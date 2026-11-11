@@ -1,0 +1,152 @@
+name: siberianforum-production
+
+x-app-env: &app-env
+  DEBUG: "0"
+  DOMAIN: "${DOMAIN:?Set DOMAIN}"
+  SECRET_KEY: "${SECRET_KEY:?Set SECRET_KEY}"
+  ALLOWED_HOSTS: "${DOMAIN},${ADMIN_DOMAIN:-admin.sibforum-tomsk.ru},localhost,127.0.0.1,backend-prod"
+  CSRF_TRUSTED_ORIGINS: "https://${DOMAIN},https://${ADMIN_DOMAIN:-admin.sibforum-tomsk.ru}"
+  PUBLIC_SITE_URL: "https://${DOMAIN}"
+  PUBLIC_BACKEND_URL: "https://${DOMAIN}"
+  ADMIN_DOMAIN: "${ADMIN_DOMAIN:-admin.sibforum-tomsk.ru}"
+  ADMIN_OWNER_USERNAME: "${ADMIN_OWNER_USERNAME:-director}"
+  ADMIN_TOTP_REQUIRED: "${ADMIN_TOTP_REQUIRED:-1}"
+  ADMIN_SITE_URL: "https://${ADMIN_DOMAIN:-admin.sibforum-tomsk.ru}"
+  TRUST_PROXY_IP_HEADER: "1"
+  POSTGRES_DB: siberian_forum
+  POSTGRES_USER: forum
+  POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}"
+  POSTGRES_HOST: db
+  EMAIL_HOST: "${EMAIL_HOST:-}"
+  EMAIL_PORT: "${EMAIL_PORT:-587}"
+  EMAIL_HOST_USER: "${EMAIL_HOST_USER}"
+  EMAIL_HOST_PASSWORD: "${EMAIL_HOST_PASSWORD}"
+  EMAIL_USE_TLS: "${EMAIL_USE_TLS:-1}"
+  EMAIL_USE_SSL: "${EMAIL_USE_SSL:-0}"
+  EMAIL_TIMEOUT: "15"
+  DEFAULT_FROM_EMAIL: "${DEFAULT_FROM_EMAIL:-}"
+  YANDEX_SMARTCAPTCHA_SECRET: "${YANDEX_SMARTCAPTCHA_SECRET:-}"
+  YANDEX_SMARTCAPTCHA_CLIENT_ID: "${YANDEX_SMARTCAPTCHA_CLIENT_ID:-}"
+  SECURE_SSL_REDIRECT: "1"
+  SESSION_COOKIE_SECURE: "1"
+  CSRF_COOKIE_SECURE: "1"
+  SECURE_HSTS_SECONDS: "31536000"
+  SECURE_HSTS_INCLUDE_SUBDOMAINS: "1"
+  SECURE_HSTS_PRELOAD: "1"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: siberianforum-production-db
+    environment:
+      POSTGRES_DB: siberian_forum
+      POSTGRES_USER: forum
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}"
+    volumes:
+      - production-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U forum -d siberian_forum"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+
+  backend-prod:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: siberianforum-backend:production
+    container_name: siberianforum-production-backend
+    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8101 --workers 4 --threads 8 --timeout 60"
+    environment: *app-env
+    volumes:
+      - production-static:/app/staticfiles
+      - production-media:/app/media
+      - production-backups:/app/backups
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; r=urllib.request.Request('http://127.0.0.1:8101/api/v1/health/', headers={'X-Forwarded-Proto': 'https'}); urllib.request.urlopen(r, timeout=5).read()"]
+      interval: 10s
+      timeout: 6s
+      start_period: 30s
+      retries: 12
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: siberianforum-backend:production
+    container_name: siberianforum-production-worker
+    command: python manage.py process_notifications --loop --sleep 5
+    environment: *app-env
+    depends_on:
+      backend-prod:
+        condition: service_healthy
+    restart: unless-stopped
+
+  backup:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: siberianforum-backend:production
+    container_name: siberianforum-production-backup
+    command: sh -c "while true; do python manage.py backup_data && sleep 86400; done"
+    environment: *app-env
+    volumes:
+      - production-backups:/app/backups
+      - production-media:/app/media:ro
+    depends_on:
+      backend-prod:
+        condition: service_healthy
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: siberianforum-production-nginx
+    command: sh -c "envsubst '$$DOMAIN $$ADMIN_DOMAIN $$PUBLIC_SUBMISSIONS_ENABLED' < /etc/nginx/project/$$NGINX_TEMPLATE > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    environment:
+      DOMAIN: "${DOMAIN:?Set DOMAIN}"
+      ADMIN_DOMAIN: "${ADMIN_DOMAIN:-admin.sibforum-tomsk.ru}"
+      PUBLIC_SUBMISSIONS_ENABLED: "${PUBLIC_SUBMISSIONS_ENABLED:-0}"
+      NGINX_TEMPLATE: nginx.conf
+    ports:
+      - "${BIND_IP:-127.0.0.1}:80:80"
+      - "${BIND_IP:-127.0.0.1}:443:443"
+    volumes:
+      - ./deploy:/etc/nginx/project:ro
+      - ./site:/usr/share/nginx/html/site:ro
+      - production-certbot-etc:/etc/letsencrypt
+      - production-certbot-var:/var/lib/letsencrypt
+      - production-static:/usr/share/nginx/html/static:ro
+      - production-media:/usr/share/nginx/html/media:ro
+    depends_on:
+      backend-prod:
+        condition: service_healthy
+    restart: unless-stopped
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: siberianforum-production-certbot
+    profiles: ["certbot"]
+    environment:
+      DOMAIN: "${DOMAIN:?Set DOMAIN}"
+      ADMIN_DOMAIN: "${ADMIN_DOMAIN:-admin.sibforum-tomsk.ru}"
+      TLS_EMAIL: "${TLS_EMAIL:-}"
+    volumes:
+      - ./deploy:/etc/nginx/project:ro
+      - production-certbot-etc:/etc/letsencrypt
+      - production-certbot-var:/var/lib/letsencrypt
+    entrypoint: ["/bin/sh", "/etc/nginx/project/certbot.sh"]
+    command: []
+    restart: "no"
+
+volumes:
+  production-postgres:
+  production-static:
+  production-media:
+  production-backups:
+  production-certbot-etc:
+  production-certbot-var:

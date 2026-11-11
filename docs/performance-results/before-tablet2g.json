@@ -1,0 +1,377 @@
+[
+  {
+    "variant": "before",
+    "profile": "tablet2g",
+    "path": "/",
+    "elapsed": 11640,
+    "fcp": 704,
+    "lcp": 3608,
+    "cls": 0.5599691808844607,
+    "loadBytes": 1943090,
+    "bytes": 2861065,
+    "requests": 67,
+    "dom": 478,
+    "images": 23,
+    "initialLoadedImages": 23,
+    "initialDecodedMiB": 15.476593017578125,
+    "heapMiB": 21.65274429321289,
+    "scrollTaskMs": 2636.1489999999994,
+    "scrollLayoutMs": 9.367999999999988,
+    "scroll": {
+      "frames": 115,
+      "frameP95": 83.39999999999964,
+      "slowFrames": 18,
+      "mutations": 24
+    },
+    "peakContainerMiB": 586.2109375,
+    "overflow": false,
+    "errors": [],
+    "failed": [
+      {
+        "url": "https://core-renderer-tiles.maps.yandex.ru/tiles?lang=ru_RU&l=map&v=26.11.09-0~b:261028152700~ia:26.09.28-0~ib:26.11.11-0&x=96470&y=40623&z=17&scale=2&theme=light&maptype=undefined&style=&ads=enabled&client_id=yandex-web-maps&experimental_use_metapoi=1&experimental_metapoi_combined_tiles=1&experimental_ranking_mode_name=default-web-ranking&experimental_mm_local_rubricpoi_min_zoom=13&experimental_mm_local_photopoi_min_zoom=13&experimental_mm_photopoi_min_zoom=13&experimental_mm_rubricpoi_min_zoom=13",
+        "error": "net::ERR_ABORTED"
+      }
+    ],
+    "brokenImages": [],
+    "longTasks": [
+      137,
+      55,
+      110,
+      94,
+      78,
+      105,
+      109,
+      55,
+      129,
+      107,
+      62,
+      189,
+      420,
+      63,
+      161,
+      86,
+      97,
+      101,
+      185,
+      90,
+      55,
+      92,
+      238,
+      92,
+      85,
+      192,
+      102,
+      105,
+      79,
+      184,
+      92,
+      92,
+      85,
+      210,
+      686,
+      156
+    ],
+    "resources": [
+      {
+        "name": "https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Onest:wght@400;500;600;700;800&display=swap",
+        "duration": 349.30000000074506,
+        "bytes": 2128
+      },
+      {
+        "name": "http://before/css/style.css",
+        "duration": 310.6000000014901,
+        "bytes": 48905
+      },
+      {
+        "name": "http://before/img/brand/tpp-tomsk-logo-white.png",
+        "duration": 129.90000000223517,
+        "bytes": 8270
+      },
+      {
+        "name": "http://before/js/icons.js",
+        "duration": 252.89999999850988,
+        "bytes": 23177
+      },
+      {
+        "name": "http://before/js/common.js",
+        "duration": 198.70000000298023,
+        "bytes": 7349
+      },
+      {
+        "name": "http://before/js/portal-data.js",
+        "duration": 217,
+        "bytes": 9147
+      },
+      {
+        "name": "http://before/js/hero.js",
+        "duration": 186.80000000074506,
+        "bytes": 5292
+      },
+      {
+        "name": "http://before/js/showcase.js",
+        "duration": 260.79999999701977,
+        "bytes": 8398
+      },
+      {
+        "name": "https://yandex.ru/map-widget/v1/?ll=84.965019%2C56.470105&z=17&pt=84.965019%2C56.470105%2Cpm2rdm",
+        "duration": 3441.2000000029802,
+        "bytes": 0
+      },
+      {
+        "name": "http://before/img/hero/tomsk-night-panorama.jpg",
+        "duration": 3032.7999999970198,
+        "bytes": 345143
+      },
+      {
+        "name": "http://before/img/photos/tomsk-aerial-day.jpg",
+        "duration": 2791,
+        "bytes": 261718
+      },
+      {
+        "name": "http://before/deployment-config.json",
+        "duration": 152,
+        "bytes": 325
+      },
+      {
+        "name": "http://before/api/v1/forums/promtour/program/",
+        "duration": 684.8000000007451,
+        "bytes": 38039
+      },
+      {
+        "name": "http://before/img/brand/tpp-tomsk-logo-trim.png",
+        "duration": 286.1000000014901,
+        "bytes": 10513
+      },
+      {
+        "name": "http://before/img/brand/asi-logo-trim.png",
+        "duration": 385.69999999925494,
+        "bytes": 17223
+      },
+      {
+        "name": "http://before/img/brand/minpromtorg-logo-trim.png",
+        "duration": 608.5,
+        "bytes": 33323
+      },
+      {
+        "name": "http://before/img/brand/forum-esg-logo.png",
+        "duration": 1750.3999999985099,
+        "bytes": 117031
+      }
+    ]
+  },
+  {
+    "variant": "before",
+    "profile": "tablet2g",
+    "path": "/promtour/",
+    "elapsed": 6846,
+    "fcp": 724,
+    "lcp": 724,
+    "cls": 0.0014532706118188798,
+    "loadBytes": 466865,
+    "bytes": 1122473,
+    "requests": 34,
+    "dom": 798,
+    "images": 14,
+    "initialLoadedImages": 1,
+    "initialDecodedMiB": 0.1063232421875,
+    "heapMiB": 1.1410903930664062,
+    "scrollTaskMs": 850.5729999999998,
+    "scrollLayoutMs": 12.419000000000013,
+    "scroll": {
+      "frames": 206,
+      "frameP95": 50,
+      "slowFrames": 8,
+      "mutations": 0
+    },
+    "peakContainerMiB": 709.13671875,
+    "overflow": false,
+    "errors": [],
+    "failed": [],
+    "brokenImages": [],
+    "longTasks": [
+      115,
+      224,
+      125,
+      69,
+      82,
+      57,
+      57,
+      54
+    ],
+    "resources": [
+      {
+        "name": "https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Onest:wght@400;500;600;700;800&display=swap",
+        "duration": 307.6000000014901,
+        "bytes": 2128
+      },
+      {
+        "name": "http://before/css/register.css",
+        "duration": 251.90000000223517,
+        "bytes": 16785
+      },
+      {
+        "name": "http://before/css/style.css",
+        "duration": 435.1000000014901,
+        "bytes": 48905
+      },
+      {
+        "name": "http://before/css/promtour.css",
+        "duration": 288.0999999977648,
+        "bytes": 21457
+      },
+      {
+        "name": "http://before/img/brand/tpp-tomsk-logo-white.png",
+        "duration": 185.70000000298023,
+        "bytes": 8270
+      },
+      {
+        "name": "http://before/js/icons.js",
+        "duration": 302.80000000074506,
+        "bytes": 23177
+      },
+      {
+        "name": "http://before/js/common.js",
+        "duration": 168,
+        "bytes": 7349
+      },
+      {
+        "name": "http://before/promtour/content.js",
+        "duration": 424.3999999985099,
+        "bytes": 20254
+      },
+      {
+        "name": "http://before/promtour/nominations.js",
+        "duration": 270.19999999925494,
+        "bytes": 727
+      },
+      {
+        "name": "http://before/js/captcha.js",
+        "duration": 366.0999999977648,
+        "bytes": 1447
+      },
+      {
+        "name": "http://before/js/promtour.js",
+        "duration": 487.8999999985099,
+        "bytes": 41209
+      },
+      {
+        "name": "http://before/deployment-config.json",
+        "duration": 98.5,
+        "bytes": 325
+      },
+      {
+        "name": "http://before/api/v1/public-config/",
+        "duration": 102.10000000149012,
+        "bytes": 343
+      },
+      {
+        "name": "http://before/api/v1/contests/promtour/",
+        "duration": 415.30000000074506,
+        "bytes": 75714
+      },
+      {
+        "name": "http://before/api/v1/forums/promtour/program/",
+        "duration": 338.70000000298023,
+        "bytes": 38039
+      }
+    ]
+  },
+  {
+    "variant": "before",
+    "profile": "tablet2g",
+    "path": "/contest/",
+    "elapsed": 6523,
+    "fcp": 580,
+    "lcp": 580,
+    "cls": 0.12289964097241561,
+    "loadBytes": 319644,
+    "bytes": 319644,
+    "requests": 18,
+    "dom": 826,
+    "images": 1,
+    "initialLoadedImages": 1,
+    "initialDecodedMiB": 0.1063232421875,
+    "heapMiB": 1.3719215393066406,
+    "scrollTaskMs": 377.64799999999997,
+    "scrollLayoutMs": 0,
+    "scroll": {
+      "frames": 237,
+      "frameP95": 16.799999999999727,
+      "slowFrames": 0,
+      "mutations": 0
+    },
+    "peakContainerMiB": 709.13671875,
+    "overflow": false,
+    "errors": [],
+    "failed": [],
+    "brokenImages": [],
+    "longTasks": [],
+    "resources": [
+      {
+        "name": "https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Onest:wght@400;500;600;700;800&display=swap",
+        "duration": 333.79999999701977,
+        "bytes": 2128
+      },
+      {
+        "name": "http://before/css/style.css",
+        "duration": 377.30000000074506,
+        "bytes": 48905
+      },
+      {
+        "name": "http://before/css/register.css",
+        "duration": 252.80000000074506,
+        "bytes": 16785
+      },
+      {
+        "name": "http://before/css/promtour.css",
+        "duration": 289.30000000074506,
+        "bytes": 21457
+      },
+      {
+        "name": "http://before/css/contest.css",
+        "duration": 105.80000000074506,
+        "bytes": 2345
+      },
+      {
+        "name": "http://before/img/brand/tpp-tomsk-logo-white.png",
+        "duration": 171.59999999776483,
+        "bytes": 8270
+      },
+      {
+        "name": "http://before/js/icons.js",
+        "duration": 296.9000000022352,
+        "bytes": 23177
+      },
+      {
+        "name": "http://before/js/common.js",
+        "duration": 257.69999999925494,
+        "bytes": 7349
+      },
+      {
+        "name": "http://before/js/captcha.js",
+        "duration": 267.8999999985099,
+        "bytes": 1447
+      },
+      {
+        "name": "http://before/js/contest.js",
+        "duration": 383.30000000074506,
+        "bytes": 14278
+      },
+      {
+        "name": "http://before/deployment-config.json",
+        "duration": 89.29999999701977,
+        "bytes": 325
+      },
+      {
+        "name": "http://before/api/v1/public-config/",
+        "duration": 89.29999999701977,
+        "bytes": 343
+      },
+      {
+        "name": "http://before/api/v1/contests/promtour",
+        "duration": 422.69999999925494,
+        "bytes": 75714
+      }
+    ]
+  }
+]

@@ -1,0 +1,121 @@
+[
+  {
+    "variant": "after",
+    "profile": "phone2g",
+    "path": "/contest/",
+    "elapsed": 6981,
+    "fcp": 860,
+    "lcp": 860,
+    "cls": 0.027337249178434376,
+    "loadBytes": 159483,
+    "bytes": 159483,
+    "requests": 18,
+    "dom": 824,
+    "images": 1,
+    "initialLoadedImages": 1,
+    "initialDecodedMiB": 0.1063232421875,
+    "heapMiB": 1.4033203125,
+    "scrollTaskMs": 744.84,
+    "scrollLayoutMs": 0,
+    "scroll": {
+      "frames": 231,
+      "frameP95": 16.700000000000728,
+      "slowFrames": 1,
+      "mutations": 0
+    },
+    "peakContainerMiB": 169.1015625,
+    "overflow": false,
+    "errors": [],
+    "failed": [],
+    "brokenImages": [],
+    "longTasks": [
+      208,
+      77,
+      50,
+      138,
+      53
+    ],
+    "resources": [
+      {
+        "name": "http://after/fonts/fonts.css",
+        "duration": 157.40000000223517,
+        "bytes": 818
+      },
+      {
+        "name": "http://after/css/register.css",
+        "duration": 264.3999999985099,
+        "bytes": 4323
+      },
+      {
+        "name": "http://after/css/style.css",
+        "duration": 325.69999999925494,
+        "bytes": 10917
+      },
+      {
+        "name": "http://after/css/promtour.css",
+        "duration": 263.9000000022352,
+        "bytes": 4388
+      },
+      {
+        "name": "http://after/css/contest.css",
+        "duration": 184.30000000074506,
+        "bytes": 1066
+      },
+      {
+        "name": "http://after/img/brand/tpp-tomsk-logo-white.png",
+        "duration": 298.6000000014901,
+        "bytes": 8270
+      },
+      {
+        "name": "http://after/js/common.js",
+        "duration": 371,
+        "bytes": 3271
+      },
+      {
+        "name": "http://after/js/icons.js",
+        "duration": 393.69999999925494,
+        "bytes": 9512
+      },
+      {
+        "name": "http://after/js/captcha.js",
+        "duration": 446.19999999925494,
+        "bytes": 800
+      },
+      {
+        "name": "http://after/js/contest.js",
+        "duration": 455.19999999925494,
+        "bytes": 4544
+      },
+      {
+        "name": "http://after/fonts/onest-cyrillic.woff2",
+        "duration": 318.1000000014901,
+        "bytes": 16128
+      },
+      {
+        "name": "http://after/fonts/onest-latin.woff2",
+        "duration": 429.6000000014901,
+        "bytes": 34108
+      },
+      {
+        "name": "http://after/deployment-config.json",
+        "duration": 171.59999999776483,
+        "bytes": 325
+      },
+      {
+        "name": "http://after/api/v1/public-config/",
+        "duration": 162.40000000223517,
+        "bytes": 343
+      },
+      {
+        "name": "http://after/api/v1/contests/promtour",
+        "duration": 421.80000000074506,
+        "bytes": 20567
+      },
+      {
+        "name": "http://after/fonts/montserrat-latin.woff2",
+        "duration": 333.80000000074506,
+        "bytes": 35808
+      }
+    ]
+  }
+]

@@ -1,0 +1,107 @@
+[
+  {
+    "engine": "webkit",
+    "width": 320,
+    "path": "/",
+    "errors": [],
+    "externalBeforeMap": []
+  },
+  {
+    "engine": "webkit",
+    "width": 320,
+    "path": "/promtour/",
+    "errors": [],
+    "externalBeforeMap": []
+  },
+  {
+    "engine": "webkit",
+    "width": 320,
+    "path": "/contest/",
+    "errors": [],
+    "externalBeforeMap": []
+  },
+  {
+    "engine": "webkit",
+    "width": 360,
+    "path": "/",
+    "errors": [],
+    "externalBeforeMap": []
+  },
+  {
+    "engine": "webkit",
+    "width": 360,
+    "path": "/promtour/",
+    "errors": [],
+    "externalBeforeMap": []
+  },
+  {
+    "engine": "webkit",
+    "width": 360,
+    "path": "/contest/",
+    "errors": [],
+    "externalBeforeMap": []
+  },
+  {
+    "engine": "webkit",
+    "width": 768,
+    "path": "/",
+    "errors": [],
+    "externalBeforeMap": []
+  },
+  {
+    "engine": "webkit",
+    "width": 768,
+    "path": "/promtour/",
+    "errors": [],
+    "externalBeforeMap": []
+  },
+  {
+    "engine": "webkit",
+    "width": 768,
+    "path": "/contest/",
+    "errors": [],
+    "externalBeforeMap": []
+  },
+  {
+    "engine": "webkit",
+    "width": 1024,
+    "path": "/",
+    "errors": [],
+    "externalBeforeMap": []
+  },
+  {
+    "engine": "webkit",
+    "width": 1024,
+    "path": "/promtour/",
+    "errors": [],
+    "externalBeforeMap": []
+  },
+  {
+    "engine": "webkit",
+    "width": 1024,
+    "path": "/contest/",
+    "errors": [],
+    "externalBeforeMap": []
+  },
+  {
+    "engine": "webkit",
+    "width": 1440,
+    "path": "/",
+    "errors": [],
+    "externalBeforeMap": []
+  },
+  {
+    "engine": "webkit",
+    "width": 1440,
+    "path": "/promtour/",
+    "errors": [],
+    "externalBeforeMap": []
+  },
+  {
+    "engine": "webkit",
+    "width": 1440,
+    "path": "/contest/",
+    "errors": [],
+    "externalBeforeMap": []
+  }
+]

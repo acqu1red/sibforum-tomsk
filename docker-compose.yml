@@ -1,0 +1,21 @@
+# Прототип сайта «Сибирский форум». Отдельный проект — не пересекается с другими контейнерами на машине.
+# Запуск: start-site-docker.bat (или docker compose -p siberianforum-proto up -d --build)
+name: siberianforum-proto
+
+services:
+  site:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: siberianforum-proto:latest
+    container_name: siberianforum-proto
+    ports:
+      - "127.0.0.1:8095:8095"
+    environment:
+      HOST: 0.0.0.0
+      PORT: 8095
+      DATA_DIR: /app/data
+      PLATFORM_BACKEND_URL: http://host.docker.internal:8100
+    volumes:
+      - ./server/data:/app/data
+    restart: "no"

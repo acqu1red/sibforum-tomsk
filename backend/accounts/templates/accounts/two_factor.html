@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }}</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 24px; background: #f5f6fb; color: #0e1330; font: 16px/1.5 system-ui, sans-serif; }
+    main { max-width: 440px; margin: 40px auto; padding: 28px; border: 1px solid #d9dceb; border-radius: 16px; background: #fff; }
+    h1 { margin: 0 0 16px; font-size: 26px; }
+    p { margin: 12px 0; }
+    form { margin-top: 20px; }
+    label { display: block; margin-bottom: 8px; font-weight: 600; }
+    input { width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid #9ba3bf; border-radius: 8px; font: 24px/1.2 system-ui; letter-spacing: 5px; }
+    button { min-height: 48px; margin-top: 16px; padding: 12px 20px; border: 0; border-radius: 8px; background: #3f4fb5; color: #fff; font-weight: 700; cursor: pointer; }
+    .errorlist { margin: 8px 0; padding: 0; color: #a51e16; list-style: none; }
+    .secret { padding: 12px; background: #ecedf7; word-break: break-all; font-family: monospace; }
+    .qr { width: 220px; max-width: 100%; margin: 16px auto; }
+    .qr svg { width: 100%; height: auto; }
+    .note { color: #4a5070; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>{{ title }}</h1>
+    {% if is_setup %}
+      <p>Добавьте аккаунт в приложение-аутентификатор и введите текущий шестизначный код.</p>
+      <div class="qr" id="qr" data-uri="{{ otpauth_uri }}"></div>
+      <p>Или введите ключ вручную:</p>
+      <p class="secret">{{ secret }}</p>
+    {% else %}
+      <p>Введите шестизначный код из приложения-аутентификатора.</p>
+    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
+      {{ form.code.label_tag }}
+      {{ form.code }}
+      {{ form.code.errors }}
+      {{ form.non_field_errors }}
+      <button type="submit">Подтвердить</button>
+    </form>
+    <p class="note">Код нельзя использовать повторно. После пяти ошибок ввод блокируется на 5 минут.</p>
+  </main>
+  {% if is_setup %}
+    <script src="/static/accounts/qrcode.js"></script>
+    <script>
+      var qr = window.qrcode(0, 'M');
+      qr.addData(document.getElementById('qr').getAttribute('data-uri'));
+      qr.make();
+      document.getElementById('qr').innerHTML = qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
+    </script>
+  {% endif %}
+</body>
+</html>

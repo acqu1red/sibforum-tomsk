@@ -1,0 +1,373 @@
+[
+  {
+    "variant": "before",
+    "profile": "veryweak",
+    "path": "/",
+    "elapsed": 24305,
+    "fcp": 2684,
+    "lcp": 2684,
+    "cls": 0.004923316955566406,
+    "loadBytes": 1762862,
+    "bytes": 1905814,
+    "requests": 59,
+    "dom": 478,
+    "images": 23,
+    "initialLoadedImages": 23,
+    "initialDecodedMiB": 15.476593017578125,
+    "heapMiB": 13.9581298828125,
+    "scrollTaskMs": 3501.138000000001,
+    "scrollLayoutMs": 59.625999999999955,
+    "scroll": {
+      "frames": 64,
+      "frameP95": 266.6999999999971,
+      "slowFrames": 12,
+      "mutations": 24
+    },
+    "peakContainerMiB": 340.8203125,
+    "overflow": false,
+    "errors": [],
+    "failed": [],
+    "brokenImages": [],
+    "longTasks": [
+      633,
+      79,
+      75,
+      288,
+      120,
+      276,
+      205,
+      338,
+      62,
+      267,
+      336,
+      357,
+      210,
+      71,
+      74,
+      120,
+      179,
+      352,
+      994,
+      119,
+      54,
+      570,
+      118,
+      211,
+      75,
+      200,
+      167,
+      205,
+      53,
+      163,
+      86,
+      76,
+      57
+    ],
+    "resources": [
+      {
+        "name": "https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Onest:wght@400;500;600;700;800&display=swap",
+        "duration": 689.3000000007451,
+        "bytes": 2128
+      },
+      {
+        "name": "http://before/css/style.css",
+        "duration": 1492.1000000014901,
+        "bytes": 48905
+      },
+      {
+        "name": "http://before/img/brand/tpp-tomsk-logo-white.png",
+        "duration": 767.5,
+        "bytes": 8270
+      },
+      {
+        "name": "http://before/js/icons.js",
+        "duration": 1205.699999999255,
+        "bytes": 23177
+      },
+      {
+        "name": "http://before/js/portal-data.js",
+        "duration": 884.1999999992549,
+        "bytes": 9147
+      },
+      {
+        "name": "http://before/js/common.js",
+        "duration": 789,
+        "bytes": 7349
+      },
+      {
+        "name": "http://before/js/hero.js",
+        "duration": 700.7000000029802,
+        "bytes": 5292
+      },
+      {
+        "name": "http://before/js/showcase.js",
+        "duration": 1256.7000000029802,
+        "bytes": 8398
+      },
+      {
+        "name": "https://yandex.ru/map-widget/v1/?ll=84.965019%2C56.470105&z=17&pt=84.965019%2C56.470105%2Cpm2rdm",
+        "duration": 15635.800000000745,
+        "bytes": 0
+      },
+      {
+        "name": "http://before/img/hero/tomsk-night-panorama.jpg",
+        "duration": 15461.900000002235,
+        "bytes": 345143
+      },
+      {
+        "name": "http://before/img/photos/tomsk-aerial-day.jpg",
+        "duration": 14155,
+        "bytes": 261718
+      },
+      {
+        "name": "http://before/deployment-config.json",
+        "duration": 406.30000000074506,
+        "bytes": 325
+      },
+      {
+        "name": "http://before/api/v1/forums/promtour/program/",
+        "duration": 3511.300000000745,
+        "bytes": 38039
+      },
+      {
+        "name": "http://before/img/brand/tpp-tomsk-logo-trim.png",
+        "duration": 1512.5,
+        "bytes": 10513
+      },
+      {
+        "name": "http://before/img/brand/asi-logo-trim.png",
+        "duration": 2217.39999999851,
+        "bytes": 17223
+      },
+      {
+        "name": "http://before/img/brand/minpromtorg-logo-trim.png",
+        "duration": 3441.89999999851,
+        "bytes": 33323
+      },
+      {
+        "name": "http://before/img/brand/forum-esg-logo.png",
+        "duration": 10854.800000000745,
+        "bytes": 117031
+      }
+    ]
+  },
+  {
+    "variant": "before",
+    "profile": "veryweak",
+    "path": "/promtour/",
+    "elapsed": 10726,
+    "fcp": 2300,
+    "lcp": 2300,
+    "cls": 0.00013815879821777341,
+    "loadBytes": 466865,
+    "bytes": 537014,
+    "requests": 34,
+    "dom": 798,
+    "images": 14,
+    "initialLoadedImages": 1,
+    "initialDecodedMiB": 0.1063232421875,
+    "heapMiB": 1.1404991149902344,
+    "scrollTaskMs": 1399.3159999999998,
+    "scrollLayoutMs": 63.19799999999998,
+    "scroll": {
+      "frames": 204,
+      "frameP95": 16.80000000000109,
+      "slowFrames": 6,
+      "mutations": 0
+    },
+    "peakContainerMiB": 346.3046875,
+    "overflow": false,
+    "errors": [],
+    "failed": [],
+    "brokenImages": [],
+    "longTasks": [
+      323,
+      523,
+      128,
+      61,
+      51,
+      96,
+      88,
+      66,
+      74
+    ],
+    "resources": [
+      {
+        "name": "https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Onest:wght@400;500;600;700;800&display=swap",
+        "duration": 572.3999999985099,
+        "bytes": 2128
+      },
+      {
+        "name": "http://before/css/style.css",
+        "duration": 1505.699999999255,
+        "bytes": 48905
+      },
+      {
+        "name": "http://before/css/register.css",
+        "duration": 989.1000000014901,
+        "bytes": 16785
+      },
+      {
+        "name": "http://before/css/promtour.css",
+        "duration": 1136.7000000029802,
+        "bytes": 21457
+      },
+      {
+        "name": "http://before/img/brand/tpp-tomsk-logo-white.png",
+        "duration": 1694.2999999970198,
+        "bytes": 8270
+      },
+      {
+        "name": "http://before/js/icons.js",
+        "duration": 1156.5,
+        "bytes": 23177
+      },
+      {
+        "name": "http://before/js/common.js",
+        "duration": 1558.300000000745,
+        "bytes": 7349
+      },
+      {
+        "name": "http://before/promtour/nominations.js",
+        "duration": 1518.199999999255,
+        "bytes": 727
+      },
+      {
+        "name": "http://before/promtour/content.js",
+        "duration": 1826.5,
+        "bytes": 20254
+      },
+      {
+        "name": "http://before/js/captcha.js",
+        "duration": 1525.300000000745,
+        "bytes": 1447
+      },
+      {
+        "name": "http://before/js/promtour.js",
+        "duration": 3459.300000000745,
+        "bytes": 41209
+      },
+      {
+        "name": "http://before/deployment-config.json",
+        "duration": 396.69999999925494,
+        "bytes": 325
+      },
+      {
+        "name": "http://before/api/v1/public-config/",
+        "duration": 310.9000000022352,
+        "bytes": 343
+      },
+      {
+        "name": "http://before/api/v1/contests/promtour/",
+        "duration": 1461.0999999977648,
+        "bytes": 75714
+      },
+      {
+        "name": "http://before/api/v1/forums/promtour/program/",
+        "duration": 1070.800000000745,
+        "bytes": 38039
+      }
+    ]
+  },
+  {
+    "variant": "before",
+    "profile": "veryweak",
+    "path": "/contest/",
+    "elapsed": 8869,
+    "fcp": 2164,
+    "lcp": 2164,
+    "cls": 0.00013815879821777341,
+    "loadBytes": 281553,
+    "bytes": 319644,
+    "requests": 18,
+    "dom": 826,
+    "images": 1,
+    "initialLoadedImages": 1,
+    "initialDecodedMiB": 0.1063232421875,
+    "heapMiB": 1.3804244995117188,
+    "scrollTaskMs": 353.4429999999999,
+    "scrollLayoutMs": 0,
+    "scroll": {
+      "frames": 241,
+      "frameP95": 16.799999999999272,
+      "slowFrames": 0,
+      "mutations": 0
+    },
+    "peakContainerMiB": 346.3046875,
+    "overflow": false,
+    "errors": [],
+    "failed": [],
+    "brokenImages": [],
+    "longTasks": [
+      171,
+      90
+    ],
+    "resources": [
+      {
+        "name": "https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Onest:wght@400;500;600;700;800&display=swap",
+        "duration": 605.4000000022352,
+        "bytes": 2128
+      },
+      {
+        "name": "http://before/css/style.css",
+        "duration": 1503.699999999255,
+        "bytes": 48905
+      },
+      {
+        "name": "http://before/css/register.css",
+        "duration": 1020.2999999970198,
+        "bytes": 16785
+      },
+      {
+        "name": "http://before/css/promtour.css",
+        "duration": 1172.699999999255,
+        "bytes": 21457
+      },
+      {
+        "name": "http://before/css/contest.css",
+        "duration": 433.9000000022352,
+        "bytes": 2345
+      },
+      {
+        "name": "http://before/img/brand/tpp-tomsk-logo-white.png",
+        "duration": 1698.699999999255,
+        "bytes": 8270
+      },
+      {
+        "name": "http://before/js/icons.js",
+        "duration": 1254.300000000745,
+        "bytes": 23177
+      },
+      {
+        "name": "http://before/js/common.js",
+        "duration": 1670.5999999977648,
+        "bytes": 7349
+      },
+      {
+        "name": "http://before/js/captcha.js",
+        "duration": 1599.4000000022352,
+        "bytes": 1447
+      },
+      {
+        "name": "http://before/js/contest.js",
+        "duration": 1806.699999999255,
+        "bytes": 14278
+      },
+      {
+        "name": "http://before/deployment-config.json",
+        "duration": 332.80000000074506,
+        "bytes": 325
+      },
+      {
+        "name": "http://before/api/v1/public-config/",
+        "duration": 347.30000000074506,
+        "bytes": 343
+      },
+      {
+        "name": "http://before/api/v1/contests/promtour",
+        "duration": 1461.5,
+        "bytes": 75714
+      }
+    ]
+  }
+]

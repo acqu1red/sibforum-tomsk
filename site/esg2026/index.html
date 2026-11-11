@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>V Сибирский форум «Производительность и устойчивое развитие» — 13–17 апреля 2026, Томск</title>
+  <meta name="description" content="V Сибирский форум «Производительность и устойчивое развитие»: 13–17 апреля 2026, Томск. Программа, спикеры, экскурсии на предприятия, регистрация.">
+  <meta property="og:title" content="V Сибирский форум «Производительность и устойчивое развитие»">
+  <meta property="og:description" content="13–17 апреля 2026, Томск. 8 треков, пленарное заседание, экскурсии на предприятия.">
+  <meta property="og:image" content="../img/hero/tomsk-night-panorama.jpg">
+  <meta name="theme-color" content="#071466">
+  <link rel="icon" type="image/png" href="../img/favicon.png">
+  <link rel="stylesheet" href="/fonts/fonts.css?v=2a94b395edf2">
+  <link rel="stylesheet" href="../css/style.css?v=331e8efece9c">
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+
+  <!-- Шапка сайта форума (шаблон: логотип, название и даты берутся из data/forum.js) -->
+  <header class="header header-forum" id="header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="V Сибирский форум — главная">
+        <img class="brand-forum-logo" src="../img/brand/forum-esg-logo.png" alt="" width="841" height="741" decoding="async">
+        <span class="brand-text">V Сибирский форум<small>13–17 апреля 2026 · Томск</small></span>
+      </a>
+      <nav class="nav" aria-label="Разделы форума">
+        <ul>
+          <li><a href="program.html">Программа</a></li>
+          <li><a href="#speakers">Спикеры</a></li>
+          <li><a href="#excursions">Экскурсии</a></li>
+          <li><a href="#partners">Партнёры</a></li>
+          <li><a href="#contacts">Контакты</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-ghost-light hide-sm hide-md" href="../index.html#forums">Форумы прошлых лет</a>
+        <a class="btn btn-primary hide-sm" href="register.html">Регистрация</a>
+        <button class="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu" data-menu-open>
+          <span data-icon="menu" data-icon-class="icon-lg"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Меню">
+    <div class="mobile-menu-top">
+      <span class="brand-text">V Сибирский форум<small>13–17 апреля 2026 · Томск</small></span>
+      <button class="burger" type="button" aria-label="Закрыть меню" data-menu-close><span data-icon="x" data-icon-class="icon-lg"></span></button>
+    </div>
+    <nav aria-label="Меню для телефона">
+      <a href="program.html">Программа <span data-icon="arrow-right"></span></a>
+      <a href="#speakers">Спикеры <span data-icon="arrow-right"></span></a>
+      <a href="#excursions">Экскурсии <span data-icon="arrow-right"></span></a>
+      <a href="#partners">Партнёры <span data-icon="arrow-right"></span></a>
+      <a href="#contacts">Контакты <span data-icon="arrow-right"></span></a>
+      <a href="../index.html#forums">Форумы прошлых лет <span data-icon="arrow-right"></span></a>
+    </nav>
+    <a class="btn btn-primary btn-block" href="register.html">Зарегистрироваться</a>
+    <div class="mobile-menu-contacts">
+      <a href="tel:+79293721986">+7 (929) 372-19-86</a><br>
+      <a href="mailto:kfa@tomsktpp.ru">kfa@tomsktpp.ru</a>
+    </div>
+  </div>
+
+  <main id="main">
+    <!-- Hero. Состояния: A анонс, B регистрация открыта, C идёт сейчас, D завершён -->
+    <section class="hero on-dark" id="forum" data-state="B" aria-labelledby="hero-title">
+      <div class="container hero-inner">
+        <img class="hero-logo" src="../img/brand/forum-esg-logo.png" alt="Логотип форума «Производительность и устойчивое развитие»" width="140" height="123">
+        <p class="hero-kicker">Сибирский форум Торгово-промышленной палаты Томской области</p>
+        <h1 class="hero-title" id="hero-title">V Сибирский форум<br>Производительность<br>и устойчивое развитие</h1>
+        <p class="hero-meta">13–17 апреля 2026 · Томск</p>
+        <div class="hero-divider" aria-hidden="true"></div>
+
+        <div class="hero-state" data-for="A">
+          <div class="hero-status"><span class="badge badge-open"><span class="dot" style="background:var(--signal)"></span>Анонс</span></div>
+          <p class="hero-note">Регистрация откроется 2 марта</p>
+        </div>
+        <div class="hero-state" data-for="B">
+          <div class="hero-status"><span class="badge badge-open"><span class="dot"></span>Регистрация открыта</span></div>
+        </div>
+        <div class="hero-state" data-for="A B">
+          <p class="timer-label" id="timer-label">До начала форума</p>
+          <div class="timer" role="timer" aria-labelledby="timer-label" data-timer>
+            <div class="timer-cell"><div class="timer-num" data-t="d">23</div><div class="timer-unit" data-u="d">дня</div></div>
+            <div class="timer-cell"><div class="timer-num" data-t="h">14</div><div class="timer-unit" data-u="h">часов</div></div>
+            <div class="timer-cell"><div class="timer-num" data-t="m">05</div><div class="timer-unit" data-u="m">минут</div></div>
+            <div class="timer-cell"><div class="timer-num" data-t="s">32</div><div class="timer-unit" data-u="s">секунд</div></div>
+          </div>
+        </div>
+        <div class="hero-state" data-for="C">
+          <div class="hero-status"><span class="badge badge-live"><span class="dot"></span>Идёт сейчас</span></div>
+          <p class="hero-now">День 5 из 5 · сейчас: Пленарное заседание<span>13:00–14:30 · ОЭЗ «Томск», пр. Развития, 3</span></p>
+        </div>
+        <div class="hero-state" data-for="D">
+          <div class="hero-status"><span class="badge badge-muted">Форум завершён 17 апреля 2026</span></div>
+          <p class="hero-note">Итоги и материалы</p>
+          <div class="results">
+            <a class="result-tile" href="https://vkvideo.ru/playlist/-211618771_1" target="_blank" rel="noopener"><span data-icon="video" data-icon-class="icon-lg"></span><span><strong>Записи трансляций</strong><span>Пленарное и 8 треков</span></span></a>
+            <a class="result-tile" href="program.html"><span data-icon="file" data-icon-class="icon-lg"></span><span><strong>Презентации спикеров</strong><span>По трекам программы</span></span></a>
+            <a class="result-tile" href="#gallery"><span data-icon="image" data-icon-class="icon-lg"></span><span><strong>Фотографии</strong><span>Фотоотчёт с форума</span></span></a>
+          </div>
+        </div>
+
+        <p class="hero-desc">Юбилейный форум объединит российских и зарубежных экспертов, представителей органов государственной власти, производственных компаний, региональных центров компетенций в сфере производительности труда, центров стандартизации и метрологии, экспертов Торгово-промышленной палаты России, научного сообщества, компаний-участников национального проекта «Эффективная и конкурентная экономика».</p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary hero-state-inline" data-for="B" href="register.html">Зарегистрироваться</a>
+          <a class="btn btn-primary hero-state-inline" data-for="C" href="https://vkvideo.ru/playlist/-211618771_1" target="_blank" rel="noopener"><span data-icon="play"></span>Смотреть трансляцию</a>
+          <a class="btn btn-primary hero-state-inline" data-for="D" href="#gallery">Итоги и материалы</a>
+          <a class="btn btn-ghost-light hero-state-inline" data-for="A B" href="program.html">Программа</a>
+          <a class="btn btn-ghost-light hero-state-inline" data-for="C" href="program.html?day=5">Программа на сегодня</a>
+          <a class="btn btn-ghost-light hero-state-inline" data-for="A B" href="#excursions">Экскурсии</a>
+          <a class="btn btn-ghost-light hero-state-inline" data-for="D" href="../index.html#forums">Форумы прошлых лет</a>
+        </div>
+      </div>
+      <a class="scroll-cue" href="#figures" aria-label="Листать вниз"><span data-icon="chevron-down" data-icon-class="icon-lg"></span></a>
+    </section>
+
+    <!-- Цифры форума -->
+    <div class="figures-wrap" id="figures">
+      <div class="container">
+        <dl class="figures">
+          <div class="figure"><dt class="visually-hidden">Дней</dt><dd class="figure-num">5</dd><dd class="figure-label">дней программы</dd></div>
+          <div class="figure"><dt class="visually-hidden">Треки</dt><dd class="figure-num">8</dd><dd class="figure-label">тематических треков</dd></div>
+          <div class="figure"><dt class="visually-hidden">Спикеры</dt><dd class="figure-num">100+</dd><dd class="figure-label">спикеров</dd></div>
+          <div class="figure"><dt class="visually-hidden">Экскурсии</dt><dd class="figure-num">4</dd><dd class="figure-label">экскурсии на предприятия</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Спикеры -->
+    <section class="section" id="speakers" aria-labelledby="speakers-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title" id="speakers-title">Спикеры форума</h2>
+          <p class="section-lead">Представители власти, промышленности, науки и бизнеса — из Томска, Москвы, регионов Сибири и из-за рубежа.</p>
+        </div>
+        <ul class="speakers-grid" role="list" data-speakers></ul>
+        <div class="section-actions">
+          <button class="btn btn-secondary" type="button" data-speakers-toggle aria-expanded="false">Показать всех спикеров (16)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Темы -->
+    <section class="section themes on-dark" id="themes" aria-labelledby="themes-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title" id="themes-title">Основные темы форума</h2>
+          <p class="section-lead">Каждая тема — отдельный трек программы. Нажмите на тему, чтобы увидеть её сессии.</p>
+        </div>
+        <ul class="themes-list" role="list" data-themes></ul>
+      </div>
+    </section>
+
+    <!-- Программа кратко -->
+    <section class="section program-brief on-dark" id="program" aria-labelledby="program-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title" id="program-title">Программа форума</h2>
+          <p class="section-lead">Пять дней: визиты на предприятия, мастер-классы, конференции и главный день с параллельными треками. Программа форума может дополняться и корректироваться.</p>
+        </div>
+        <div class="panel" data-days></div>
+        <div class="section-actions">
+          <a class="btn btn-light" href="program.html">Полная программа <span data-icon="arrow-right"></span></a>
+          <a class="btn btn-secondary" href="program.html?print=1"><span data-icon="download"></span>Скачать программу (PDF)</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Экскурсии -->
+    <section class="section excursions" id="excursions" aria-labelledby="excursions-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title" id="excursions-title">Экскурсии на предприятия</h2>
+          <p class="section-lead">Четверг, 16 апреля. Места в автобусе ограничены — записывайтесь при регистрации. Если мест нет, можно встать в лист ожидания.</p>
+        </div>
+        <ul class="x-cards" role="list" data-excursions></ul>
+      </div>
+    </section>
+
+    <!-- Организаторы и партнёры -->
+    <section class="section partners on-dark" id="partners" aria-labelledby="organizers-title">
+      <div class="container">
+        <h2 class="logos-title" id="organizers-title">Организаторы форума</h2>
+        <ul class="logos" data-logos="organizers"></ul>
+        <h2 class="logos-title">Партнёры форума</h2>
+        <ul class="logos logos-6" data-logos="partners"></ul>
+        <p class="partner-cta">Чтобы стать партнёром мероприятия, свяжитесь с нами по телефону <a href="tel:+79293721986">+7 (929) 372-19-86</a> или почте <a href="mailto:kfa@tomsktpp.ru">kfa@tomsktpp.ru</a></p>
+      </div>
+    </section>
+
+    <!-- Фото прошлых лет -->
+    <section class="section" id="gallery" aria-labelledby="gallery-title">
+      <div class="container">
+        <div class="gallery-head" style="margin-top:0">
+          <h2 class="section-title" id="gallery-title">Как проходят форумы</h2>
+          <div class="chips">
+            <a class="link-arrow" href="https://vk.com/album-211618771_309542415" target="_blank" rel="noopener">Все фото — в альбоме VK <span data-icon="external"></span></a>
+          </div>
+        </div>
+        <div class="gallery">
+          <figure><img src="../img/photos/event-audience.jpg" alt="Участники в зале во время сессии" loading="lazy" width="1280" height="852" decoding="async"><figcaption>Сессии и пленарное заседание</figcaption></figure>
+          <figure><img src="../img/photos/event-networking-table.jpg" alt="Участники обсуждают за столом" loading="lazy" width="1280" height="849" decoding="async"><figcaption>Нетворкинг</figcaption></figure>
+          <figure><img src="../img/photos/venue-oez-tomsk.jpg" alt="Здание ОЭЗ «Томск»" loading="lazy" width="1280" height="943" decoding="async"><figcaption>ОЭЗ «Томск» — площадка главного дня</figcaption></figure>
+          <figure><img src="../img/photos/excursion-factory-tour.jpg" alt="Экскурсионная группа на производстве" loading="lazy" width="1280" height="962" decoding="async"><figcaption>Визиты на предприятия</figcaption></figure>
+          <figure><img src="../img/photos/event-crowd.jpg" alt="Участники форума" loading="lazy" width="1280" height="853" decoding="async"><figcaption>Участники форума</figcaption></figure>
+        </div>
+        <div class="section-actions">
+          <a class="btn btn-secondary" href="../index.html#forums">Все форумы с 2022 года <span data-icon="arrow-right"></span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Контакты по направлениям и площадки -->
+    <section class="section contacts" id="contacts" aria-labelledby="contacts-title">
+      <div class="container">
+        <div class="section-head left">
+          <h2 class="section-title" id="contacts-title">Контакты</h2>
+        </div>
+        <div class="contacts-grid">
+          <div class="contact-card">
+            <h3>Участие, регистрация и партнёрство</h3>
+            <p class="contact-person">Фёдор Александрович Косенков</p>
+            <ul class="contact-list">
+              <li><span data-icon="phone"></span><a href="tel:+79293721986">+7 (929) 372-19-86</a></li>
+              <li><span data-icon="mail"></span><a href="mailto:kfa@tomsktpp.ru">kfa@tomsktpp.ru</a></li>
+            </ul>
+            <div class="contact-sep"></div>
+            <h3>Организатор</h3>
+            <p class="contact-person">Союз «Торгово-промышленная палата Томской области»</p>
+            <ul class="contact-list">
+              <li><span data-icon="pin"></span><span>г. Томск, Красноармейская, 71а</span></li>
+              <li><span data-icon="phone"></span><a href="tel:+73822278288">+7 (3822) 278-288</a></li>
+              <li><span data-icon="mail"></span><a href="mailto:mail@tomsktpp.ru">mail@tomsktpp.ru</a></li>
+            </ul>
+            <div class="contact-sep"></div>
+            <h3>Площадки форума</h3>
+            <ul class="venue-list" data-venues></ul>
+          </div>
+          <div class="map">
+            <div class="map-preview" data-map-url="https://yandex.ru/map-widget/v1/?text=%D0%A2%D0%BE%D0%BC%D1%81%D0%BA%2C%20%D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82%20%D0%A0%D0%B0%D0%B7%D0%B2%D0%B8%D1%82%D0%B8%D1%8F%2C%203&amp;z=15" data-map-title="Карта: ОЭЗ «Томск», пр. Развития, 3 — площадка главного дня"><span data-icon="pin" data-icon-class="icon-lg"></span><p><strong>ОЭЗ «Томск», пр. Развития, 3</strong></p><button class="btn btn-primary" type="button" data-load-map>Показать интерактивную карту</button><a class="link-arrow" href="https://yandex.ru/maps/?text=Томск%20проспект%20Развития%203" target="_blank" rel="noopener">Открыть маршрут в Яндекс Картах</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer on-dark">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="../img/brand/tpp-tomsk-logo-white.png" alt="Союз «ТПП Томской области»" width="268" height="104" decoding="async">
+          <p>V Сибирский форум «Производительность и устойчивое развитие» · 13–17 апреля 2026 · Томск. Организатор — Союз «Торгово-промышленная палата Томской области».</p>
+          <div class="socials">
+            <a href="https://vk.com/" target="_blank" rel="noopener">VK</a>
+            <a href="https://t.me/" target="_blank" rel="noopener"><span data-icon="send"></span>Telegram</a>
+          </div>
+        </div>
+        <div>
+          <h4>Форум</h4>
+          <ul>
+            <li><a href="program.html">Программа</a></li>
+            <li><a href="#speakers">Спикеры</a></li>
+            <li><a href="#excursions">Экскурсии</a></li>
+            <li><a href="register.html">Регистрация</a></li>
+            <li><a href="my.html">Моя программа</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Сибирский форум</h4>
+          <ul>
+            <li><a href="../index.html">Все форумы — siberianforum.ru</a></li>
+            <li><a href="../index.html#forums">Форумы прошлых лет</a></li>
+            <li><a href="https://tomsktpp.ru/" target="_blank" rel="noopener">ТПП Томской области</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Документы</h4>
+          <ul>
+            <li><a href="../legal/privacy.html">Политика обработки персональных данных</a></li>
+            <li><a href="../legal/consent.html">Согласие на обработку персональных данных</a></li>
+            <li><a href="../legal/newsletter.html">Согласие на рассылку</a></li>
+            <li><a href="../legal/cookies.html">Использование cookie</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© Союз «Торгово-промышленная палата Томской области», 2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="cookie" role="region" aria-label="Уведомление о cookie" data-cookie hidden>
+    <p>Сайт использует cookie. Продолжая пользоваться сайтом, вы соглашаетесь с <a href="../legal/privacy.html">политикой обработки персональных данных</a>.</p>
+    <button class="btn btn-primary btn-sm" type="button" data-cookie-ok>Понятно</button>
+  </div>
+
+  <!-- Только для прототипа: переключение состояний первого экрана -->
+  <div class="proto" role="group" aria-label="Прототип: состояние первого экрана">
+    <span class="proto-label">Первый экран:</span>
+    <button type="button" data-proto-state="A" title="Анонс">A</button>
+    <button type="button" data-proto-state="B" title="Регистрация открыта">B</button>
+    <button type="button" data-proto-state="C" title="Идёт сейчас">C</button>
+    <button type="button" data-proto-state="D" title="Форум завершён">D</button>
+  </div>
+
+  <script>window.SITE_ROOT = '../';</script>
+  <script src="../js/icons.js?v=2c4c0eb595b1"></script>
+  <script src="data/forum.js?v=0721c3df1957"></script>
+  <script src="data/program.js?v=a268ac645d5e"></script>
+  <script src="../js/common.js?v=084ded3fb938"></script>
+  <script src="../js/schedule.js?v=c579d9a81dfa"></script>
+  <script src="../js/api.js?v=df0ab0d6d54d"></script>
+  <script src="../js/hero.js?v=c738d1c0bf80"></script>
+  <script src="../js/forum-home.js?v=a83c78d39a76"></script>
+</body>
+</html>

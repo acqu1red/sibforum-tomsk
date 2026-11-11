@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Программа — V Сибирский форум «Производительность и устойчивое развитие»</title>
+  <meta name="description" content="Программа V Сибирского форума «Производительность и устойчивое развитие», 13–17 апреля 2026, Томск: 8 треков, пленарное заседание, визиты на предприятия.">
+  <meta name="theme-color" content="#071466">
+  <link rel="icon" type="image/png" href="../img/favicon.png">
+  <link rel="stylesheet" href="/fonts/fonts.css?v=2a94b395edf2">
+  <link rel="stylesheet" href="../css/style.css?v=331e8efece9c">
+  <link rel="stylesheet" href="../css/program.css?v=6723e38bd731">
+</head>
+<body>
+  <a class="skip-link" href="#program">Перейти к программе</a>
+
+  <!-- Шапка сайта форума -->
+  <header class="header header-forum always-solid" id="header">
+    <div class="container container-wide header-inner">
+      <a class="brand" href="index.html" aria-label="V Сибирский форум — на главную">
+        <img class="brand-forum-logo" src="../img/brand/forum-esg-logo.png" alt="" width="841" height="741" decoding="async">
+        <span class="brand-text">V Сибирский форум<small>13–17 апреля 2026 · Томск</small></span>
+      </a>
+      <nav class="nav" aria-label="Разделы форума">
+        <ul>
+          <li><a href="program.html" aria-current="page">Программа</a></li>
+          <li><a href="index.html#speakers">Спикеры</a></li>
+          <li><a href="index.html#excursions">Экскурсии</a></li>
+          <li><a href="index.html#partners">Партнёры</a></li>
+          <li><a href="index.html#contacts">Контакты</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-ghost-light hide-sm hide-md" href="../index.html#forums">Форумы прошлых лет</a>
+        <button class="btn btn-ghost-light" type="button" data-mine-open aria-label="Моя программа">
+          <span data-icon="bookmark"></span><span class="hide-sm">Моя программа</span><span class="counter" data-mine-count>0</span>
+        </button>
+        <a class="btn btn-primary hide-sm" href="register.html">Регистрация</a>
+        <button class="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu" data-menu-open>
+          <span data-icon="menu" data-icon-class="icon-lg"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Меню">
+    <div class="mobile-menu-top">
+      <span class="brand-text">V Сибирский форум<small>13–17 апреля 2026 · Томск</small></span>
+      <button class="burger" type="button" aria-label="Закрыть меню" data-menu-close><span data-icon="x" data-icon-class="icon-lg"></span></button>
+    </div>
+    <nav aria-label="Меню для телефона">
+      <a href="program.html">Программа <span data-icon="arrow-right"></span></a>
+      <a href="index.html#speakers">Спикеры <span data-icon="arrow-right"></span></a>
+      <a href="index.html#partners">Партнёры <span data-icon="arrow-right"></span></a>
+      <a href="index.html#contacts">Контакты <span data-icon="arrow-right"></span></a>
+      <a href="../index.html#forums">Форумы прошлых лет <span data-icon="arrow-right"></span></a>
+    </nav>
+    <a class="btn btn-primary btn-block" href="register.html">Зарегистрироваться</a>
+  </div>
+
+  <main id="main">
+    <section class="page-head on-dark" aria-labelledby="page-title">
+      <div class="container container-wide">
+        <nav class="crumbs" aria-label="Хлебные крошки"><a href="../index.html">siberianforum.ru</a><span aria-hidden="true">/</span><a href="index.html#forum">V форум</a><span aria-hidden="true">/</span><span>Программа</span></nav>
+        <h1 id="page-title">Программа форума</h1>
+        <div class="page-meta">
+          <span><span data-icon="calendar"></span>13–17 апреля 2026 · Томск</span>
+          <span><span data-icon="clock"></span>Время томское (МСК+4)</span>
+        </div>
+        <p class="page-note">Программа форума может дополняться и корректироваться. Если вы записались на событие, об изменениях придёт письмо.</p>
+        <div class="page-actions">
+          <button class="btn btn-light" type="button" data-print="all"><span data-icon="download"></span>Скачать программу (PDF)</button>
+          <button class="btn btn-ghost-light" type="button" data-mine-open><span data-icon="bookmark"></span>Моя программа</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="toolbar" data-toolbar>
+      <div class="container container-wide">
+        <div class="day-tabs" role="tablist" aria-label="Дни форума" data-day-tabs></div>
+        <div class="toolbar-row">
+          <button class="btn btn-secondary btn-sm btn-filters" type="button" data-filters-open aria-controls="filters" aria-expanded="false">
+            <span data-icon="sliders"></span>Фильтры <span class="counter" data-filter-count hidden>0</span>
+          </button>
+          <span class="results-count" data-results-count></span>
+
+          <div class="filters" id="filters" data-filters role="region" aria-label="Фильтры программы">
+            <div class="filters-grab" aria-hidden="true"></div>
+            <div class="filters-head">
+              <h2>Фильтры</h2>
+              <button class="icon-btn" type="button" aria-label="Закрыть фильтры" data-filters-close><span data-icon="x"></span></button>
+            </div>
+            <fieldset>
+              <legend>Треки</legend>
+              <div class="track-chips" data-track-chips></div>
+            </fieldset>
+            <div class="filters-selects">
+              <div>
+                <label for="f-venue">Площадка</label>
+                <select class="select" id="f-venue" data-filter-venue><option value="">Все площадки</option></select>
+              </div>
+              <div>
+                <label for="f-format">Формат</label>
+                <select class="select" id="f-format" data-filter-format><option value="">Все форматы</option></select>
+              </div>
+            </div>
+            <div class="filters-foot">
+              <button class="btn btn-secondary btn-sm" type="button" data-filters-reset>Сбросить</button>
+              <button class="btn btn-primary btn-sm apply" type="button" data-filters-close data-apply-label>Показать</button>
+            </div>
+          </div>
+
+          <div class="view-toggle" role="group" aria-label="Вид программы">
+            <button type="button" data-view="grid" aria-pressed="true"><span data-icon="grid"></span>Сетка</button>
+            <button type="button" data-view="list" aria-pressed="false"><span data-icon="list"></span>Список</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sheet-backdrop" data-sheet-backdrop hidden></div>
+
+    <section class="program-body" id="program" aria-live="polite">
+      <div class="container container-wide">
+        <div class="day-intro" data-day-intro></div>
+        <div data-program></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer on-dark">
+    <div class="container container-wide">
+      <div class="footer-bottom" style="margin-top:0;border-top:0;padding-top:0">
+        <span>© Союз «Торгово-промышленная палата Томской области», 2026 · <a href="../legal/privacy.html">Политика обработки персональных данных</a></span>
+        <span>Вопросы по программе: <a href="tel:+79293721986">+7 (929) 372-19-86</a> · <a href="mailto:kfa@tomsktpp.ru">kfa@tomsktpp.ru</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="mine-bar" data-mine-bar>
+    <p><span data-icon="bookmark"></span><span data-mine-bar-text>Моя программа</span></p>
+    <button class="btn btn-light" type="button" data-mine-open>Открыть</button>
+  </div>
+
+  <dialog class="dialog" data-session-dialog aria-labelledby="session-title"></dialog>
+  <dialog class="dialog drawer" data-mine-dialog aria-labelledby="mine-title"></dialog>
+  <div class="print-area" data-print-area></div>
+
+  <script>window.SITE_ROOT = '../';</script>
+  <script src="../js/icons.js?v=2c4c0eb595b1"></script>
+  <script src="data/forum.js?v=0721c3df1957"></script>
+  <script src="data/program.js?v=a268ac645d5e"></script>
+  <script src="../js/common.js?v=084ded3fb938"></script>
+  <script src="../js/schedule.js?v=c579d9a81dfa"></script>
+  <script src="../js/api.js?v=df0ab0d6d54d"></script>
+  <script src="../js/program.js?v=421677e31413"></script>
+</body>
+</html>

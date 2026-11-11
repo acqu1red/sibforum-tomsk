@@ -1,0 +1,2567 @@
+[
+{
+  "model": "forums.forum",
+  "pk": "54192377-196b-439d-917e-7c5acba91f07",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.381Z",
+    "updated_at": "2026-11-11T06:37:18.381Z",
+    "slug": "promtour",
+    "title": "Сибирский форум по промышленному туризму",
+    "short_title": "#ПРОМОТУРТОМСК–2026",
+    "number": "V",
+    "series": "promtour",
+    "description": "Два дня о развитии промышленного туризма: посещение действующих предприятий, обмен региональным опытом, деловые переговоры и семейные мероприятия.",
+    "starts_at": "2026-11-23T02:00:00Z",
+    "ends_at": "2026-11-24T10:00:00Z",
+    "timezone": "Asia/Tomsk",
+    "status": "published",
+    "is_featured": true
+  }
+},
+{
+  "model": "forums.venue",
+  "pk": "0a633872-7ad6-42c7-a5af-195ab4ea8a3e",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.387Z",
+    "updated_at": "2026-11-11T06:37:18.387Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "name": "Точка кипения — Томск",
+    "address": "г. Томск, пр. Ленина, 26",
+    "map_url": "",
+    "position": 0,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.venue",
+  "pk": "0f0fad9f-63ef-4701-be8f-441e74f94410",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.386Z",
+    "updated_at": "2026-11-11T06:37:18.386Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "name": "Союз «ТПП Томской области»",
+    "address": "г. Томск, ул. Красноармейская, 71а",
+    "map_url": "",
+    "position": 0,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.venue",
+  "pk": "45b41b40-2563-49dc-83a7-0c976f56f192",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.385Z",
+    "updated_at": "2026-11-11T06:37:18.385Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "name": "ОЭЗ ТВТ «Томск»",
+    "address": "г. Томск, пр. Развития, 3, 6 этаж",
+    "map_url": "",
+    "position": 0,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.eventday",
+  "pk": "25e8dafa-b2ec-4a77-b0c3-00ef2e2db23f",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.389Z",
+    "updated_at": "2026-11-11T06:37:18.389Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "date": "2026-11-24",
+    "title": "День 2 · Деловая программа",
+    "position": 2
+  }
+},
+{
+  "model": "forums.eventday",
+  "pk": "3bcb36dd-9941-431e-80b9-7672696c40dd",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.388Z",
+    "updated_at": "2026-11-11T06:37:18.388Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "date": "2026-11-23",
+    "title": "День 1 · Предприятия и практика",
+    "position": 1
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "1542f9c6-1dd9-473f-bcda-b5f6844b3bfe",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.401Z",
+    "updated_at": "2026-11-11T06:37:18.401Z",
+    "day": "3bcb36dd-9941-431e-80b9-7672696c40dd",
+    "venue": "0f0fad9f-63ef-4701-be8f-441e74f94410",
+    "kind": "other",
+    "title": "Экскурсии на промышленные предприятия Томска и Томской области",
+    "slug": "routes",
+    "annotation": "Шесть маршрутов с отправлением от Союза «ТПП Томской области» в 09:15. Можно выбрать только один маршрут.",
+    "description": "",
+    "start_time": "09:00:00",
+    "end_time": "17:00:00",
+    "registration_policy": "none",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": false,
+    "price": null,
+    "payment_note": "",
+    "capacity_target": null,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 0,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "179ff78b-dcba-4ff4-b234-aed66c85c8de",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.494Z",
+    "updated_at": "2026-11-11T06:37:18.494Z",
+    "day": "25e8dafa-b2ec-4a77-b0c3-00ef2e2db23f",
+    "venue": "45b41b40-2563-49dc-83a7-0c976f56f192",
+    "kind": "session",
+    "title": "Стратегическая сессия «Открываем города Сибири»",
+    "slug": "strategy",
+    "annotation": "Межрегиональное взаимодействие как инструмент развития промышленного туризма.",
+    "description": "",
+    "start_time": "15:00:00",
+    "end_time": "17:00:00",
+    "registration_policy": "auto",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": false,
+    "price": null,
+    "payment_note": "",
+    "capacity_target": null,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 8,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "1b3e03e0-adac-4ace-b78b-172abfb20be4",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.500Z",
+    "updated_at": "2026-11-11T06:37:18.500Z",
+    "day": "25e8dafa-b2ec-4a77-b0c3-00ef2e2db23f",
+    "venue": "45b41b40-2563-49dc-83a7-0c976f56f192",
+    "kind": "session",
+    "title": "Круглый стол: семейный бизнес",
+    "slug": "roundtable",
+    "annotation": "Обсуждение развития семейных предприятий. Ведущая по программе: Дыбова Е. Н. (ТПП РФ).",
+    "description": "",
+    "start_time": "15:00:00",
+    "end_time": "17:00:00",
+    "registration_policy": "auto",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": false,
+    "price": null,
+    "payment_note": "",
+    "capacity_target": null,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 10,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "2ab41bc5-0b6c-4d8d-8295-9e0cb457971b",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.476Z",
+    "updated_at": "2026-11-11T06:37:18.476Z",
+    "day": "25e8dafa-b2ec-4a77-b0c3-00ef2e2db23f",
+    "venue": "45b41b40-2563-49dc-83a7-0c976f56f192",
+    "kind": "other",
+    "title": "Шоу-дефиле спецодежды и выступление танцевальной группы",
+    "slug": "fashion",
+    "annotation": "Презентация спецодежды с участием «Техноавиа».",
+    "description": "",
+    "start_time": "11:30:00",
+    "end_time": "12:00:00",
+    "registration_policy": "none",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": false,
+    "price": null,
+    "payment_note": "",
+    "capacity_target": null,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 3,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "2e086840-9516-4086-910f-438357ebe653",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.466Z",
+    "updated_at": "2026-11-11T06:37:18.466Z",
+    "day": "25e8dafa-b2ec-4a77-b0c3-00ef2e2db23f",
+    "venue": "45b41b40-2563-49dc-83a7-0c976f56f192",
+    "kind": "other",
+    "title": "Видеоролик о туристическом потенциале Томской области",
+    "slug": "video",
+    "annotation": "Открытие деловой программы.",
+    "description": "",
+    "start_time": "10:00:00",
+    "end_time": "10:03:00",
+    "registration_policy": "none",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": false,
+    "price": null,
+    "payment_note": "",
+    "capacity_target": null,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 0,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "3c934f0d-bec6-4565-a3be-78827cb4cf47",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.462Z",
+    "updated_at": "2026-11-11T06:37:18.462Z",
+    "day": "3bcb36dd-9941-431e-80b9-7672696c40dd",
+    "venue": "0a633872-7ad6-42c7-a5af-195ab4ea8a3e",
+    "kind": "masterclass",
+    "title": "Мастер-класс «Город четырёх комфортов»",
+    "slug": "masterclass",
+    "annotation": "Практическое занятие для студентов и детей. Регистрация проводится отдельно на Leader ID; адрес страницы мастер-класса уточняется организатором.",
+    "description": "",
+    "start_time": "16:00:00",
+    "end_time": "18:00:00",
+    "registration_policy": "external",
+    "detail_mode": "auto",
+    "external_url": "https://leader-id.ru/",
+    "is_paid": false,
+    "price": null,
+    "payment_note": "",
+    "capacity_target": null,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 10,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "4cd8b69f-eaa2-4c79-ae73-85f55d6f6ec7",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.442Z",
+    "updated_at": "2026-11-11T06:37:18.442Z",
+    "day": "3bcb36dd-9941-431e-80b9-7672696c40dd",
+    "venue": "0f0fad9f-63ef-4701-be8f-441e74f94410",
+    "kind": "route",
+    "title": "Маршрут 6",
+    "slug": "route-6",
+    "annotation": "Предприятия: Завод закалённого стекла (ИП Смуткин А. Г.), «ПК ШИК», «Континент Сервис» / «Томский кондитер». Платная экскурсия, заявка отправляется куратору на модерацию.",
+    "description": "",
+    "start_time": "09:15:00",
+    "end_time": "17:00:00",
+    "registration_policy": "moderated",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": true,
+    "price": "2500.00",
+    "payment_note": "Оплата после звонка куратора. Заявка не является оплатой.",
+    "capacity_target": 15,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 6,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "50edd26c-e197-447e-a586-e4ccc25d1f59",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.490Z",
+    "updated_at": "2026-11-11T06:37:18.490Z",
+    "day": "25e8dafa-b2ec-4a77-b0c3-00ef2e2db23f",
+    "venue": "45b41b40-2563-49dc-83a7-0c976f56f192",
+    "kind": "other",
+    "title": "Обед",
+    "slug": "lunch",
+    "annotation": "Перерыв.",
+    "description": "",
+    "start_time": "14:00:00",
+    "end_time": "15:00:00",
+    "registration_policy": "none",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": false,
+    "price": null,
+    "payment_note": "",
+    "capacity_target": null,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 7,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "610d999b-85be-49e8-8195-df4ba676d894",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.416Z",
+    "updated_at": "2026-11-11T06:37:18.416Z",
+    "day": "3bcb36dd-9941-431e-80b9-7672696c40dd",
+    "venue": "0f0fad9f-63ef-4701-be8f-441e74f94410",
+    "kind": "route",
+    "title": "Маршрут 2",
+    "slug": "route-2",
+    "annotation": "Предприятия: «Самусьский судостроительно-судоремонтный завод», «Интергласс», «Кахети». Платная экскурсия, заявка отправляется куратору на модерацию.",
+    "description": "",
+    "start_time": "09:15:00",
+    "end_time": "17:00:00",
+    "registration_policy": "moderated",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": true,
+    "price": "2500.00",
+    "payment_note": "Оплата после звонка куратора. Заявка не является оплатой.",
+    "capacity_target": 15,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 2,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "7fbd95c3-f5aa-466f-b934-00fc900d2c9a",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.484Z",
+    "updated_at": "2026-11-11T06:37:18.484Z",
+    "day": "25e8dafa-b2ec-4a77-b0c3-00ef2e2db23f",
+    "venue": "45b41b40-2563-49dc-83a7-0c976f56f192",
+    "kind": "seminar",
+    "title": "Семинар «Инструменты повышения туристической привлекательности региона»",
+    "slug": "seminar",
+    "annotation": "Разбор маршрутов на промышленные предприятия, охраны труда и промышленной безопасности. Инструменты для анализа потенциала региона, формирования предложения и продвижения в цифровых каналах.",
+    "description": "",
+    "start_time": "12:30:00",
+    "end_time": "14:00:00",
+    "registration_policy": "auto",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": false,
+    "price": null,
+    "payment_note": "",
+    "capacity_target": null,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 5,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "8e599a86-4788-42e3-b5b7-40475112a4dd",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.422Z",
+    "updated_at": "2026-11-11T06:37:18.422Z",
+    "day": "3bcb36dd-9941-431e-80b9-7672696c40dd",
+    "venue": "0f0fad9f-63ef-4701-be8f-441e74f94410",
+    "kind": "route",
+    "title": "Маршрут 3",
+    "slug": "route-3",
+    "annotation": "Предприятия: «ЛОРГЕ Медикал», «ПРОКВАНТ», «ИнженерПластСервис». Платная экскурсия, заявка отправляется куратору на модерацию.",
+    "description": "",
+    "start_time": "09:15:00",
+    "end_time": "17:00:00",
+    "registration_policy": "moderated",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": true,
+    "price": "2500.00",
+    "payment_note": "Оплата после звонка куратора. Заявка не является оплатой.",
+    "capacity_target": 15,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 3,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "943eca31-6597-44ef-8a8a-8292814858fe",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.429Z",
+    "updated_at": "2026-11-11T06:37:18.429Z",
+    "day": "3bcb36dd-9941-431e-80b9-7672696c40dd",
+    "venue": "0f0fad9f-63ef-4701-be8f-441e74f94410",
+    "kind": "route",
+    "title": "Маршрут 4",
+    "slug": "route-4",
+    "annotation": "Предприятия: «Томлесдрев», «Томсккабель», «Территория тайги». Платная экскурсия, заявка отправляется куратору на модерацию.",
+    "description": "",
+    "start_time": "09:15:00",
+    "end_time": "17:00:00",
+    "registration_policy": "moderated",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": true,
+    "price": "2500.00",
+    "payment_note": "Оплата после звонка куратора. Заявка не является оплатой.",
+    "capacity_target": 15,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 4,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "9e6d6e00-60d5-4d6c-b461-e1b7c10a8fa4",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.473Z",
+    "updated_at": "2026-11-11T06:37:18.473Z",
+    "day": "25e8dafa-b2ec-4a77-b0c3-00ef2e2db23f",
+    "venue": "45b41b40-2563-49dc-83a7-0c976f56f192",
+    "kind": "other",
+    "title": "Награждение участников конкурса «Индустриальный код»",
+    "slug": "awards",
+    "annotation": "Награждение лучших проектов Томской области в сфере промышленного туризма.",
+    "description": "",
+    "start_time": "11:00:00",
+    "end_time": "11:30:00",
+    "registration_policy": "none",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": false,
+    "price": null,
+    "payment_note": "",
+    "capacity_target": null,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 2,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "a734ba47-efad-4f38-beb4-48e7cb96f2da",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.480Z",
+    "updated_at": "2026-11-11T06:37:18.480Z",
+    "day": "25e8dafa-b2ec-4a77-b0c3-00ef2e2db23f",
+    "venue": "45b41b40-2563-49dc-83a7-0c976f56f192",
+    "kind": "other",
+    "title": "Кофе-брейк",
+    "slug": "coffee",
+    "annotation": "Перерыв и неформальное общение.",
+    "description": "",
+    "start_time": "12:00:00",
+    "end_time": "12:30:00",
+    "registration_policy": "none",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": false,
+    "price": null,
+    "payment_note": "",
+    "capacity_target": null,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 4,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "a8a7c96d-c323-44cc-9145-286f34d89266",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.407Z",
+    "updated_at": "2026-11-11T06:37:18.407Z",
+    "day": "3bcb36dd-9941-431e-80b9-7672696c40dd",
+    "venue": "0f0fad9f-63ef-4701-be8f-441e74f94410",
+    "kind": "route",
+    "title": "Маршрут 1",
+    "slug": "route-1",
+    "annotation": "Предприятия: «Неотехника», «Копыловский кирпичный завод», «Межениновская птицефабрика», «Томские Мебельные Фасады». Платная экскурсия, заявка отправляется куратору на модерацию.",
+    "description": "",
+    "start_time": "09:15:00",
+    "end_time": "17:00:00",
+    "registration_policy": "moderated",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": true,
+    "price": "2500.00",
+    "payment_note": "Оплата после звонка куратора. Заявка не является оплатой.",
+    "capacity_target": 15,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 1,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "a9fe7e5b-db88-4c5f-92ac-f738142afd92",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.436Z",
+    "updated_at": "2026-11-11T06:37:18.436Z",
+    "day": "3bcb36dd-9941-431e-80b9-7672696c40dd",
+    "venue": "0f0fad9f-63ef-4701-be8f-441e74f94410",
+    "kind": "route",
+    "title": "Маршрут 5",
+    "slug": "route-5",
+    "annotation": "Предприятия: «Микран», «ТЭМЗ», «Томское пиво». Платная экскурсия, заявка отправляется куратору на модерацию.",
+    "description": "",
+    "start_time": "09:15:00",
+    "end_time": "17:00:00",
+    "registration_policy": "moderated",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": true,
+    "price": "2500.00",
+    "payment_note": "Оплата после звонка куратора. Заявка не является оплатой.",
+    "capacity_target": 15,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 5,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "b07e3d7c-e096-442c-b973-ed21531be63f",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.487Z",
+    "updated_at": "2026-11-11T06:37:18.487Z",
+    "day": "25e8dafa-b2ec-4a77-b0c3-00ef2e2db23f",
+    "venue": "45b41b40-2563-49dc-83a7-0c976f56f192",
+    "kind": "exchange",
+    "title": "Биржа субконтрактов",
+    "slug": "exchange",
+    "annotation": "Переговоры потенциальных исполнителей с заказчиками по техническим запросам. Участие и выбранные лоты проходят модерацию.",
+    "description": "Исполнитель выбирает лоты для переговоров. Заявка проходит модерацию.",
+    "start_time": "12:30:00",
+    "end_time": "14:00:00",
+    "registration_policy": "moderated",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": false,
+    "price": null,
+    "payment_note": "",
+    "capacity_target": null,
+    "curator_email": "",
+    "min_lot_selections": 1,
+    "max_lot_selections": null,
+    "position": 6,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "cb53aebb-d03b-4152-a32e-d15b206ea9d3",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.470Z",
+    "updated_at": "2026-11-11T06:37:18.470Z",
+    "day": "25e8dafa-b2ec-4a77-b0c3-00ef2e2db23f",
+    "venue": "45b41b40-2563-49dc-83a7-0c976f56f192",
+    "kind": "plenary",
+    "title": "Открытие форума «Промышленный туризм как драйвер развития бизнеса и региона»",
+    "slug": "opening",
+    "annotation": "Приветствие участников и представителей делового сообщества.",
+    "description": "",
+    "start_time": "10:05:00",
+    "end_time": "11:00:00",
+    "registration_policy": "auto",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": false,
+    "price": null,
+    "payment_note": "",
+    "capacity_target": null,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 1,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.event",
+  "pk": "dbd99d76-a3ec-4791-a2fd-e1667cec5d2e",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.497Z",
+    "updated_at": "2026-11-11T06:37:18.497Z",
+    "day": "25e8dafa-b2ec-4a77-b0c3-00ef2e2db23f",
+    "venue": "45b41b40-2563-49dc-83a7-0c976f56f192",
+    "kind": "session",
+    "title": "Семейный квиз",
+    "slug": "quiz",
+    "annotation": "Мероприятие для родительских комитетов образовательных школ Томска.",
+    "description": "",
+    "start_time": "15:00:00",
+    "end_time": "17:00:00",
+    "registration_policy": "auto",
+    "detail_mode": "auto",
+    "external_url": "",
+    "is_paid": false,
+    "price": null,
+    "payment_note": "",
+    "capacity_target": null,
+    "curator_email": "",
+    "min_lot_selections": 0,
+    "max_lot_selections": null,
+    "position": 9,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.choicegroup",
+  "pk": "02788a1f-4890-4539-a22d-baacb01cfa68",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.501Z",
+    "updated_at": "2026-11-11T06:37:18.501Z",
+    "day": "25e8dafa-b2ec-4a77-b0c3-00ef2e2db23f",
+    "title": "До обеда — одно событие",
+    "min_selections": 0,
+    "max_selections": 1,
+    "position": 1
+  }
+},
+{
+  "model": "forums.choicegroup",
+  "pk": "b70a85e0-1052-4590-9b91-e7dc9aa2dd63",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.505Z",
+    "updated_at": "2026-11-11T06:37:18.505Z",
+    "day": "25e8dafa-b2ec-4a77-b0c3-00ef2e2db23f",
+    "title": "После обеда — одно событие",
+    "min_selections": 0,
+    "max_selections": 1,
+    "position": 2
+  }
+},
+{
+  "model": "forums.choicegroupevent",
+  "pk": "00bdcf6b-a75c-4698-bc70-17eaa2d31f57",
+  "fields": {
+    "group": "b70a85e0-1052-4590-9b91-e7dc9aa2dd63",
+    "event": "1b3e03e0-adac-4ace-b78b-172abfb20be4",
+    "position": 3
+  }
+},
+{
+  "model": "forums.choicegroupevent",
+  "pk": "4c79145b-1c76-4641-a529-0ebec476e055",
+  "fields": {
+    "group": "b70a85e0-1052-4590-9b91-e7dc9aa2dd63",
+    "event": "179ff78b-dcba-4ff4-b234-aed66c85c8de",
+    "position": 1
+  }
+},
+{
+  "model": "forums.choicegroupevent",
+  "pk": "8862d59f-2d36-4584-ae37-b0bc1a584adc",
+  "fields": {
+    "group": "02788a1f-4890-4539-a22d-baacb01cfa68",
+    "event": "b07e3d7c-e096-442c-b973-ed21531be63f",
+    "position": 2
+  }
+},
+{
+  "model": "forums.choicegroupevent",
+  "pk": "9d763ce7-dff4-40f0-8010-9002aafae917",
+  "fields": {
+    "group": "b70a85e0-1052-4590-9b91-e7dc9aa2dd63",
+    "event": "dbd99d76-a3ec-4791-a2fd-e1667cec5d2e",
+    "position": 2
+  }
+},
+{
+  "model": "forums.choicegroupevent",
+  "pk": "dcfc9bc5-00c3-4b3a-a111-55c95d47e504",
+  "fields": {
+    "group": "02788a1f-4890-4539-a22d-baacb01cfa68",
+    "event": "7fbd95c3-f5aa-466f-b934-00fc900d2c9a",
+    "position": 1
+  }
+},
+{
+  "model": "forums.speaker",
+  "pk": "016723fc-8cce-4787-b1d8-29f2240315d7",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.517Z",
+    "updated_at": "2026-11-11T06:37:18.517Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "full_name": "Епихина Наталья Сергеевна",
+    "credentials": "Руководитель Учебно-методического центра Союза промышленников Алтайского края; исполнительный директор Клуба молодых промышленников Алтайского края; руководитель региональной команды «Открытая промышленность» в Алтайском крае.",
+    "topic": "«Открытая промышленность» в Алтайском крае.",
+    "photo": "",
+    "static_photo": "/img/promtour/speakers/epikhina.webp",
+    "position": 2,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.speaker",
+  "pk": "10fe67db-d55e-4165-9352-7801f92f0c13",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.520Z",
+    "updated_at": "2026-11-11T06:37:18.520Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "full_name": "Ковалева Светлана Александровна",
+    "credentials": "Президент Союза «Торгово-промышленная палата Орловской области».",
+    "topic": "Презентация проекта «Крылатые компетенции».",
+    "photo": "",
+    "static_photo": "/img/promtour/speakers/kovaleva.webp",
+    "position": 3,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.speaker",
+  "pk": "19f9817d-12cb-4a01-9774-027b7690ede6",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.546Z",
+    "updated_at": "2026-11-11T06:37:18.546Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "full_name": "Особа Александр Юрьевич",
+    "credentials": "Ассистент отделения социально-гуманитарных наук Школы общественных наук Томского политехнического университета.",
+    "topic": "",
+    "photo": "",
+    "static_photo": "/img/promtour/speakers/osoba.webp",
+    "position": 11,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.speaker",
+  "pk": "23099ddf-ceda-442f-9e81-6ccbdac3076d",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.549Z",
+    "updated_at": "2026-11-11T06:37:18.549Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "full_name": "Медведьев Иван Иванович",
+    "credentials": "Директор детского технопарка «Кванториум» в Томске, директор фестиваля «Технопредки: код технологий».",
+    "topic": "",
+    "photo": "",
+    "static_photo": "/img/promtour/speakers/medvedev.webp",
+    "position": 12,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.speaker",
+  "pk": "3bdcff8d-1b12-4d0d-9258-f8e88c57f396",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.529Z",
+    "updated_at": "2026-11-11T06:37:18.529Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "full_name": "Калюжная Юлия Юрьевна",
+    "credentials": "Исполнительный директор Томского областного отделения Русского географического общества.",
+    "topic": "Межрегиональный маршрут «Открываем Сибирь».",
+    "photo": "",
+    "static_photo": "/img/promtour/speakers/kalyuzhnaya.webp",
+    "position": 7,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.speaker",
+  "pk": "3e290d0b-1e71-4264-94bf-e5c954b9227b",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.536Z",
+    "updated_at": "2026-11-11T06:37:18.536Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "full_name": "Кисельникова Наталья Владимировна",
+    "credentials": "Лауреат премии Правительства РФ за проект «Развитие промышленного туризма в регионах Российской Федерации»; методолог, эксперт в сфере политики открытости предприятий; автор образовательных программ и «Методологии развития промышленного туризма в Российской Федерации».",
+    "topic": "Инструменты повышения туристической привлекательности региона.",
+    "photo": "",
+    "static_photo": "/img/promtour/speakers/kiselnikova.webp",
+    "position": 9,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.speaker",
+  "pk": "73e03c9f-2c99-407d-838a-36708fe1151d",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.552Z",
+    "updated_at": "2026-11-11T06:37:18.552Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "full_name": "Черенков Константин Анатольевич",
+    "credentials": "Управляющий креативным кластером «Пенаты», директор краеведческого проекта «Сибириада».",
+    "topic": "",
+    "photo": "",
+    "static_photo": "/img/promtour/speakers/cherenkov.webp",
+    "position": 13,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.speaker",
+  "pk": "a9c01f2f-4c38-4448-b037-16697b05294a",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.528Z",
+    "updated_at": "2026-11-11T06:37:18.528Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "full_name": "Горбулицкая Анастасия Сергеевна",
+    "credentials": "Директор ООО «НЗСП», Новосибирск.",
+    "topic": "Промышленный туризм как драйвер развития бизнеса и корпоративной среды.",
+    "photo": "",
+    "static_photo": "/img/promtour/speakers/gorbulitskaya.webp",
+    "position": 6,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.speaker",
+  "pk": "cdb8af48-db97-4451-9d71-96e60ae16859",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.540Z",
+    "updated_at": "2026-11-11T06:37:18.540Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "full_name": "Акимова Александра Константиновна",
+    "credentials": "Куратор проекта «Открытая промышленность» в Алтайском крае.",
+    "topic": "Роль работодателей в ранней профориентации. Модель ранней профориентации «Инженеры с детского сада».",
+    "photo": "",
+    "static_photo": "/img/promtour/speakers/akimova.webp",
+    "position": 10,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.speaker",
+  "pk": "dfb5d325-7057-40ec-bcc9-f45669323424",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.526Z",
+    "updated_at": "2026-11-11T06:37:18.526Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "full_name": "Гефсиманская Лидия Михайловна",
+    "credentials": "Заместитель директора, начальник управления организационной работы ГАУ «Агентство по туризму Кузбасса».",
+    "topic": "Об опыте развития промышленного туризма в Кемеровской области — Кузбассе.",
+    "photo": "",
+    "static_photo": "/img/promtour/speakers/gefsimanskaya.webp",
+    "position": 5,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.speaker",
+  "pk": "e645cb76-e208-4afc-8c4e-62371d816d28",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.532Z",
+    "updated_at": "2026-11-11T06:37:18.532Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "full_name": "Жаркова Марина Алексеевна",
+    "credentials": "Заведующая кафедрой, руководитель отделения социально-гуманитарных наук Школы общественных наук Томского политехнического университета.",
+    "topic": "",
+    "photo": "",
+    "static_photo": "/img/promtour/speakers/zharkova.webp",
+    "position": 8,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.speaker",
+  "pk": "fa453a50-180d-4735-b342-f641f14b0fbb",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.522Z",
+    "updated_at": "2026-11-11T06:37:18.522Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "full_name": "Лукьянова Наталья Александровна",
+    "credentials": "Д. ф. н., профессор, директор Школы общественных наук (ШОН) ТПУ.",
+    "topic": "Подготовка кадров для промышленного туризма: образовательная модель ТПУ как инструмент реализации российского подхода с учётом международного опыта.",
+    "photo": "",
+    "static_photo": "/img/promtour/speakers/lukyanova.webp",
+    "position": 4,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.speaker",
+  "pk": "fc30e325-1b2f-4677-971e-e3590e4b1794",
+  "fields": {
+    "created_at": "2026-11-11T06:37:18.511Z",
+    "updated_at": "2026-11-11T06:37:18.511Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "full_name": "Беленок Ирина Александровна",
+    "credentials": "Генеральный директор АНОО ДПО «Сибирская Академия Туризма»; руководитель проектного офиса по промышленному туризму Новосибирской области; генеральный директор туроператора «СибАкадемТур» (ООО «Мандарин»); председатель комитета по предпринимательству в сфере туризма Союза «Торгово-промышленная палата Новосибирской области».",
+    "topic": "Инновации, традиции, развитие кооперации в промышленном туризме Новосибирской области: опыт, масштабирование, перспективы.",
+    "photo": "",
+    "static_photo": "/img/promtour/speakers/belenok.webp",
+    "position": 1,
+    "is_published": true
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "019df485-912a-4ae8-ad1e-7f946470c594",
+  "fields": {
+    "event": "7fbd95c3-f5aa-466f-b934-00fc900d2c9a",
+    "speaker": "fa453a50-180d-4735-b342-f641f14b0fbb",
+    "role": "Спикер",
+    "topic": "Подготовка кадров для промышленного туризма: образовательная модель ТПУ как инструмент реализации российского подхода с учётом международного опыта.",
+    "position": 1
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "09c1a0f1-7822-4529-a787-8168e441c0e4",
+  "fields": {
+    "event": "7fbd95c3-f5aa-466f-b934-00fc900d2c9a",
+    "speaker": "3bdcff8d-1b12-4d0d-9258-f8e88c57f396",
+    "role": "Спикер",
+    "topic": "Межрегиональный маршрут «Открываем Сибирь».",
+    "position": 1
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "0da8b1a3-2380-4247-b3b1-83bea3e3238d",
+  "fields": {
+    "event": "7fbd95c3-f5aa-466f-b934-00fc900d2c9a",
+    "speaker": "10fe67db-d55e-4165-9352-7801f92f0c13",
+    "role": "Спикер",
+    "topic": "Презентация проекта «Крылатые компетенции».",
+    "position": 1
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "330d2808-3bd6-4abe-a729-01776e9e00f7",
+  "fields": {
+    "event": "7fbd95c3-f5aa-466f-b934-00fc900d2c9a",
+    "speaker": "3e290d0b-1e71-4264-94bf-e5c954b9227b",
+    "role": "Модератор и спикер",
+    "topic": "Инструменты повышения туристической привлекательности региона.",
+    "position": 1
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "4f1e1622-c8ee-4674-b9ff-8974dddf6fe6",
+  "fields": {
+    "event": "7fbd95c3-f5aa-466f-b934-00fc900d2c9a",
+    "speaker": "016723fc-8cce-4787-b1d8-29f2240315d7",
+    "role": "Спикер",
+    "topic": "«Открытая промышленность» в Алтайском крае.",
+    "position": 1
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "5487df4a-6d5d-4322-9d46-567223f3fc6f",
+  "fields": {
+    "event": "7fbd95c3-f5aa-466f-b934-00fc900d2c9a",
+    "speaker": "fc30e325-1b2f-4677-971e-e3590e4b1794",
+    "role": "Спикер",
+    "topic": "Инновации, традиции, развитие кооперации в промышленном туризме Новосибирской области: опыт, масштабирование, перспективы.",
+    "position": 1
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "5aa9ae4f-d9f3-49d0-81a1-14f7cacaa80a",
+  "fields": {
+    "event": "179ff78b-dcba-4ff4-b234-aed66c85c8de",
+    "speaker": "3bdcff8d-1b12-4d0d-9258-f8e88c57f396",
+    "role": "Модератор",
+    "topic": "Межрегиональный маршрут «Открываем Сибирь».",
+    "position": 2
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "6be342fe-7485-48ac-8593-cf252e498e9a",
+  "fields": {
+    "event": "179ff78b-dcba-4ff4-b234-aed66c85c8de",
+    "speaker": "3e290d0b-1e71-4264-94bf-e5c954b9227b",
+    "role": "Модератор",
+    "topic": "Инструменты повышения туристической привлекательности региона.",
+    "position": 2
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "802992a1-3433-4a7a-9c0c-fb25188a3a42",
+  "fields": {
+    "event": "dbd99d76-a3ec-4791-a2fd-e1667cec5d2e",
+    "speaker": "e645cb76-e208-4afc-8c4e-62371d816d28",
+    "role": "Модератор",
+    "topic": "",
+    "position": 2
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "876ee85e-c65c-434f-b6fe-023c7b6a2a24",
+  "fields": {
+    "event": "9e6d6e00-60d5-4d6c-b461-e1b7c10a8fa4",
+    "speaker": "73e03c9f-2c99-407d-838a-36708fe1151d",
+    "role": "Модератор",
+    "topic": "",
+    "position": 2
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "8d847869-fe0d-4b25-a885-ed608110e3a1",
+  "fields": {
+    "event": "3c934f0d-bec6-4565-a3be-78827cb4cf47",
+    "speaker": "23099ddf-ceda-442f-9e81-6ccbdac3076d",
+    "role": "Модератор",
+    "topic": "",
+    "position": 1
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "9eb467c1-2751-4523-85cb-0f06b94c804f",
+  "fields": {
+    "event": "cb53aebb-d03b-4152-a32e-d15b206ea9d3",
+    "speaker": "73e03c9f-2c99-407d-838a-36708fe1151d",
+    "role": "Модератор",
+    "topic": "",
+    "position": 1
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "a8c93a47-5623-43cf-a236-f0b80ffd8c66",
+  "fields": {
+    "event": "dbd99d76-a3ec-4791-a2fd-e1667cec5d2e",
+    "speaker": "23099ddf-ceda-442f-9e81-6ccbdac3076d",
+    "role": "Модератор",
+    "topic": "",
+    "position": 2
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "ac3bc4ab-ab5a-4e45-b556-bc71c4a8f605",
+  "fields": {
+    "event": "3c934f0d-bec6-4565-a3be-78827cb4cf47",
+    "speaker": "19f9817d-12cb-4a01-9774-027b7690ede6",
+    "role": "Эксперт",
+    "topic": "",
+    "position": 1
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "bf048c07-59c1-400f-935f-58555084d74b",
+  "fields": {
+    "event": "179ff78b-dcba-4ff4-b234-aed66c85c8de",
+    "speaker": "fa453a50-180d-4735-b342-f641f14b0fbb",
+    "role": "Модератор",
+    "topic": "Подготовка кадров для промышленного туризма: образовательная модель ТПУ как инструмент реализации российского подхода с учётом международного опыта.",
+    "position": 2
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "c0504ad8-7799-4a50-9810-b13c6c32d9de",
+  "fields": {
+    "event": "7fbd95c3-f5aa-466f-b934-00fc900d2c9a",
+    "speaker": "dfb5d325-7057-40ec-bcc9-f45669323424",
+    "role": "Спикер",
+    "topic": "Об опыте развития промышленного туризма в Кемеровской области — Кузбассе.",
+    "position": 1
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "cf5327da-f02d-407f-8bce-a1c296009619",
+  "fields": {
+    "event": "3c934f0d-bec6-4565-a3be-78827cb4cf47",
+    "speaker": "e645cb76-e208-4afc-8c4e-62371d816d28",
+    "role": "Модератор",
+    "topic": "",
+    "position": 1
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "dc743927-3dfa-4db5-aae9-ec34e2cb9cc6",
+  "fields": {
+    "event": "dbd99d76-a3ec-4791-a2fd-e1667cec5d2e",
+    "speaker": "cdb8af48-db97-4451-9d71-96e60ae16859",
+    "role": "Модератор",
+    "topic": "Роль работодателей в ранней профориентации. Модель ранней профориентации «Инженеры с детского сада».",
+    "position": 1
+  }
+},
+{
+  "model": "forums.eventspeaker",
+  "pk": "f19f679a-822b-4a38-8762-1f5479dc72f3",
+  "fields": {
+    "event": "7fbd95c3-f5aa-466f-b934-00fc900d2c9a",
+    "speaker": "a9c01f2f-4c38-4448-b037-16697b05294a",
+    "role": "Спикер",
+    "topic": "Промышленный туризм как драйвер развития бизнеса и корпоративной среды.",
+    "position": 1
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "03c3aa4b-2b6c-4bd2-9cd5-ac473f930a80",
+  "fields": {
+    "event": "610d999b-85be-49e8-8195-df4ba676d894",
+    "name": "«Интергласс»",
+    "description": "Производство стеклотары.",
+    "position": 2
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "0d9d3ac7-e1d6-46c6-9e63-d73f97e8a804",
+  "fields": {
+    "event": "8e599a86-4788-42e3-b5b7-40475112a4dd",
+    "name": "«ИнженерПластСервис»",
+    "description": "Производство композиционных материалов.",
+    "position": 3
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "0dbce0f8-36d8-4504-bb90-8120e7e03f9e",
+  "fields": {
+    "event": "a8a7c96d-c323-44cc-9145-286f34d89266",
+    "name": "«Копыловский кирпичный завод»",
+    "description": "Производство строительных и облицовочных материалов из керамики.",
+    "position": 2
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "0ee443c2-28ef-40c8-82df-26264723ceb7",
+  "fields": {
+    "event": "8e599a86-4788-42e3-b5b7-40475112a4dd",
+    "name": "«ЛОРГЕ Медикал»",
+    "description": "Производство медицинского оборудования и электрохирургических инструментов.",
+    "position": 1
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "12177162-c2b5-4f9f-b758-6d6d18e850ac",
+  "fields": {
+    "event": "610d999b-85be-49e8-8195-df4ba676d894",
+    "name": "«Самусьский судостроительно-судоремонтный завод»",
+    "description": "Судостроение.",
+    "position": 1
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "1bd30b9e-d96a-4880-ad43-8417b1f6e66f",
+  "fields": {
+    "event": "a8a7c96d-c323-44cc-9145-286f34d89266",
+    "name": "«Томские Мебельные Фасады»",
+    "description": "Производство мебельных фасадов.",
+    "position": 4
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "1d49ab12-9447-4426-a579-4ee1252433bc",
+  "fields": {
+    "event": "943eca31-6597-44ef-8a8a-8292814858fe",
+    "name": "«Территория тайги»",
+    "description": "Глубокая переработка дикоросов.",
+    "position": 3
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "212cf8af-ee76-4ede-93d8-99c01122a77e",
+  "fields": {
+    "event": "a8a7c96d-c323-44cc-9145-286f34d89266",
+    "name": "«Межениновская птицефабрика»",
+    "description": "Производство и переработка мяса цыплят-бройлеров и мясных полуфабрикатов.",
+    "position": 3
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "3918ce3d-292c-4980-a522-dd8484ea05d3",
+  "fields": {
+    "event": "a8a7c96d-c323-44cc-9145-286f34d89266",
+    "name": "«Неотехника»",
+    "description": "Производство комплексных промышленных решений: блок-контейнерных систем, дизельных и газопоршневых электростанций, приборного оборудования.",
+    "position": 1
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "3a474074-dda5-4ac0-90f3-7421143f4c32",
+  "fields": {
+    "event": "4cd8b69f-eaa2-4c79-ae73-85f55d6f6ec7",
+    "name": "«Континент Сервис» / «Томский кондитер»",
+    "description": "Производство кондитерских изделий.",
+    "position": 3
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "3b97f556-6ba7-4cd2-91b2-3dde9722c3e1",
+  "fields": {
+    "event": "a9fe7e5b-db88-4c5f-92ac-f738142afd92",
+    "name": "«Микран»",
+    "description": "Проектирование и производство СВЧ-радиоэлектроники, микроэлектроники и телекоммуникационного оборудования.",
+    "position": 1
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "6befb8a0-8d6f-4fe1-8bb7-efa165aa3d5e",
+  "fields": {
+    "event": "943eca31-6597-44ef-8a8a-8292814858fe",
+    "name": "«Томлесдрев»",
+    "description": "Производство ДСП и ЛДСП.",
+    "position": 1
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "9318e289-b7b3-40ee-9e0f-c6486f92f202",
+  "fields": {
+    "event": "a9fe7e5b-db88-4c5f-92ac-f738142afd92",
+    "name": "«ТЭМЗ»",
+    "description": "Производство горно-шахтного и общепромышленного оборудования, электроприводов, запорно-регулирующей трубопроводной арматуры.",
+    "position": 2
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "a7608290-1857-4c7c-9770-5ce8d7a0012b",
+  "fields": {
+    "event": "4cd8b69f-eaa2-4c79-ae73-85f55d6f6ec7",
+    "name": "Завод закалённого стекла (ИП Смуткин А. Г.)",
+    "description": "Производство закалённого стекла для фасадов, стеклопакетов, мебели и интерьерных решений, производство зеркал.",
+    "position": 1
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "b3756f9f-cb80-4d8a-8155-70758aa4777e",
+  "fields": {
+    "event": "a9fe7e5b-db88-4c5f-92ac-f738142afd92",
+    "name": "«Томское пиво»",
+    "description": "Производство пива и безалкогольных напитков.",
+    "position": 3
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "b933787a-1618-44fb-93af-4193893cd907",
+  "fields": {
+    "event": "4cd8b69f-eaa2-4c79-ae73-85f55d6f6ec7",
+    "name": "«ПК ШИК»",
+    "description": "Производство изделий из кожи.",
+    "position": 2
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "bcddea25-63a3-4ae7-b47c-3d43cafde661",
+  "fields": {
+    "event": "8e599a86-4788-42e3-b5b7-40475112a4dd",
+    "name": "«ПРОКВАНТ»",
+    "description": "Проектирование и производство аппаратных платформ, электроники и решений в сфере квантовых коммуникаций и телекоммуникаций.",
+    "position": 2
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "d0c63530-1326-4ba5-ad9a-c128e9f03b9c",
+  "fields": {
+    "event": "610d999b-85be-49e8-8195-df4ba676d894",
+    "name": "«Кахети»",
+    "description": "Производство натуральных виноградных вин и плодовой алкогольной продукции.",
+    "position": 3
+  }
+},
+{
+  "model": "forums.routeenterprise",
+  "pk": "dc57e468-c6c6-476e-9f79-81ccbff63105",
+  "fields": {
+    "event": "943eca31-6597-44ef-8a8a-8292814858fe",
+    "name": "«Томсккабель»",
+    "description": "Производство кабельной продукции.",
+    "position": 2
+  }
+},
+{
+  "model": "voting.contest",
+  "pk": "c052d125-b53a-4c2a-b5ab-6a51a60793c7",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.421Z",
+    "updated_at": "2026-11-11T06:37:19.421Z",
+    "forum": "54192377-196b-439d-917e-7c5acba91f07",
+    "title": "Индустриальный код",
+    "description": "Онлайн-голосование за лучшие проекты Томской области в сфере промышленного туризма.",
+    "rules_text": "Можно пропустить незнакомую номинацию. Не более одного голоса за кандидата в каждой номинации. Один подтверждённый email = один бюллетень.",
+    "is_open": true,
+    "voting_opens_at": "2026-11-11T05:37:19.419Z",
+    "voting_closes_at": "2026-11-24T10:00:00Z",
+    "results_published": false,
+    "winners_text": ""
+  }
+},
+{
+  "model": "voting.nomination",
+  "pk": "3058d97f-e5ff-463e-9863-12c880669d90",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.463Z",
+    "updated_at": "2026-11-11T06:37:19.463Z",
+    "contest": "c052d125-b53a-4c2a-b5ab-6a51a60793c7",
+    "title": "Профориентационный тур года",
+    "description": "",
+    "visual_group": 0,
+    "min_selections": 0,
+    "max_selections": 1,
+    "position": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nomination",
+  "pk": "406d5f27-934e-403d-b79e-38d4c848b52f",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.442Z",
+    "updated_at": "2026-11-11T06:37:19.442Z",
+    "contest": "c052d125-b53a-4c2a-b5ab-6a51a60793c7",
+    "title": "Лучший промышленный маршрут",
+    "description": "",
+    "visual_group": 1,
+    "min_selections": 0,
+    "max_selections": 1,
+    "position": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nomination",
+  "pk": "af26bff6-9db3-46a6-8056-7d14d0473f46",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.474Z",
+    "updated_at": "2026-11-11T06:37:19.474Z",
+    "contest": "c052d125-b53a-4c2a-b5ab-6a51a60793c7",
+    "title": "Лучший гид по промышленному туризму",
+    "description": "",
+    "visual_group": 0,
+    "min_selections": 0,
+    "max_selections": 1,
+    "position": 7,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nomination",
+  "pk": "cdb5a5c7-05a4-4b9f-8630-1355edb53f25",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.455Z",
+    "updated_at": "2026-11-11T06:37:19.455Z",
+    "contest": "c052d125-b53a-4c2a-b5ab-6a51a60793c7",
+    "title": "Корпоративный музей как точка притяжения",
+    "description": "",
+    "visual_group": 1,
+    "min_selections": 0,
+    "max_selections": 1,
+    "position": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nomination",
+  "pk": "db396601-7fa4-4038-a32e-0d95901d3e82",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.423Z",
+    "updated_at": "2026-11-11T06:37:19.423Z",
+    "contest": "c052d125-b53a-4c2a-b5ab-6a51a60793c7",
+    "title": "Лучший бренд ТО",
+    "description": "",
+    "visual_group": 1,
+    "min_selections": 0,
+    "max_selections": 1,
+    "position": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nomination",
+  "pk": "dc546b53-f97d-464d-845d-89e7c2dea3e3",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.479Z",
+    "updated_at": "2026-11-11T06:37:19.479Z",
+    "contest": "c052d125-b53a-4c2a-b5ab-6a51a60793c7",
+    "title": "Лучшая сувенирная продукция предприятия",
+    "description": "",
+    "visual_group": 0,
+    "min_selections": 0,
+    "max_selections": 1,
+    "position": 8,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nomination",
+  "pk": "f757f6ad-0a0c-44a2-a8d6-02c9a03deb99",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.468Z",
+    "updated_at": "2026-11-11T06:37:19.468Z",
+    "contest": "c052d125-b53a-4c2a-b5ab-6a51a60793c7",
+    "title": "Самый доступный промышленный тур",
+    "description": "",
+    "visual_group": 0,
+    "min_selections": 0,
+    "max_selections": 1,
+    "position": 6,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nomination",
+  "pk": "fc1eca5d-f19c-4c6b-9ede-9ebfb59267c8",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.461Z",
+    "updated_at": "2026-11-11T06:37:19.461Z",
+    "contest": "c052d125-b53a-4c2a-b5ab-6a51a60793c7",
+    "title": "Креативное продвижение промышленного туризма",
+    "description": "",
+    "visual_group": 0,
+    "min_selections": 0,
+    "max_selections": 1,
+    "position": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "00c931aa-097c-4f33-ae9e-c274b4530414",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.475Z",
+    "updated_at": "2026-11-11T06:37:19.475Z",
+    "nomination": "af26bff6-9db3-46a6-8056-7d14d0473f46",
+    "name": "Территория тайги",
+    "description": "Майер Людмила Анатольевна работник пищевого производства 2 разряда",
+    "website_url": "",
+    "position": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "040a2837-7560-4278-bf1a-431e5c72de20",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.474Z",
+    "updated_at": "2026-11-11T06:37:19.474Z",
+    "nomination": "af26bff6-9db3-46a6-8056-7d14d0473f46",
+    "name": "Черенков Константин Анатольевич экскурсовод",
+    "description": "",
+    "website_url": "",
+    "position": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "07598085-ec06-4eff-a57f-aae5b86318f6",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.459Z",
+    "updated_at": "2026-11-11T06:37:19.459Z",
+    "nomination": "cdb5a5c7-05a4-4b9f-8630-1355edb53f25",
+    "name": "Музей ТПУ",
+    "description": "В Комплекс музеев Томского политеха входят 5 музеев — это Музей истории, Мемориальный кабинет академиков В.А. Обручева - М.А. Усова, Палеонтологический и Минералогический музеи, Музей физики и физических приборов. Фонды Комплекса музеев насчитывают более 50 тысяч экспонатов. Сотрудники музеев собирают, обрабатывают, бережно хранят, исследуют и экспонируют ценные свидетельства прошлого ТПУ, сохраняя и развивая традиции, сложившиеся в вузе за его более чем вековую жизнь. Комплекс музеев — это открытая система, «живой» организм, который постоянно развивается. Его посещают сотрудники, студенты и выпускники ТПУ, а также российские и зарубежные партнеры вуза. Всей своей деятельностью КМ подтверждает высокий статус ТПУ как особо ценного объекта культурного наследия народов России, а также представляет ТПУ в мероприятиях различного уровня, поддерживая и формируя имидж вуза как инновационного университета мирового уровня.",
+    "website_url": "",
+    "position": 7,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "0b3170db-7698-4b33-aae1-0dfe58ea0f51",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.427Z",
+    "updated_at": "2026-11-11T06:37:19.427Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "BoomGift (Производственная компания ШИК).",
+    "description": "Производитель премиальных изделий из натуральной кожи. Компания успешно прошла сертификацию и получила знак «Сделано в России» по направлению «Надежность». ПК ШИК закрепилась как одно из крупнейших кожевенных производств в Сибири, делая ставку на индивидуальное исполнение. Сайт https://www.boomgift.ru/",
+    "website_url": "https://www.boomgift.ru/",
+    "position": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "0bda5276-d304-45d5-87a3-0d4b9bcd61f6",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.449Z",
+    "updated_at": "2026-11-11T06:37:19.449Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "ООО «КОПЫЛОВСКИЙ КИРПИЧНЫЙ ЗАВОД»",
+    "description": "Копыловский кирпичный завод («Копыловская керамика») — в Томске, входит в группу FURBAU. Основан в 1990 году, первую партию кирпича выпустили в 1995‑м. Производит лицевой керамический кирпич (в т. ч. цветные варианты) и крупноформатные поризованные блоки («КераБлок»). Мощность — около 60 млн условных кирпичей в год. Сырьё — своя база: карьеры красной и белой глины. География поставок — Сибирь, Дальний Восток, Казахстан, Монголия. Сайт: https://kkirpich.ru/ , https://furbau70.ru/",
+    "website_url": "https://kkirpich.ru/",
+    "position": 11,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "0c3d92f1-82ee-4e10-99a0-db29be1618f9",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.453Z",
+    "updated_at": "2026-11-11T06:37:19.453Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "ООО НПП «ТЭК»",
+    "description": "Разработка и производство программно-аппаратных комплексов для автоматизированных средств управления производствами. Разработка алгоритмов и реализация программных решений по управлению движением. Полный цикл разработки программного обеспечения. Сайт https://npptec.ru/",
+    "website_url": "https://npptec.ru/",
+    "position": 17,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "0e341e90-2a19-46c0-bbc4-2ffa9ad28dd9",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.478Z",
+    "updated_at": "2026-11-11T06:37:19.478Z",
+    "nomination": "af26bff6-9db3-46a6-8056-7d14d0473f46",
+    "name": "Копыловский Кирпичный Завод",
+    "description": "Карионова Нина Петровна главный технолог Баранчин Марат Барыевич главный инженер",
+    "website_url": "",
+    "position": 8,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "0e942d3b-59d6-4211-bacb-f56260525ab6",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.432Z",
+    "updated_at": "2026-11-11T06:37:19.432Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "Территория тайги",
+    "description": "Территория тайги – это производитель 100% натуральных продуктов и косметики. Ассортимент компании насчитывает более 700 наименований изделий. Сайт https://tayga.market/ekskursii/",
+    "website_url": "https://tayga.market/ekskursii/",
+    "position": 10,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "191decde-a0bc-4528-87a5-451f2ea8e5e8",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.437Z",
+    "updated_at": "2026-11-11T06:37:19.437Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "ООО «Томслесдрев»",
+    "description": "ООО «Томлесдрев» - крупнейшее лесоперерабатывающее предприятие Томской области, приоритетным направлением которого является комплексная переработка древесины: производство ДСП, ЛДСП и пиломатериалов. Сайт https://tomlesdrev.ru/",
+    "website_url": "https://tomlesdrev.ru/",
+    "position": 17,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "1abc3bcb-5270-4b7b-b878-71c7bd1f3070",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.454Z",
+    "updated_at": "2026-11-11T06:37:19.454Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "АО «ТЭМЗ»",
+    "description": "АО «ТЭМЗ» (Томский электромеханический завод им. В. В. Вахрушева) — действующее предприятие в Томске (пр. Ленина, 28), основано в 1920 году, юридически зарегистрировано в 1993 году. Производит горно-шахтное и общепромышленное оборудование: отбойные молотки, шахтные и промышленные вентиляторы, гидравлические толкатели, колодочные тормоза, пневмо‑ и электроинструмент. Есть взрывозащищённые модели. Также выполняет гарантийный ремонт техники. Сайт https://temz.tomsk.ru/",
+    "website_url": "https://temz.tomsk.ru/",
+    "position": 19,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "1b9518a6-a2c7-4bda-9165-a252e8623425",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.447Z",
+    "updated_at": "2026-11-11T06:37:19.447Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "Экскурсия на Самусьский судостроительный завод",
+    "description": "Самусьская судоверфь — одно из старейших российских судостроительных предприятий. Верфь внесла огромный вклад в развитие отечественного кораблестроения и коммерческого флота. На одном из старейших предприятий мы увидим, как происходит строительство барж, паромов, яхт, катеров, услышим историю становления завода, о времени его расцвета и чем живет завод сейчас.",
+    "website_url": "",
+    "position": 8,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "1ecc8151-efab-4620-bc09-7e3c339f7b37",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.471Z",
+    "updated_at": "2026-11-11T06:37:19.471Z",
+    "nomination": "f757f6ad-0a0c-44a2-a8d6-02c9a03deb99",
+    "name": "ЭКО - ФАБРИКА СИБИРСКИЙ КЕДР",
+    "description": "Знакомство со всей технологической цепочкой в цехах (переработка кедровой шишки и ореха, выпуск кедрового масла, кедрокофе, шоколада, грильяжа, пастилы, мармелада и ореховой пасты). Осмотр оборудования, рассказ о сырье. Сезонная высадка кедра (весной и осенью на некоторых программах). Дегустация - пробы различных видов эко-сладостей и чаепитие.",
+    "website_url": "",
+    "position": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "1f278ddc-6b0b-4fdf-89cd-9e1ffb98e0f3",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.456Z",
+    "updated_at": "2026-11-11T06:37:19.456Z",
+    "nomination": "cdb5a5c7-05a4-4b9f-8630-1355edb53f25",
+    "name": "Музей ОАО «Манотомь»",
+    "description": "«Манотомь» (бывший Томский манометровый завод) — один из старейших заводов города. Музей отражает историю предприятия, в том числе период эвакуации в годы Великой Отечественной войны: здесь собраны документы, фотоальбомы и артефакты, начиная с 1941 года. Экспозиция показывает, как завод развивался и какие приборы контроля выпускал для танковой и авиационной промышленности",
+    "website_url": "",
+    "position": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "205df5ab-e511-41ca-851b-b18edcd023df",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.467Z",
+    "updated_at": "2026-11-11T06:37:19.467Z",
+    "nomination": "3058d97f-e5ff-463e-9863-12c880669d90",
+    "name": "Экскурсия в Томский Политехнический Университет — лидер в образовании и исследованиях по широкому спектру инженерных направлений. Опорный университет «Газпрома», «Росатома», «Роснефти» и других высокотехнологичных компаний. Занимает первое место в России в сфере нефтегазового дела. Лидирует по предметным областям «Энергетика», «Химические технологии», «Ядерные технологии».",
+    "description": "Томский политехнический университет - старейший технический вуз в азиатской части России. С историей развития региона, науки и образования можно познакомиться в Комплексе музеев ТПУ и на пешеходных экскурсиях, которые проводят сотрудники музея. В Комплекс музеев входят 5 музеев - Музей истории, Мемориальный кабинет академиков В.А. Обручева - М.А. Усова, Палеонтологический и Минералогический музеи, Музей физики и физических приборов. Фонды Комплекса музеев насчитывают более 50 тысяч экспонатов. Сотрудники музеев собирают, обрабатывают, бережно хранят, исследуют и экспонируют ценные свидетельства прошлого ТПУ, сохраняя и развивая традиции, сложившиеся в вузе за его более чем вековую жизнь.",
+    "website_url": "",
+    "position": 6,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "2075b37e-3421-425e-bca3-5655b482f116",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.429Z",
+    "updated_at": "2026-11-11T06:37:19.429Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "ООО «Томсккабель»",
+    "description": "ООО «Томсккабель» входит в число ведущих производителей кабельно-проводниковой продукции в России. Предприятие работает в отрасли с 2000 года. Приоритетной задачей является разработка инновационных и высокотехнологичных решений на кабельном рынке. На сегодняшний день производственные мощности насчитывают более 100 современных технологических линий с возможностью ежемесячной переработки от 1 500 тонн меди и 700 тонн алюминия. Постоянно ведется модернизация и оптимизация производства. Каждый этап технологии выпуска готового продукта автоматизирован и имеет жесткий 100% контроль: от момента подбора сырья до отгрузки потребителю. Сайт https://tomskcable.ru/",
+    "website_url": "https://tomskcable.ru/",
+    "position": 6,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "20d4e797-f0cb-4a82-9d23-57ad57f9b450",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.455Z",
+    "updated_at": "2026-11-11T06:37:19.455Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "ООО «Интергласс»",
+    "description": "Интергласс производит стеклотару для пищевой и технической промышленности. Выпускаем стеклянные бутылки и банки стандартной формы, более 40 позиций постоянного ассортимента, и производим стеклянную упаковку по эскизу заказчика. Изделия выполнены из бесцветного стекла, методом ВВ и РВ. Сайт https://www.interglass.su/",
+    "website_url": "https://www.interglass.su/",
+    "position": 20,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "21eef204-0188-40d3-801c-07413245a389",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.470Z",
+    "updated_at": "2026-11-11T06:37:19.470Z",
+    "nomination": "f757f6ad-0a0c-44a2-a8d6-02c9a03deb99",
+    "name": "Томский кондитер",
+    "description": "Гости проходят в действующие цеха фабрики «Томский кондитер», где видят работу конвейеров, процесс замеса теста и выпечки. На входе выдают защитную одежду, а также индивидуальные аудиоусилители (наушники с гарнитурой), чтобы хорошо слышать экскурсовода на шумном производстве. В финале участников ждет щедрое угощение свежей продукцией - горячие маффины, печенье, слойки, крекеры и соки прямо с конвейера.",
+    "website_url": "",
+    "position": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "23674021-6cbc-4f9d-b407-d106c25be0b0",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.480Z",
+    "updated_at": "2026-11-11T06:37:19.480Z",
+    "nomination": "dc546b53-f97d-464d-845d-89e7c2dea3e3",
+    "name": "Территория тайги",
+    "description": "Кедровый грильяж в форме полноразмерной кедровой шишки. *Кедровый орех - один из символов Томской области, и сама концепция не обычная (коробка - сумочка; продукт одновременно выступает частью дизайна своей упаковки), и материал тактильно приятный (софт-тач с золотым тиснением).",
+    "website_url": "",
+    "position": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "24a91e5e-4fe8-4073-aeb1-d8cb01d600f9",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.457Z",
+    "updated_at": "2026-11-11T06:37:19.457Z",
+    "nomination": "cdb5a5c7-05a4-4b9f-8630-1355edb53f25",
+    "name": "Музей Томское пиво",
+    "description": "Экспозиция рассказывает об истории завода — от основания прусским подданным Карлом Крюгером в 1876–1877 годах до наших дней. В музее собрали больше тысячи экспонатов: документы, фотографии, макеты предприятия разных лет; награды, почётные грамоты, личные вещи и предметы быта работников и основателей (в том числе переданные потомками династии Крюгеров); коллекцию этикеток, бутылок и пробок — от дореволюционных до современных; отдельную экспозицию, посвящённую советскому периоду.",
+    "website_url": "",
+    "position": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "257056d2-be99-4b16-9d16-cef55fcd885e",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.433Z",
+    "updated_at": "2026-11-11T06:37:19.433Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "ООО «КАХЕТИ»",
+    "description": "Винный завод «Кахети» (Томск) основан в 2002 году. Производит виноградные и плодовые вина, ягодные напитки (в том числе линейку «Сибирская ягода»), ликёроводочную продукцию, а с 2025 года — ещё и безалкогольные газированные напитки. Есть собственное производство виноматериалов и итальянская линия розлива в инертной среде. Продукция поставляется по Сибири и идёт на экспорт. Завод проводит экскурсии с дегустацией. Сайт https://kachety.com/",
+    "website_url": "https://kachety.com/",
+    "position": 11,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "2698e6c1-55e2-43e1-90cc-de3eb14710be",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.446Z",
+    "updated_at": "2026-11-11T06:37:19.446Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "Экскурсия на сыроварню \"VAN CLASSEN\"",
+    "description": "Уникальные технологии по производству сыров и любовь к животным. Новое стадо необычных коровок из Голландии оказались главными КОМПАНЬОНАМИ в деле сыроварения. Приглашаем Вас познакомиться с \"Сырными\" коровками и уникальными технологиями! Экскурсии для организованных групп по предварительному согласованию в любой день. По дороге на сыроварню поговорим о истории появления сыра. Интересные факты, любопытные истории и викторина! На экскурсии вместе с вами мы заглянем в жизнь «Сырных коров». Понаблюдаем важную ежедневную работу робота «Astronaut» . Увидим, чем связаны животные и высокие технологии. Нарисуем коров, напишем письма и развлечемся. Устроим дегустацию сыров которые приготовили нам сыровары « VAN CLASSEN» Пройдем весь цикл производства продукта - СЫР. Вас ожидает экскурсия, уникальные фото, натуральные продукты (возможность их покупки), вкусные подарки и добрые при добрые эмоции.",
+    "website_url": "",
+    "position": 6,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "2b0a42af-2193-4700-8109-57c49888c470",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.457Z",
+    "updated_at": "2026-11-11T06:37:19.457Z",
+    "nomination": "cdb5a5c7-05a4-4b9f-8630-1355edb53f25",
+    "name": "Музей Томской судоходной компании",
+    "description": "Этот музей рассказывает об истории предприятия — от основания Томской пристани в 1902 году до современного этапа. В двух залах представлены разные темы: в первом — военно-патриотический зал, посвящённый речникам в годы ВОВ, во втором — общая история компании. Среди экспонатов — макеты, иллюстрирующие производственные процессы: грузоперевозки, переработку грузов, добычу и переработку нерудных строительных материалов.",
+    "website_url": "",
+    "position": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "32b869c3-ed46-4206-8bd6-7618ee9706dc",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.439Z",
+    "updated_at": "2026-11-11T06:37:19.439Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "ООО НПП «ТЭК»",
+    "description": "Разработка и производство программно-аппаратных комплексов для автоматизированных средств управления производствами. Разработка алгоритмов и реализация программных решений по управлению движением. Полный цикл разработки программного обеспечения. Сайт https://npptec.ru/",
+    "website_url": "https://npptec.ru/",
+    "position": 20,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "3364e61f-25a6-4640-b218-823436f09266",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.477Z",
+    "updated_at": "2026-11-11T06:37:19.477Z",
+    "nomination": "af26bff6-9db3-46a6-8056-7d14d0473f46",
+    "name": "Кахети",
+    "description": "Киселева Людмила Александровна директор по развитию",
+    "website_url": "",
+    "position": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "36599375-dd27-44cf-bf8d-03d16464f31b",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.425Z",
+    "updated_at": "2026-11-11T06:37:19.425Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "ООО «ЭКО - ФАБРИКА СИБИРСКИЙ КЕДР»",
+    "description": "Эко-фабрика «Сибирский кедр» (Томская область) — производитель натуральной продукции из кедрового ореха, дикоросов и мёда (более 300 наименований), развивает экспорт и участвует в экологических проектах. В 2023 году этот производитель продуктов из дикоросов стал победителем конкурса брендов на форуме «Сильные идеи для нового времени». Из пяти тысяч российских брендов в топ-15 вошла именно томская компания. Конкурс организован по поручению Президента России: жюри оценивало рост на внутреннем рынке и социально значимые проекты участников. Сайт https://siberia.eco/",
+    "website_url": "https://siberia.eco/",
+    "position": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "42145211-f8f9-48fc-841f-f1e28d992714",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.440Z",
+    "updated_at": "2026-11-11T06:37:19.440Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "ООО «Интергласс»",
+    "description": "Интергласс производит стеклотару для пищевой и технической промышленности. Выпускаем стеклянные бутылки и банки стандартной формы, более 40 позиций постоянного ассортимента, и производим стеклянную упаковку по эскизу заказчика. Изделия выполнены из бесцветного стекла, методом ВВ и РВ. Сайт https://www.interglass.su/",
+    "website_url": "https://www.interglass.su/",
+    "position": 23,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "46b24200-61ad-4a66-874a-fd05215a5c69",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.456Z",
+    "updated_at": "2026-11-11T06:37:19.456Z",
+    "nomination": "cdb5a5c7-05a4-4b9f-8630-1355edb53f25",
+    "name": "Музей истории Томского приборного завода",
+    "description": "Здесь собрана история одного из значимых предприятий города. Завод входил в военно-промышленный комплекс и разрабатывал приборы для ракетно-космической отрасли и народного хозяйства. В музее можно увидеть архивные фотографии, документы и воспоминания бывших работников. Экскурсии часто проводят сами ветераны завода — это делает рассказ особенно живым и личным.",
+    "website_url": "",
+    "position": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "4b0c44de-09d7-4f34-a9fd-cee5ebcb7dab",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.471Z",
+    "updated_at": "2026-11-11T06:37:19.471Z",
+    "nomination": "f757f6ad-0a0c-44a2-a8d6-02c9a03deb99",
+    "name": "Фабрика ростовых кукол «Потапыч»",
+    "description": "Знакомство с секретами изготовления ростовых кукол. Знакомство с работой фабрики в реальном времени. Возможность примерки элементов костюмов.",
+    "website_url": "",
+    "position": 6,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "4e302022-635d-4258-92b0-252c08849d0b",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.426Z",
+    "updated_at": "2026-11-11T06:37:19.426Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "ОАО «Томское пиво»",
+    "description": "ОАО «Томское пиво» — одно из старейших предприятий Томска: его история отсчитывается с 1884 года (завод Карла Крюгера). Сегодня «Томское пиво» выпускает не только разные сорта пива (например, «Крюгер», «Трое в лодке», «Томское фирменное»), но и безалкогольную продукцию: квас («Благодей»), газированные напитки, минеральную воду («Чажемто», Vival). В коллекции компании — более 300 наград за качество продукции, эффективность управления и вклад в возрождение традиций пивоварения. Продукция поставляется не только по России (в десятки регионов), но и за рубеж — в Казахстан, Монголию, Китай. Промышленный туризм Одна из интересных особенностей завода — возможность познакомиться с ним изнутри. На территории работает музей истории «Томского пива». Во время экскурсии можно увидеть действующие производственные цеха (варницу, линии розлива, историческое оборудование), познакомиться с редкими экспонатами (документы, фотографии, предметы заводского быта, макеты, коллекции этикеток, награды, личные вещи работников) и в завершение поучаствовать в дегустации Сайт https://tomskbeer.ru/",
+    "website_url": "https://tomskbeer.ru/",
+    "position": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "510932da-3b2f-482a-a2c5-2595df130674",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.439Z",
+    "updated_at": "2026-11-11T06:37:19.439Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "АО «ТОМЗЭЛ»",
+    "description": "Производим высоконадежные электроприводы для трубопроводной арматуры. Сайт tomzel.transneft.ru https://томзэл.транснефть.рф/",
+    "website_url": "https://томзэл.транснефть.рф/",
+    "position": 21,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "51765653-3506-45cc-8611-6e0929984641",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.436Z",
+    "updated_at": "2026-11-11T06:37:19.436Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "Компания «Неотехника»",
+    "description": "Компания «Неотехника» создана на базе обособленного производственного подразделения компании «Синтек» (ООО «Синтек», г. Нижний Новгород) в г. Томске, функционирующего с 2010 г. Потенциал предприятия ориентирован на создание различных систем на базе блок-контейнеров, выпуск комплектных электростанций, шкафного и приборного оборудования, включая разработку, производство, внедрение и сервис изготавливаемой продукции. Сайт https://neotechnica.ru/",
+    "website_url": "https://neotechnica.ru/",
+    "position": 16,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "532963e6-e301-4c67-b199-143dd7ab9c64",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.437Z",
+    "updated_at": "2026-11-11T06:37:19.437Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "LW Group",
+    "description": "Компания LW GROUP Это профессиональные плотники, руководители проектов, креативные архитекторы и конструкторы, рабочие, водители. Мы плечом к плечу идем к нашей цели - стать лучшей компанией в сфере деревянного домостроения. Мы специализируемся на строительстве премиальных домов, бань и банных комплексов из сибирского кедра крупных диаметров. Сайт https://srub-lw.ru/",
+    "website_url": "https://srub-lw.ru/",
+    "position": 18,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "53e25cfe-b501-4dad-9907-c191051fe9ae",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.444Z",
+    "updated_at": "2026-11-11T06:37:19.444Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "Экскурсия \"Сибирский кедр\"",
+    "description": "Увидим процесс переработки шишки, отбор орешков и производство сладостей из дикоросов. Сибирский кедр - это полномасштабное производство эко-сладостей! Тут раскроется весь секретный путь изготовления: цех шоколада, переработки ореха, мармелада и многое другое! Увидим как готовится кедровый грильяж, халва и ягодная пастила. Познакомимся с оборудованием и продегустируем топовую продукцию! Вот она какая, сладкая жизнь...",
+    "website_url": "",
+    "position": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "56ce1cab-50ae-4ec6-bd6d-d044a6df2238",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.464Z",
+    "updated_at": "2026-11-11T06:37:19.464Z",
+    "nomination": "3058d97f-e5ff-463e-9863-12c880669d90",
+    "name": "Экскурсия «Микрон»",
+    "description": "Ребята видят реальное производство, знакомятся с технологиями, встречаются с сотрудниками, узнают про целевое обучение и стажировки. Иногда к таким турам подключают родителей в рамках проекта «Семейная профориентация»",
+    "website_url": "",
+    "position": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "5913e8bc-4ada-438d-b183-a3d3d95b0988",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.473Z",
+    "updated_at": "2026-11-11T06:37:19.473Z",
+    "nomination": "f757f6ad-0a0c-44a2-a8d6-02c9a03deb99",
+    "name": "Копыловский Кирпичный Завод",
+    "description": "Знакомство с историей завода и этапами его развития. Можно увидеть полный цикл производства керамического строительного материала - от сырья до готовой продукции, включая выпуск крупноформатных поризованных блоков (теплой керамики) и лицевого/облицовочного керамического кирпича.",
+    "website_url": "",
+    "position": 9,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "60477b56-29fa-45e2-a385-7f0b9b2581ed",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.451Z",
+    "updated_at": "2026-11-11T06:37:19.451Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "Компания «Неотехника»",
+    "description": "Компания «Неотехника» создана на базе обособленного производственного подразделения компании «Синтек» (ООО «Синтек», г. Нижний Новгород) в г. Томске, функционирующего с 2010 г. Потенциал предприятия ориентирован на создание различных систем на базе блок-контейнеров, выпуск комплектных электростанций, шкафного и приборного оборудования, включая разработку, производство, внедрение и сервис изготавливаемой продукции. Сайт https://neotechnica.ru/",
+    "website_url": "https://neotechnica.ru/",
+    "position": 13,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "60de97ea-7a08-4253-8797-03572a731d59",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.443Z",
+    "updated_at": "2026-11-11T06:37:19.443Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "Экскурсия на фабрику «Томский кондитер»",
+    "description": "Приглашаем на экскурсию, которую не забыть! Представьте: вы заходите на большую фабрику «Томский кондитер» — шум линий, запах свежей выпечки, всё гудит и движется, никакой бутафории, только реальное производство вокруг. Уже с порога вам выдают спецодежду, все сумки и телефоны оставляются в стороне, а в уши ловко помещают усилитель — теперь вы не пропустите ни слова даже в самом гуще событий. И вот вы шагаете по цехам, а перед вами, будто в сказке про скатерть-самобранку, расстилается угощение: горячие маффины, свежие печенья-сэндвичи, хрустящие крекеры-рыбки — бери, пробуй, сколько душе угодно! Никто не ограничивает одной печенькой, всё по-настоящему и столько, сколько захочется ...",
+    "website_url": "",
+    "position": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "621d5058-a88e-4c7d-bb14-0526b785746c",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.447Z",
+    "updated_at": "2026-11-11T06:37:19.447Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "ООО «Томсккабель»",
+    "description": "ООО «Томсккабель» входит в число ведущих производителей кабельно-проводниковой продукции в России. Предприятие работает в отрасли с 2000 года. Приоритетной задачей является разработка инновационных и высокотехнологичных решений на кабельном рынке. На сегодняшний день производственные мощности насчитывают более 100 современных технологических линий с возможностью ежемесячной переработки от 1 500 тонн меди и 700 тонн алюминия. Постоянно ведется модернизация и оптимизация производства. Каждый этап технологии выпуска готового продукта автоматизирован и имеет жесткий 100% контроль: от момента подбора сырья до отгрузки потребителю. Сайт https://tomskcable.ru/",
+    "website_url": "https://tomskcable.ru/",
+    "position": 9,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "67717f8a-7a5b-4d3c-94d3-71cd4e20ffb1",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.430Z",
+    "updated_at": "2026-11-11T06:37:19.430Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "АО «ПроКванТ»",
+    "description": "Акционерное общество «ПРОИЗВОДСТВО КВАНТОВЫХ ТЕХНОЛОГИЙ» (ПроКванТ) создано компанией «ИнфоТеКС» в 2021 году для развития ключевых компетенций в области информационных технологий, проектирования электронной (радиоэлектронной) продукции, в том числе компьютерного оборудования, вычислительной техники, сетевого, телекоммуникационного и периферийного оборудования а также создания современного научно-производственного комплекса для последующей организации опытного и мелкосерийного производства разработанных программно-аппаратных комплексов и другой электронной (радиоэлектронной) продукции на территории особой экономической зоны технико-внедренческого типа «Томск». Сайт https://prokvant.ru/",
+    "website_url": "https://prokvant.ru/",
+    "position": 8,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "696ca4bc-ef17-49fa-9cb5-c4e9330cda70",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.469Z",
+    "updated_at": "2026-11-11T06:37:19.469Z",
+    "nomination": "f757f6ad-0a0c-44a2-a8d6-02c9a03deb99",
+    "name": "Томское пиво",
+    "description": "Гостей проводят в музей, где познакомят с историей завода с 1931 года, покажут старинные документы, фотографии, коллекцию этикеток и макеты предприятия. Далее маршрут выстроен по цехам последовательно: от первого этапа дробления солода и варочного порядка до цехов брожения, фильтрации и розлива готовой продукции в бутылки, банки и кеги. Посетители могут увидеть современное оборудование, задать вопросы рабочим и технологам. Завершается экскурсия дегустацией, в рамках которой можно попробовать основные сорта пива, квас, газированные напитки и минеральную воду, которые выпускает предприятие.",
+    "website_url": "",
+    "position": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "714b22cc-cd9e-4175-93a5-2741e241f2b9",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.459Z",
+    "updated_at": "2026-11-11T06:37:19.459Z",
+    "nomination": "cdb5a5c7-05a4-4b9f-8630-1355edb53f25",
+    "name": "Музей ТИЗ",
+    "description": "Музей Томского инструментального завода (ТИЗ) — это коллекция экспонатов, посвящённая истории предприятия, его развитию и людям, которые на нём работали. Музей был основан в 1982 году силами ветеранов завода. Когда в 2000-х годах производство было перенесено из центра Томска в деревню Лоскутово (Кировский район), возникла угроза утраты части коллекции. Ветерану Валентине Клементьевой, которая стала первым руководителем музея, поручили собрать, упаковать и сохранить экспонаты. Для музея в новом месте было построено отдельное помещение, и к юбилею завода основная экспозиция была обновлена.",
+    "website_url": "",
+    "position": 6,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "72809154-cd66-43d7-ab78-9191bf0df556",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.441Z",
+    "updated_at": "2026-11-11T06:37:19.441Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "ООО «АРТЛАЙФ»",
+    "description": "Артлайф – это одна из самых быстро и уверенно развивающихся российских компаний в сфере здорового питания! Компания по праву считается основоположником wellness-индустрии в России. Сайт https://www.artlife.ru/",
+    "website_url": "https://www.artlife.ru/",
+    "position": 24,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "7a42569a-61a7-44c8-b83b-c0ded635fccd",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.464Z",
+    "updated_at": "2026-11-11T06:37:19.464Z",
+    "nomination": "3058d97f-e5ff-463e-9863-12c880669d90",
+    "name": "Экскурсия «Манотомь»",
+    "description": "ОАО «Манотомь» - одно из ведущих предприятий приборостроения в Томске, регулярно организует экскурсии для студентов, школьников и делегаций в рамках промышленных туров. В рамках экскурсии гости могут познакомиться с историей завода, этапами его развития и вкладом в отечественную промышленность, осмотреть производственные цеха и увидеть процессы изготовления манометров, датчиков давления и другой приборной продукции, а также встретиться с ведущими специалистами предприятия и задать интересующие вопросы.",
+    "website_url": "",
+    "position": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "7aa611a3-95d9-4f26-b7d5-feec03b43c6a",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.477Z",
+    "updated_at": "2026-11-11T06:37:19.477Z",
+    "nomination": "af26bff6-9db3-46a6-8056-7d14d0473f46",
+    "name": "ЭКО - ФАБРИКА СИБИРСКИЙ КЕДР",
+    "description": "Полина Вячеславовна Смокотина помощник руководителя",
+    "website_url": "",
+    "position": 6,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "7acd8a3f-0040-42ba-8150-f534b14ee399",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.434Z",
+    "updated_at": "2026-11-11T06:37:19.434Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "Фабрика ростовых кукол «Потапыч»",
+    "description": "Фабрика ростовых кукол \"Потапыч\" - производство ростовых кукол любой сложности для разных уровней бизнеса. Оживляет логотипы, товарные продукты, героев мультфильмов, создает талисманов разных компаний. А также организовывает крупные шоу-программы с участием ростовых кукол. мпания Потапыч самая медийная среди конкурентов и единственная, у которой руководитель является автором детской книги. Участник Премии «Top Luxury Awards\". Номинация \"Бренд #1» Лучшая компания по производству ростовых кукол. «Потапыч» -2022. Клиенты фабрики из 40 стран мира. (США, Азербайджан, Россия, Белоруссия, Украина, Израиль, Германия, Казахстан, Узбекистан, Сербия, Канада, Армения, Италия, Молдова, Корея и др.) Сайт https://potaph.com/",
+    "website_url": "https://potaph.com/",
+    "position": 14,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "84c04b04-64c3-49d6-a25e-9355f61994df",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.478Z",
+    "updated_at": "2026-11-11T06:37:19.478Z",
+    "nomination": "af26bff6-9db3-46a6-8056-7d14d0473f46",
+    "name": "Самусьский судостроительно-судоремонтный завод",
+    "description": "Величко Дмитрий Игоревич главный механик",
+    "website_url": "",
+    "position": 7,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "857c2758-e72b-4e7d-ae2e-7522fcef3f3b",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.440Z",
+    "updated_at": "2026-11-11T06:37:19.440Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "АО «ТЭМЗ»",
+    "description": "АО «ТЭМЗ» (Томский электромеханический завод им. В. В. Вахрушева) — действующее предприятие в Томске (пр. Ленина, 28), основано в 1920 году, юридически зарегистрировано в 1993 году. Производит горно‑шахтное и общепромышленное оборудование: отбойные молотки, шахтные и промышленные вентиляторы, гидравлические толкатели, колодочные тормоза, пневмо‑ и электроинструмент. Есть взрывозащищённые модели. Также выполняет гарантийный ремонт техники. Сайт https://temz.tomsk.ru/",
+    "website_url": "https://temz.tomsk.ru/",
+    "position": 22,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "886900c0-4e2e-42f4-a26e-ac742aeffca8",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.460Z",
+    "updated_at": "2026-11-11T06:37:19.460Z",
+    "nomination": "cdb5a5c7-05a4-4b9f-8630-1355edb53f25",
+    "name": "Музейно-выставочный центр «Сибагро». Проектирование и реализация концепции",
+    "description": "15 июня 2022 года в Томске открылся музейно-выставочный центр одной из крупнейших агропромышленных компаний России — холдинга Сибагро. Его первыми посетителями стали амбассадоры компании. Команда Бюро музейной сценографии «Метаформа» спроектировала и создала инсталляционные решения для музея. Основной задачей проекта была реализация сформированной ранее концепции музейно-выставочного центра Сибагро — проектирование и создание конструктивов, мультимедиа инсталляций, настенных графических элементов, монтаж экспозиции. Команда Бюро также занималась редактированием текстов, вёрстки и художественных элементов. Корпоративный музей в первую очередь ориентирован на развитие корпоративной культуры Сибагро и укрепление его положительного имиджа. Планируется, что центр посетят тысячи сотрудников компании — как опытных, так и новичков, а также партнёры и другие гости холдинга. Сайт",
+    "website_url": "",
+    "position": 8,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "88b56919-e476-43c9-8023-b0ae4e919f25",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.454Z",
+    "updated_at": "2026-11-11T06:37:19.454Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "АО «ТОМЗЭЛ»",
+    "description": "Производим высоконадежные электроприводы для трубопроводной арматуры. Сайт tomzel.transneft.ru https://томзэл.транснефть.рф/",
+    "website_url": "https://томзэл.транснефть.рф/",
+    "position": 18,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "8f6ebf97-141c-4322-bd1e-e8cec753f928",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.431Z",
+    "updated_at": "2026-11-11T06:37:19.431Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "ООО «КОПЫЛОВСКИЙ КИРПИЧНЫЙ ЗАВОД»",
+    "description": "Копыловский кирпичный завод («Копыловская керамика») — в Томске, входит в группу FURBAU. Основан в 1990 году, первую партию кирпича выпустили в 1995‑м. Производит лицевой керамический кирпич (в т. ч. цветные варианты) и крупноформатные поризованные блоки («КераБлок»). Мощность — около 60 млн условных кирпичей в год. Сырьё — своя база: карьеры красной и белой глины. География поставок — Сибирь, Дальний Восток, Казахстан, Монголия. Сайт: https://kkirpich.ru/ , https://furbau70.ru/",
+    "website_url": "https://kkirpich.ru/",
+    "position": 9,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "900ffa6d-7189-4263-8b31-64620195b5e2",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.461Z",
+    "updated_at": "2026-11-11T06:37:19.461Z",
+    "nomination": "fc1eca5d-f19c-4c6b-9ede-9ebfb59267c8",
+    "name": "Иммерсивные и семейные форматы. Проект «Технопредки: твоё будущее!»",
+    "description": "отличный пример. Он объединяет детей и родителей: на экскурсиях семья вместе погружается в технологические процессы, что помогает в профориентации. Можно расширять эту идею: добавлять к экскурсиям семейные интенсивы с мастер-классами, квестами или квизами.",
+    "website_url": "",
+    "position": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "94065bd6-1522-4785-8185-87026f0e1888",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.442Z",
+    "updated_at": "2026-11-11T06:37:19.442Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "«Территория тайги» Более 5 тематических экскурсии на предприятие",
+    "description": "«Территория тайги – это технологичное производство 100% натуральных продуктов и косметики. Площадь размером как футбольное поле оснащена 35 видами различных установок, на которых 50 мастеров готовят 700 наименований изделий. Водопады шоколада, хвойный аромат сосновой шишки, яркие сочные ягоды и дегустации… - здесь каждый что-то запоминает навсегда. Приглашаем открыть мир современной переработки дикоросов».",
+    "website_url": "",
+    "position": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "9c7b3b82-ada0-4b7e-bc70-586d54fc119d",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.462Z",
+    "updated_at": "2026-11-11T06:37:19.462Z",
+    "nomination": "fc1eca5d-f19c-4c6b-9ede-9ebfb59267c8",
+    "name": "Виртуальная экскурсия «СИБАГРО»",
+    "description": "Технологии для погружения. Используйте VR и AR. Например, VR-экскурсии на предприятия позволяют «пройти» по цеху, не выходя из дома, или отработать сложные навыки (сварка, управление краном) в виртуальной среде без риска. AR можно вплести в городские маршруты: дополненная реальность оживит историю промышленных объектов или покажет, как менялось производство со временем.",
+    "website_url": "",
+    "position": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "aaf2652a-cf60-4415-adb5-f4f78e629249",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.444Z",
+    "updated_at": "2026-11-11T06:37:19.444Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "Экскурсия \"Потапыч\"",
+    "description": "Получите яркие эмоции и море улыбок во время экскурсии на фабрику ростовых кукол. Во время экскурсии ребята окунутся в мир медведей, динозавров, зайцев и других герое... Юные экскурсанты узнают секреты изготовления ростовых кукол и увидят работу фабрики в реальном времени, познакомятся с географией отправки таких кукол . Желающие смогут перевоплотиться и померить элементы костюмов. А в завершение экскурсии все зажгут с плюшевыми героями в танце и получат вкусный подарок от Потапыча.",
+    "website_url": "",
+    "position": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "acdb91ba-e5b5-49d2-99af-67ffa0989b9f",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.466Z",
+    "updated_at": "2026-11-11T06:37:19.466Z",
+    "nomination": "3058d97f-e5ff-463e-9863-12c880669d90",
+    "name": "Экскурсия Томский электромеханический завод (ТЭМЗ)",
+    "description": "АО «Томский электромеханический завод им. В. В. Вахрушева» (ТЭМЗ) - первый и единственный машиностроительный завод в довоенном Томске. Экскурсии на завод проводятся для школьников, студентов и участников профориентационных туров, а также в рамах проектов по знакомству с промышленностью региона. Экскурсия включает обзор полного производственного цикла (от создания заготовки до выпуска готовой продукции), посещение основных цехов (литейный, ремонтный, малярный, инструментальный и др.), знакомство с выпускаемым оборудованием (антипомпажные и регулирующие клапаны, электрооборудование, горно-шахтное оборудование, вентиляторы, пневмо- и гидроинструмент), профориентационный рассказ о востребованных рабочих и инженерных профессиях на заводе.",
+    "website_url": "",
+    "position": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "afea5748-f1f7-4b31-b000-5fa121ca49fb",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.445Z",
+    "updated_at": "2026-11-11T06:37:19.445Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "Экскурсия с дегустацией \"I vino veritas\" ООО «Кахети»",
+    "description": "Побывать в Томске и не заехать на завод «Кахети» невозможно. Во время экскурсии вы узнаете все тайны и тонкости виноделия, познакомитесь с отдельными и самыми интересными этапами производства виноградного и ягодного вина. Завершится экскурсия дегустацией. Это единственное за Уралом, уникальное предприятие в Сибири, основанное в 2002 году и работающее по новейшим технологиям в области обработки и производства натуральных виноградных вин.",
+    "website_url": "",
+    "position": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "b22cebcd-adf6-412e-a784-2a4c33026024",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.434Z",
+    "updated_at": "2026-11-11T06:37:19.434Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "ООО «Сырная История»",
+    "description": "VAN CLASSEN— это голландские технологии, помноженные на сибирский профессионализм. Компания объединила любовь к животным, современное оборудование и опыт европейских коллег, чтобы создавать уникальные сыры европейского качества в Сибири. Наша продукция обладает уникальным сливочным вкусом и соответствует стандартам здорового питания. Сайт https://vanclassen.ru/",
+    "website_url": "https://vanclassen.ru/",
+    "position": 13,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "ba77d2f8-5811-46f9-ae1b-5533a5ec8cf4",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.463Z",
+    "updated_at": "2026-11-11T06:37:19.463Z",
+    "nomination": "fc1eca5d-f19c-4c6b-9ede-9ebfb59267c8",
+    "name": "VAN CLASSEN",
+    "description": "",
+    "website_url": "",
+    "position": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "bae1b1b8-2bcf-432e-9050-ab3d0a61d92b",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.451Z",
+    "updated_at": "2026-11-11T06:37:19.451Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "ООО «Томслесдрев»",
+    "description": "ООО «Томлесдрев» - крупнейшее лесоперерабатывающее предприятие Томской области, приоритетным направлением которого является комплексная переработка древесины: производство ДСП, ЛДСП и пиломатериалов. Сайт https://tomlesdrev.ru/",
+    "website_url": "https://tomlesdrev.ru/",
+    "position": 14,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "bdaa1d04-9aef-4d2e-9849-a43f902159ee",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.428Z",
+    "updated_at": "2026-11-11T06:37:19.428Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "Компания «САВА»",
+    "description": "ТПК «САВА» — томская производственная компания (основана в 2000 году). Производит натуральные продукты из сибирских дикоросов: варенье, джемы, соки, «Кедровое молочко», протёртые ягоды и др. Сырьё — ягоды (в том числе жимолость), грибы, кедровые орехи, травы; часть выращивают сами (например, в агрокомплексе «Северный сад»). Производство — в Томске, на ул. Кузовлевское тепличное хозяйство, д. 7. Сайт — https://www.tpksava.ru ТПК «САВА», один из ведущих региональных экспортеров экопродукции, неоднократный лауреат регионального конкурса «Экспортер года».",
+    "website_url": "https://www.tpksava.ru",
+    "position": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "c3304afb-acd9-45f9-bfe8-607bcb10b7b9",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.433Z",
+    "updated_at": "2026-11-11T06:37:19.433Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "Компания «Томский кондитер»",
+    "description": "С 1986 года компания «Томский кондитер» остаётся верной своим принципам: качество продукции рождается из уважения к традициям и любви к потребителю. Мы гордимся тем, что являемся одним из старейших и крупнейших производителей кондитерских изделий в Сибири. Лидерство нашей компании, несомненно, определяется качеством продукции. Натуральные компоненты и отточенные годами технологии – гарантия успеха продукции Томского кондитера у Покупателей. Сайт",
+    "website_url": "",
+    "position": 12,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "c5447c35-f6aa-4c83-beee-43fe7f10aa3a",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.450Z",
+    "updated_at": "2026-11-11T06:37:19.450Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "ООО «ЛЭМЗ-Т»",
+    "description": "ООО \"ЛЭМЗ-Т\" является дочерним предприятием ПАО \"НПО Алмаз\" имени академика А.А. Расплетина и входит в состав структуры АО \"Концерн ВКО \"Алмаз Антей\". Компания специализируется на разработке вычислительных систем, программного обеспечения и производстве компонентов радиотехнических систем, осуществляет разработку высокотехнологичных продуктов, направленных на укрепление и развитие отечественного рынка радиоэлектроники. НАПРАВЛЕНИЯ ДЕЯТЕЛЬНОСТИ беспилотные системы (мониторинг, технологические операции в промышленности в сельском хозяйстве) вычислительные системы (системы сбораи обработки инофрмации) искусственный интеллект (технические задания, большие данные) программное обеспечение (IT-проекты под задачи заказчика). Сайт https://lemz-t.ru/",
+    "website_url": "https://lemz-t.ru/",
+    "position": 12,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "c6a5bcfe-0276-4d84-a233-e2090b12abe5",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.470Z",
+    "updated_at": "2026-11-11T06:37:19.470Z",
+    "nomination": "f757f6ad-0a0c-44a2-a8d6-02c9a03deb99",
+    "name": "Кахети",
+    "description": "Знакомство с историей виноделия в Томске, этапами производства вина. Дегустация выпускаемой продукции (классические виноградные вина и линейка таёжных ягодных вин «Сибирская ягода» из жимолости, брусники, клюквы, черники и смородины). Посещение фирменного магазина при заводе с возможностью покупки напитков.",
+    "website_url": "",
+    "position": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "c84dd26e-5c1d-446f-8963-dcfa566fdb2d",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.430Z",
+    "updated_at": "2026-11-11T06:37:19.430Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "ООО «Самусьский судостроительно-судоремонтный завод»",
+    "description": "ООО \"Самусьский судостроительно-судоремонтный завод\" (СССРЗ) создан взамен и расположен на производственных площадях ордена ЗНАК ПОЧЕТА Самусьского судостроительно- судоремонтного завода. Самусьская судоверфь — одно из старейших российских судостроительных предприятий. Верфь внесла огромный вклад в развитие отечественного кораблестроения и коммерческого флота. Сегодня Самусьский ССРЗ — это современное судостроительное предприятие России. Коллектив завода состоит из двухсот первоклассных специалистов, способных решить самые сложные инженерные задачи. Сайт https://sssrz.ru/",
+    "website_url": "https://sssrz.ru/",
+    "position": 7,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "c8664294-897f-4c94-a810-9d29a31b6f4c",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.466Z",
+    "updated_at": "2026-11-11T06:37:19.466Z",
+    "nomination": "3058d97f-e5ff-463e-9863-12c880669d90",
+    "name": "Экскурсия Газпром трансгаз Томск",
+    "description": "«Газпром трансгаз Томск» организует экскурсии в свой Музей истории и достижений, а также на производственные объекты компании для школьников, студентов и организованных групп. Музей оснащен современными интерактивными зонами, мультитач-технологиями, проекционным глобусом и залом «Бытовка» с историческим телевизором «Рубин-102» и видеохрониками 70-х годов. Проводятся также экскурсии в обновленных форматах. Организуются ознакомительные визиты для студентов профильных учебных заведений и школьников. Доступны видео- и VR-экскурсии по залам музея на канале компании в RuTube.",
+    "website_url": "",
+    "position": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "d11f349d-edac-46b4-93e6-e7452ff5d25b",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.448Z",
+    "updated_at": "2026-11-11T06:37:19.448Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "АО «ПроКванТ»",
+    "description": "Акционерное общество «ПРОИЗВОДСТВО КВАНТОВЫХ ТЕХНОЛОГИЙ» (ПроКванТ) создано компанией «ИнфоТеКС» в 2021 году для развития ключевых компетенций в области информационных технологий, проектирования электронной (радиоэлектронной) продукции, в том числе компьютерного оборудования, вычислительной техники, сетевого, телекоммуникационного и периферийного оборудования а также создания современного научно-производственного комплекса для последующей организации опытного и мелкосерийного производства разработанных программно-аппаратных комплексов и другой электронной (радиоэлектронной) продукции на территории особой экономической зоны технико-внедренческого типа «Томск». Сайт https://prokvant.ru/",
+    "website_url": "https://prokvant.ru/",
+    "position": 10,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "d85d47ee-4d79-4185-b787-d52134406d19",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.452Z",
+    "updated_at": "2026-11-11T06:37:19.452Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "Компания «ЛОРГЕ медикал»",
+    "description": "Компания «ЛОРГЕ медикал», г.Томск Производим медицинские инструменты, аппараты, комплексы. С 2009 года разрабатываем и изготавливаем электрохирургические коагуляторы и инструмент для операционных, кардиологическое и электрофизиологическое оборудование для диагностики и лечения нарушений ритма сердца. Сайт https://lorgemedical.com/",
+    "website_url": "https://lorgemedical.com/",
+    "position": 16,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "dbc2b079-ebfd-4611-9168-c65f9bbe3c1c",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.465Z",
+    "updated_at": "2026-11-11T06:37:19.465Z",
+    "nomination": "3058d97f-e5ff-463e-9863-12c880669d90",
+    "name": "Экскурсия «Сибкабель»",
+    "description": "АО «Сибкабель» - ведущее предприятие машиностроительной отрасли России, выпускающее широкий ассортимент продукции электротехнического назначения. Завод регулярно проводит ознакомительные и профориентационные экскурсии для студентов вузов, техникумов и школьников, а также организует производственные визиты. Гости могут увидеть основные производственные цеха (волочильные, крутильные, лентообмоточные и экструзионные линии), эмальобмоточное производство, а также заглянуть в испытательные камеры и отдел технического контроля. У завода есть сервис 3D-экскурсий, который позволяет удаленно увидеть процесс создания кабельно-проводниковой продукции.",
+    "website_url": "",
+    "position": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "e080d9af-a324-460a-9443-d8547886419d",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.435Z",
+    "updated_at": "2026-11-11T06:37:19.435Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "ООО «ЛЭМЗ-Т»",
+    "description": "ООО \"ЛЭМЗ-Т\" является дочерним предприятием ПАО \"НПО Алмаз\" имени академика А.А. Расплетина и входит в состав структуры АО \"Концерн ВКО \"Алмаз Антей\". Компания специализируется на разработке вычислительных систем, программного обеспечения и производстве компонентов радиотехнических систем, осуществляет разработку высокотехнологичных продуктов, направленных на укрепление и развитие отечественного рынка радиоэлектроники. НАПРАВЛЕНИЯ ДЕЯТЕЛЬНОСТИ беспилотные системы (мониторинг, технологические операции в промышленности в сельском хозяйстве) вычислительные системы (системы сбораи обработки инофрмации) искусственный интеллект (технические задания, большие данные) программное обеспечение (IT-проекты под задачи заказчика). Сайт https://lemz-t.ru/",
+    "website_url": "https://lemz-t.ru/",
+    "position": 15,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "e0fd9ad4-b0b1-4df8-a72e-73894ac026de",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.472Z",
+    "updated_at": "2026-11-11T06:37:19.472Z",
+    "nomination": "f757f6ad-0a0c-44a2-a8d6-02c9a03deb99",
+    "name": "ООО «Сырная История»",
+    "description": "Знакомство с историей предприятия и его продукцией. Рассказ о породах коров и уникальных особенностях этих животных, в частности знакомство с коровами породы Джерси и Голштин, на основе молока которых создается продукция VAN CLASSEN. Возможность понаблюдать за тем, как живут животные, погладить и покормить их. Знакомство с производством. Можно наблюдать, как сыровары в процессе работы молоко превращают в сыр! Разговоры о тайнах сыроварения. Дегустация сыров, масла и джемов с возможностью приобрести понравившуюся продукцию. Также на территории есть уникальный АРТ объект, который привлекает внимание своим масштабом. Можно остановиться и сделать фотографии с ветряной мельницей. Большая часть процессов на ферме автоматизирована. Используются самые современные технологии и оборудование для ухода за коровами, сбора молока, а также контроля процессов производства и вызревания сыров.",
+    "website_url": "",
+    "position": 7,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "e1456ff1-686a-47e6-8ba6-293f9833e82e",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.446Z",
+    "updated_at": "2026-11-11T06:37:19.446Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "Экскурсия на «Томское пиво»",
+    "description": "Посещение действующих цехов завода, музей истории с редкими экспонатами и дегустация продукции.",
+    "website_url": "",
+    "position": 7,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "e8f99a7c-90e9-4f9d-b091-a43ac77f1178",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.468Z",
+    "updated_at": "2026-11-11T06:37:19.468Z",
+    "nomination": "f757f6ad-0a0c-44a2-a8d6-02c9a03deb99",
+    "name": "Территория тайги",
+    "description": "Маршрут по производственным цехам в режиме реальной работы с профессиональным экскурсоводом и дегустацией конфет, варенья и мармеладов. Знакомство с историей появления компании и тем, почему придерживаемся ценностей создания натуральных и полезных продуктов из богатств Сибири – дикоросов. Знакомство с технологией изготовления продукции, особенностями работы с натуральным шоколадом. Дегустация сладостей сразу на производстве. По предварительной записи все желающие могут принять участие в мастер-классах и праздничных программах.",
+    "website_url": "",
+    "position": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "e9ec6412-b202-46a3-88c1-c04f78e939e9",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.476Z",
+    "updated_at": "2026-11-11T06:37:19.476Z",
+    "nomination": "af26bff6-9db3-46a6-8056-7d14d0473f46",
+    "name": "Томский кондитер",
+    "description": "????",
+    "website_url": "",
+    "position": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "ecbd3e78-eb22-42b7-a62f-ed91e789451f",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.438Z",
+    "updated_at": "2026-11-11T06:37:19.438Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "Компания «ЛОРГЕ медикал»",
+    "description": "Компания «ЛОРГЕ медикал», г.Томск Производим медицинские инструменты, аппараты, комплексы. С 2009 года разрабатываем и изготавливаем электрохирургические коагуляторы и инструмент для операционных, кардиологическое и электрофизиологическое оборудование для диагностики и лечения нарушений ритма сердца. Сайт https://lorgemedical.com/",
+    "website_url": "https://lorgemedical.com/",
+    "position": 19,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "f2be423d-b147-4477-971a-8ca3e6094df7",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.458Z",
+    "updated_at": "2026-11-11T06:37:19.458Z",
+    "nomination": "cdb5a5c7-05a4-4b9f-8630-1355edb53f25",
+    "name": "Музей истории и достижений «Газпром трансгаз Томск»",
+    "description": "Музей открыли 17 декабря 2019 года в здании Корпоративного института компании. Это первый корпоративный музей «Газпрома» за Уралом. Он занимает около 500 м² и включает 7 тематических залов: «Начало», «Руководители», «Бытовка», «История предприятия», «События-судьбы-люди», «История ПАО „Газпром“», «Газ — это интересно». В экспозиции с помощью интерактивных и мультимедийных инсталляций рассказывают об истории крупнейшей газотранспортной компании в Западной Сибири, о Восточной газовой программе «Газпрома», а также популярно объясняют, что такое газ, как он образуется и как доходит до потребителя",
+    "website_url": "",
+    "position": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "f549671d-8dc4-4e99-9360-902c7c6ab0b3",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.473Z",
+    "updated_at": "2026-11-11T06:37:19.473Z",
+    "nomination": "f757f6ad-0a0c-44a2-a8d6-02c9a03deb99",
+    "name": "Самусьский судостроительно-судоремонтный завод",
+    "description": "Осмотр производственных цехов одного из старейших и современных российских судостроительных предприятий (финский цех раскройки металла и сборки, механический цех с токарными и фрезерными работами и другие). Знакомство с процессом создания современных судов: барж, паромов, катеров и яхт.",
+    "website_url": "",
+    "position": 8,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "fd210f05-0180-4819-9589-f710c4fdf618",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.452Z",
+    "updated_at": "2026-11-11T06:37:19.452Z",
+    "nomination": "406d5f27-934e-403d-b79e-38d4c848b52f",
+    "name": "LW Group",
+    "description": "Компания LW GROUP Это профессиональные плотники, руководители проектов, креативные архитекторы и конструкторы, рабочие, водители. Мы плечом к плечу идем к нашей цели - стать лучшей компанией в сфере деревянного домостроения. Мы специализируемся на строительстве премиальных домов, бань и банных комплексов из сибирского кедра крупных диаметров. Сайт https://srub-lw.ru/",
+    "website_url": "https://srub-lw.ru/",
+    "position": 15,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "fee96960-b154-4f64-a59e-8f68ba8f1beb",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.476Z",
+    "updated_at": "2026-11-11T06:37:19.476Z",
+    "nomination": "af26bff6-9db3-46a6-8056-7d14d0473f46",
+    "name": "Томское пиво",
+    "description": "Стрельникова Елена Владимировна экскурсовод",
+    "website_url": "",
+    "position": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "voting.nominee",
+  "pk": "ffe66466-d08b-429f-96d6-38a6baf13cab",
+  "fields": {
+    "created_at": "2026-11-11T06:37:19.427Z",
+    "updated_at": "2026-11-11T06:37:19.427Z",
+    "nomination": "db396601-7fa4-4038-a32e-0d95901d3e82",
+    "name": "«Биолит»",
+    "description": "ООО «Биолит» — это инновационная вертикально интегрированная производственная компания с последовательными стадиями технологического процесса: выращивание, сбор, экстракция экологически безопасного растительного сырья и научно обоснованное производство функциональных продуктов питания и космецевтики. Производственные площадки предприятия расположены в г. Томске, с. Корнилово Томского района, Томской области и в с. Алтайское, Алтайского района, Алтайского края. Сайт https://biolit.ru/",
+    "website_url": "https://biolit.ru/",
+    "position": 4,
+    "is_active": true
+  }
+}
+]

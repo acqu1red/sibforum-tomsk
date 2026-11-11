@@ -1,0 +1,114 @@
+{
+  "results": [
+    {
+      "name": "desktop",
+      "overflow": false,
+      "sidebarVisible": true
+    },
+    {
+      "name": "tablet",
+      "overflow": false,
+      "sidebarVisible": true
+    },
+    {
+      "name": "phone",
+      "overflow": false,
+      "sidebarVisible": true
+    },
+    {
+      "staffPasswordLogin": true,
+      "staffAccountCreationDenied": true
+    },
+    {
+      "path": "/admin/forums/event/",
+      "width": 360,
+      "title": "Выберите мероприятие для изменения | Сибирский форум",
+      "overflow": false
+    },
+    {
+      "path": "/admin/forums/event/",
+      "width": 768,
+      "title": "Выберите мероприятие для изменения | Сибирский форум",
+      "overflow": false
+    },
+    {
+      "path": "/admin/forums/event/",
+      "width": 1440,
+      "title": "Выберите мероприятие для изменения | Сибирский форум",
+      "overflow": false
+    },
+    {
+      "path": "/admin/forums/event/add/",
+      "width": 360,
+      "title": "Добавить мероприятие | Сибирский форум",
+      "overflow": false
+    },
+    {
+      "path": "/admin/forums/event/add/",
+      "width": 768,
+      "title": "Добавить мероприятие | Сибирский форум",
+      "overflow": false
+    },
+    {
+      "path": "/admin/forums/event/add/",
+      "width": 1440,
+      "title": "Добавить мероприятие | Сибирский форум",
+      "overflow": false
+    },
+    {
+      "path": "/admin/voting/nomination/",
+      "width": 360,
+      "title": "Выберите номинация для изменения | Сибирский форум",
+      "overflow": false
+    },
+    {
+      "path": "/admin/voting/nomination/",
+      "width": 768,
+      "title": "Выберите номинация для изменения | Сибирский форум",
+      "overflow": false
+    },
+    {
+      "path": "/admin/voting/nomination/",
+      "width": 1440,
+      "title": "Выберите номинация для изменения | Сибирский форум",
+      "overflow": false
+    },
+    {
+      "path": "/admin/registrations/registration/",
+      "width": 360,
+      "title": "Выберите заявка для изменения | Сибирский форум",
+      "overflow": false
+    },
+    {
+      "path": "/admin/registrations/registration/",
+      "width": 768,
+      "title": "Выберите заявка для изменения | Сибирский форум",
+      "overflow": false
+    },
+    {
+      "path": "/admin/registrations/registration/",
+      "width": 1440,
+      "title": "Выберите заявка для изменения | Сибирский форум",
+      "overflow": false
+    },
+    {
+      "path": "/admin/auth/user/add/",
+      "width": 360,
+      "title": "Добавить пользователь | Сибирский форум",
+      "overflow": false
+    },
+    {
+      "path": "/admin/auth/user/add/",
+      "width": 768,
+      "title": "Добавить пользователь | Сибирский форум",
+      "overflow": false
+    },
+    {
+      "path": "/admin/auth/user/add/",
+      "width": 1440,
+      "title": "Добавить пользователь | Сибирский форум",
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

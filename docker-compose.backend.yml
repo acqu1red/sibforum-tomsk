@@ -1,0 +1,167 @@
+name: siberianforum-platform
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: siberianforum-platform-db
+    environment:
+      POSTGRES_DB: siberian_forum
+      POSTGRES_USER: forum
+      POSTGRES_PASSWORD: local-development-only
+    volumes:
+      - platform-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U forum -d siberian_forum"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: "no"
+
+  mail:
+    image: axllent/mailpit:latest
+    container_name: siberianforum-mailpit
+    ports:
+      - "127.0.0.1:1026:1025"
+      - "127.0.0.1:8026:8025"
+    restart: "no"
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: siberianforum-backend:dev
+    container_name: siberianforum-platform-backend
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8100"
+    environment:
+      DEBUG: "1"
+      SECRET_KEY: local-development-only-change-me
+      ALLOWED_HOSTS: localhost,127.0.0.1,backend,host.docker.internal,admin.localhost
+      POSTGRES_DB: siberian_forum
+      POSTGRES_USER: forum
+      POSTGRES_PASSWORD: local-development-only
+      POSTGRES_HOST: db
+      EMAIL_HOST: mail
+      EMAIL_PORT: "1025"
+      DEFAULT_FROM_EMAIL: forum@localhost
+      PUBLIC_SITE_URL: http://localhost:8095
+      PUBLIC_BACKEND_URL: http://localhost:8100
+      ADMIN_TOTP_REQUIRED: "${ADMIN_TOTP_REQUIRED:-0}"
+      ADMIN_DOMAIN: admin.localhost
+      ADMIN_SITE_URL: http://admin.localhost:8100
+    ports:
+      - "127.0.0.1:8100:8100"
+    volumes:
+      - ./backend:/app
+      - ./контент:/content:ro
+      - platform-media:/app/media
+      - platform-backups:/app/backups
+    depends_on:
+      db:
+        condition: service_healthy
+      mail:
+        condition: service_started
+    restart: "no"
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: siberianforum-backend:dev
+    container_name: siberianforum-platform-worker
+    command: python manage.py process_notifications --loop --sleep 5
+    environment:
+      DEBUG: "1"
+      SECRET_KEY: local-development-only-change-me
+      ALLOWED_HOSTS: localhost,127.0.0.1,backend,host.docker.internal,admin.localhost
+      POSTGRES_DB: siberian_forum
+      POSTGRES_USER: forum
+      POSTGRES_PASSWORD: local-development-only
+      POSTGRES_HOST: db
+      EMAIL_HOST: mail
+      EMAIL_PORT: "1025"
+      DEFAULT_FROM_EMAIL: forum@localhost
+      PUBLIC_SITE_URL: http://localhost:8095
+      PUBLIC_BACKEND_URL: http://localhost:8100
+      ADMIN_TOTP_REQUIRED: "${ADMIN_TOTP_REQUIRED:-0}"
+      ADMIN_DOMAIN: admin.localhost
+      ADMIN_SITE_URL: http://admin.localhost:8100
+    volumes:
+      - ./backend:/app
+      - ./контент:/content:ro
+    depends_on:
+      db:
+        condition: service_healthy
+      mail:
+        condition: service_started
+    restart: "no"
+
+  backend-prod:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: siberianforum-backend:dev
+    container_name: siberianforum-platform-prod
+    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8101 --workers 4 --threads 8 --timeout 60"
+    environment:
+      DEBUG: "0"
+      SECRET_KEY: local-production-like-long-random-value-not-for-production
+      ALLOWED_HOSTS: localhost,127.0.0.1,backend-prod,host.docker.internal,admin.localhost
+      POSTGRES_DB: siberian_forum
+      POSTGRES_USER: forum
+      POSTGRES_PASSWORD: local-development-only
+      POSTGRES_HOST: db
+      EMAIL_HOST: mail
+      EMAIL_PORT: "1025"
+      DEFAULT_FROM_EMAIL: forum@localhost
+      PUBLIC_SITE_URL: http://localhost:8095
+      PUBLIC_BACKEND_URL: http://localhost:8101
+      ADMIN_TOTP_REQUIRED: "${ADMIN_TOTP_REQUIRED:-0}"
+      ADMIN_DOMAIN: admin.localhost
+      ADMIN_SITE_URL: http://admin.localhost:8101
+      SECURE_SSL_REDIRECT: "0"
+      SESSION_COOKIE_SECURE: "0"
+      CSRF_COOKIE_SECURE: "0"
+      SECURE_HSTS_SECONDS: "0"
+      SECURE_HSTS_INCLUDE_SUBDOMAINS: "0"
+      SECURE_HSTS_PRELOAD: "0"
+    ports:
+      - "127.0.0.1:8101:8101"
+    volumes:
+      - ./backend:/app
+      - ./контент:/content:ro
+      - platform-media:/app/media
+      - platform-backups:/app/backups
+    depends_on:
+      db:
+        condition: service_healthy
+      mail:
+        condition: service_started
+    restart: "no"
+
+  backup:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: siberianforum-backend:dev
+    container_name: siberianforum-platform-backup
+    command: sh -c "while true; do python manage.py backup_data && sleep 86400; done"
+    environment:
+      DEBUG: "1"
+      SECRET_KEY: local-development-only-change-me
+      POSTGRES_DB: siberian_forum
+      POSTGRES_USER: forum
+      POSTGRES_PASSWORD: local-development-only
+      POSTGRES_HOST: db
+    volumes:
+      - ./backend:/app
+      - platform-backups:/app/backups
+      - platform-media:/app/media:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+volumes:
+  platform-postgres:
+  platform-backups:
+  platform-media:

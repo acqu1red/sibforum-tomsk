@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Моя программа — V Сибирский форум</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#071466">
+  <link rel="icon" type="image/png" href="../img/favicon.png">
+  <link rel="stylesheet" href="/fonts/fonts.css?v=2a94b395edf2">
+  <link rel="stylesheet" href="../css/style.css?v=331e8efece9c">
+  <link rel="stylesheet" href="../css/program.css?v=6723e38bd731">
+  <link rel="stylesheet" href="../css/register.css?v=a108b268f3dd">
+</head>
+<body>
+  <a class="skip-link" href="#my">Перейти к программе</a>
+
+  <header class="header header-forum always-solid" id="header">
+    <div class="container container-wide header-inner">
+      <a class="brand" href="index.html" aria-label="V Сибирский форум — на главную">
+        <img class="brand-forum-logo" src="../img/brand/forum-esg-logo.png" alt="" width="841" height="741" decoding="async">
+        <span class="brand-text">V Сибирский форум<small>13–17 апреля 2026 · Томск</small></span>
+      </a>
+      <nav class="nav" aria-label="Разделы форума">
+        <ul>
+          <li><a href="program.html">Программа</a></li>
+          <li><a href="index.html#speakers">Спикеры</a></li>
+          <li><a href="index.html#excursions">Экскурсии</a></li>
+          <li><a href="index.html#partners">Партнёры</a></li>
+          <li><a href="index.html#contacts">Контакты</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-ghost-light" href="program.html"><span data-icon="calendar"></span><span class="hide-sm">Вся программа</span></a>
+        <button class="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu" data-menu-open>
+          <span data-icon="menu" data-icon-class="icon-lg"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Меню">
+    <div class="mobile-menu-top">
+      <span class="brand-text">V Сибирский форум<small>13–17 апреля 2026 · Томск</small></span>
+      <button class="burger" type="button" aria-label="Закрыть меню" data-menu-close><span data-icon="x" data-icon-class="icon-lg"></span></button>
+    </div>
+    <nav aria-label="Меню для телефона">
+      <a href="program.html">Программа <span data-icon="arrow-right"></span></a>
+      <a href="index.html#excursions">Экскурсии <span data-icon="arrow-right"></span></a>
+      <a href="index.html#contacts">Контакты <span data-icon="arrow-right"></span></a>
+    </nav>
+  </div>
+
+  <main id="main">
+    <section class="page-head on-dark" aria-labelledby="page-title">
+      <div class="container container-wide my-head-grid">
+        <div>
+          <nav class="crumbs" aria-label="Хлебные крошки"><a href="../index.html">siberianforum.ru</a><span aria-hidden="true">/</span><a href="index.html#forum">V форум</a><span aria-hidden="true">/</span><span>Моя программа</span></nav>
+          <h1 id="page-title">Моя программа</h1>
+          <p class="page-meta" data-my-person>Загружаем…</p>
+          <div class="my-status" data-my-status></div>
+          <div class="page-actions" data-my-actions hidden>
+            <button class="btn btn-light" type="button" data-my-print><span data-icon="download"></span>Скачать PDF</button>
+            <button class="btn btn-ghost-light" type="button" data-my-ics><span data-icon="calendar"></span>В календарь (.ics)</button>
+            <a class="btn btn-ghost-light" href="program.html"><span data-icon="plus"></span>Добавить события</a>
+          </div>
+        </div>
+        <div class="my-qr" data-my-qr hidden></div>
+      </div>
+    </section>
+
+    <section class="program-body" id="my">
+      <div class="container container-wide">
+        <div data-my-changes></div>
+        <div data-my-list></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer on-dark">
+    <div class="container container-wide">
+      <div class="footer-bottom" style="margin-top:0;border-top:0;padding-top:0">
+        <span>Личная ссылка — не передавайте её другим людям. Вопросы: <a href="tel:+79293721986">+7 (929) 372-19-86</a> · <a href="mailto:kfa@tomsktpp.ru">kfa@tomsktpp.ru</a></span>
+        <span>© Союз «Торгово-промышленная палата Томской области», 2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="print-area" data-print-area></div>
+
+  <script>window.SITE_ROOT = '../';</script>
+  <script src="../js/icons.js?v=2c4c0eb595b1"></script>
+  <script src="data/forum.js?v=0721c3df1957"></script>
+  <script src="data/program.js?v=a268ac645d5e"></script>
+  <script src="../js/common.js?v=084ded3fb938"></script>
+  <script src="../js/schedule.js?v=c579d9a81dfa"></script>
+  <script src="../js/api.js?v=df0ab0d6d54d"></script>
+  <script src="../js/vendor/qrcode.js?v=18ae399f8118"></script>
+  <script src="../js/my.js?v=8094a2d7ebc8"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+[
+  {
+    "variant": "before",
+    "frames": {
+      "frames": 189,
+      "p95": 17.700000000000728,
+      "over50ms": 4
+    },
+    "scrollTaskMs": 206.79800000000003,
+    "heapMiB": 1.4496650695800781
+  },
+  {
+    "variant": "after",
+    "frames": {
+      "frames": 242,
+      "p95": 17.699999999999818,
+      "over50ms": 0
+    },
+    "scrollTaskMs": 195.96,
+    "heapMiB": 1.3928909301757812
+  }
+]

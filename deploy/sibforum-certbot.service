@@ -1,0 +1,10 @@
+[Unit]
+Description=Renew Sibforum HTTPS certificates and reload nginx
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/sibforum
+ExecStart=/bin/bash /opt/sibforum/deploy/production.sh renew /etc/sibforum/production.env

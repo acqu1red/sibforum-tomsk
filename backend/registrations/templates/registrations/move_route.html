@@ -1,0 +1,36 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}Перевод на другой маршрут — {{ item.registration.participant.full_name }}{% endblock %}
+
+{% block content %}
+<main id="content-start">
+  <h1>Перевод участника на другой маршрут</h1>
+  <p><strong>Участник:</strong> {{ item.registration.participant.full_name }}</p>
+  <p><strong>Организация:</strong> {{ item.registration.participant.organization }}</p>
+  <p><strong>Текущее событие:</strong> {{ item.event.title }} · {{ item.event.start_time|time:'H:i' }}–{{ item.event.end_time|time:'H:i' }}</p>
+  <p><strong>Текущий статус:</strong> {{ item.get_status_display }}</p>
+  <p>После перевода заявка будет одобрена, участник получит письмо, а изменение сохранится в истории.</p>
+  <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="move_selected">
+    <input type="hidden" name="confirm" value="1">
+    {% for id in selected_ids %}<input type="hidden" name="{{ action_checkbox_name }}" value="{{ id }}">{% endfor %}
+    <div class="form-row">
+      <label for="target-event"><strong>Новый маршрут</strong></label>
+      <select id="target-event" name="target_event" required>
+        <option value="">Выберите маршрут</option>
+        {% for event in routes %}<option value="{{ event.id }}">{{ event.title }} · {{ event.start_time|time:'H:i' }} · {{ event.annotation }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="move-note"><strong>Комментарий для участника</strong></label>
+      <textarea id="move-note" name="note" rows="4" maxlength="2000" placeholder="Например, причина перевода и дальнейшие действия">{{ note }}</textarea>
+    </div>
+    <div class="submit-row">
+      <input type="submit" class="default" value="Перевести и одобрить">
+      <a href="{% url 'admin:registrations_registrationitem_changelist' %}" class="button cancel-link">Отмена</a>
+    </div>
+  </form>
+</main>
+{% endblock %}

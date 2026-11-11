@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Регистрация — V Сибирский форум «Производительность и устойчивое развитие»</title>
+  <meta name="description" content="Регистрация на V Сибирский форум «Производительность и устойчивое развитие», 13–17 апреля 2026, Томск. Выбор сессий и экскурсий, личная программа.">
+  <meta name="theme-color" content="#071466">
+  <link rel="icon" type="image/png" href="../img/favicon.png">
+  <link rel="stylesheet" href="/fonts/fonts.css?v=2a94b395edf2">
+  <link rel="stylesheet" href="../css/style.css?v=331e8efece9c">
+  <link rel="stylesheet" href="../css/program.css?v=6723e38bd731">
+  <link rel="stylesheet" href="../css/register.css?v=a108b268f3dd">
+</head>
+<body>
+  <a class="skip-link" href="#reg">Перейти к форме</a>
+
+  <header class="header header-forum always-solid" id="header">
+    <div class="container container-wide header-inner">
+      <a class="brand" href="index.html" aria-label="V Сибирский форум — на главную">
+        <img class="brand-forum-logo" src="../img/brand/forum-esg-logo.png" alt="" width="841" height="741" decoding="async">
+        <span class="brand-text">V Сибирский форум<small>13–17 апреля 2026 · Томск</small></span>
+      </a>
+      <nav class="nav" aria-label="Разделы форума">
+        <ul>
+          <li><a href="program.html">Программа</a></li>
+          <li><a href="index.html#speakers">Спикеры</a></li>
+          <li><a href="index.html#excursions">Экскурсии</a></li>
+          <li><a href="index.html#partners">Партнёры</a></li>
+          <li><a href="index.html#contacts">Контакты</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-ghost-light hide-sm hide-md" href="../index.html#forums">Форумы прошлых лет</a>
+        <a class="btn btn-primary hide-sm" href="register.html" aria-current="page">Регистрация</a>
+        <button class="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu" data-menu-open>
+          <span data-icon="menu" data-icon-class="icon-lg"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Меню">
+    <div class="mobile-menu-top">
+      <span class="brand-text">V Сибирский форум<small>13–17 апреля 2026 · Томск</small></span>
+      <button class="burger" type="button" aria-label="Закрыть меню" data-menu-close><span data-icon="x" data-icon-class="icon-lg"></span></button>
+    </div>
+    <nav aria-label="Меню для телефона">
+      <a href="program.html">Программа <span data-icon="arrow-right"></span></a>
+      <a href="index.html#excursions">Экскурсии <span data-icon="arrow-right"></span></a>
+      <a href="index.html#speakers">Спикеры <span data-icon="arrow-right"></span></a>
+      <a href="index.html#contacts">Контакты <span data-icon="arrow-right"></span></a>
+    </nav>
+  </div>
+
+  <main id="main">
+    <section class="page-head on-dark" aria-labelledby="page-title">
+      <div class="container container-wide">
+        <nav class="crumbs" aria-label="Хлебные крошки"><a href="../index.html">siberianforum.ru</a><span aria-hidden="true">/</span><a href="index.html#forum">V форум</a><span aria-hidden="true">/</span><span>Регистрация</span></nav>
+        <h1 id="page-title">Регистрация на форум</h1>
+        <div class="page-meta">
+          <span><span data-icon="calendar"></span>13–17 апреля 2026 · Томск</span>
+          <span><span data-icon="clock"></span>Займёт около 3 минут</span>
+        </div>
+        <p class="page-note">Выбор событий можно изменить позже — по личной ссылке из письма.</p>
+      </div>
+    </section>
+
+    <section class="reg-body" id="reg">
+      <div class="container container-wide reg-layout">
+        <div class="reg-main">
+          <ol class="stepper" data-stepper aria-label="Шаги регистрации">
+            <li data-step-ind="1"><span class="num">1</span><span class="lbl">События</span></li>
+            <li data-step-ind="2"><span class="num">2</span><span class="lbl">Анкета</span></li>
+            <li data-step-ind="3"><span class="num">3</span><span class="lbl">Подтверждение</span></li>
+          </ol>
+          <p class="demo-note" data-demo-note hidden><span data-icon="alert"></span><span>Демо-режим: сайт открыт без локального сервера, заявка сохранится только в этом браузере. Для полной проверки запустите <b>start-site.bat</b>.</span></p>
+
+          <form class="reg-form" data-form novalidate>
+            <!-- Шаг 1. События -->
+            <section class="step" data-step="1" aria-labelledby="s1-title">
+              <h2 class="step-title" id="s1-title">Выберите события</h2>
+              <p class="step-lead">Отметьте, куда придёте. Если время или зал изменятся, мы пришлём письмо — только по выбранным событиям.</p>
+              <p class="field-error block" id="err-events" data-err="events" hidden></p>
+              <div class="pick-days" data-pick-days></div>
+              <div class="step-nav sticky-nav">
+                <span class="nav-count" data-nav-count>Ничего не выбрано</span>
+                <button class="btn btn-primary" type="button" data-go="2">Далее: анкета <span data-icon="arrow-right"></span></button>
+              </div>
+            </section>
+
+            <!-- Шаг 2. Анкета -->
+            <section class="step" data-step="2" aria-labelledby="s2-title" hidden>
+              <h2 class="step-title" id="s2-title">Анкета участника</h2>
+              <p class="step-lead">Поля со звёздочкой обязательны. Браузер может заполнить их сам.</p>
+              <div class="error-summary" data-error-summary hidden tabindex="-1"></div>
+
+              <div class="fields">
+                <div class="field span-2" data-field="name">
+                  <label for="f-name">Фамилия, имя, отчество <span class="req" aria-hidden="true">*</span></label>
+                  <input class="input" id="f-name" name="name" type="text" autocomplete="name" placeholder="Иванов Иван Иванович" aria-describedby="err-name" required>
+                  <p class="field-error" id="err-name" hidden></p>
+                </div>
+                <div class="field" data-field="email">
+                  <label for="f-email">E-mail <span class="req" aria-hidden="true">*</span></label>
+                  <input class="input" id="f-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="ivanov@company.ru" aria-describedby="hint-email err-email" required>
+                  <p class="field-hint" id="hint-email">Пришлём код подтверждения и личную программу</p>
+                  <p class="field-error" id="err-email" hidden></p>
+                </div>
+                <div class="field" data-field="phone">
+                  <label for="f-phone">Телефон <span class="req" aria-hidden="true">*</span></label>
+                  <input class="input" id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" aria-describedby="err-phone" required>
+                  <p class="field-error" id="err-phone" hidden></p>
+                </div>
+                <div class="field" data-field="org">
+                  <label for="f-org">Организация <span class="req" aria-hidden="true">*</span></label>
+                  <input class="input" id="f-org" name="org" type="text" autocomplete="organization" placeholder="ООО «Компания»" aria-describedby="err-org" required>
+                  <p class="field-error" id="err-org" hidden></p>
+                </div>
+                <div class="field" data-field="position">
+                  <label for="f-position">Должность <span class="req" aria-hidden="true">*</span></label>
+                  <input class="input" id="f-position" name="position" type="text" autocomplete="organization-title" placeholder="Руководитель отдела" aria-describedby="err-position" required>
+                  <p class="field-error" id="err-position" hidden></p>
+                </div>
+
+                <fieldset class="field span-2" data-field="category" aria-describedby="err-category">
+                  <legend>Категория участника <span class="req" aria-hidden="true">*</span></legend>
+                  <div class="choices">
+                    <label class="choice"><input type="radio" name="category" value="business"><span>Бизнес</span></label>
+                    <label class="choice"><input type="radio" name="category" value="plant"><span>Промышленное предприятие</span></label>
+                    <label class="choice"><input type="radio" name="category" value="university"><span>Вуз</span></label>
+                    <label class="choice"><input type="radio" name="category" value="school"><span>Школа, колледж</span></label>
+                    <label class="choice"><input type="radio" name="category" value="government"><span>Орган власти</span></label>
+                    <label class="choice"><input type="radio" name="category" value="media"><span>СМИ</span></label>
+                    <label class="choice"><input type="radio" name="category" value="other"><span>Другое</span></label>
+                  </div>
+                  <p class="field-error" id="err-category" hidden></p>
+                </fieldset>
+
+                <fieldset class="field span-2" data-field="format" aria-describedby="err-format">
+                  <legend>Формат участия <span class="req" aria-hidden="true">*</span></legend>
+                  <div class="choice-cards">
+                    <label class="choice-card"><input type="radio" name="format" value="offline"><span><b>Очно</b>Приду на площадки форума в Томске</span></label>
+                    <label class="choice-card"><input type="radio" name="format" value="online"><span><b>Онлайн</b>Смотрю трансляции, получаю материалы</span></label>
+                  </div>
+                  <p class="field-error" id="err-format" hidden></p>
+                </fieldset>
+
+                <div class="excursion-fields span-2" data-excursion-fields hidden>
+                  <h3><span data-icon="lock"></span>Для прохода на предприятие</h3>
+                  <p>Вы выбрали экскурсию — предприятию нужны эти данные для пропуска.</p>
+                  <div class="fields">
+                    <div class="field" data-field="birth_date">
+                      <label for="f-birth">Дата рождения <span class="req" aria-hidden="true">*</span></label>
+                      <input class="input" id="f-birth" name="birth_date" type="date" autocomplete="bday" min="1930-01-01" max="2010-12-31" aria-describedby="err-birth_date">
+                      <p class="field-error" id="err-birth_date" hidden></p>
+                    </div>
+                    <div class="field" data-field="citizenship">
+                      <label for="f-citizenship">Гражданство <span class="req" aria-hidden="true">*</span></label>
+                      <select class="select" id="f-citizenship" name="citizenship" aria-describedby="err-citizenship">
+                        <option value="">Выберите</option>
+                        <option value="RU">Российская Федерация</option>
+                        <option value="other">Другое</option>
+                      </select>
+                      <p class="field-error" id="err-citizenship" hidden></p>
+                    </div>
+                  </div>
+                </div>
+
+                <details class="more-fields span-2">
+                  <summary>Дополнительно — необязательно</summary>
+                  <div class="fields">
+                    <div class="field" data-field="city">
+                      <label for="f-city">Город</label>
+                      <input class="input" id="f-city" name="city" type="text" autocomplete="address-level2" placeholder="Томск">
+                    </div>
+                    <div class="field" data-field="inn">
+                      <label for="f-inn">ИНН организации</label>
+                      <input class="input" id="f-inn" name="inn" type="text" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="10 или 12 цифр" aria-describedby="err-inn">
+                      <p class="field-error" id="err-inn" hidden></p>
+                    </div>
+                    <div class="field" data-field="source">
+                      <label for="f-source">Откуда узнали о форуме</label>
+                      <select class="select" id="f-source" name="source">
+                        <option value="">Не выбрано</option>
+                        <option>Сайт ТПП Томской области</option>
+                        <option>Рассылка ТПП</option>
+                        <option>Социальные сети</option>
+                        <option>От коллег</option>
+                        <option>СМИ</option>
+                        <option>Другое</option>
+                      </select>
+                    </div>
+                    <div class="field span-2" data-field="comment">
+                      <label for="f-comment">Комментарий</label>
+                      <textarea class="input" id="f-comment" name="comment" rows="3" maxlength="1000" placeholder="Например, нужна помощь с парковкой или доступной средой"></textarea>
+                    </div>
+                  </div>
+                </details>
+              </div>
+
+              <div class="step-nav">
+                <button class="btn btn-secondary" type="button" data-go="1"><span data-icon="arrow-right" data-icon-class="flip"></span>Назад</button>
+                <button class="btn btn-primary" type="button" data-go="3">Далее: подтверждение <span data-icon="arrow-right"></span></button>
+              </div>
+            </section>
+
+            <!-- Шаг 3. Проверка и согласия -->
+            <section class="step" data-step="3" aria-labelledby="s3-title" hidden>
+              <h2 class="step-title" id="s3-title">Проверьте данные</h2>
+              <div class="summary" data-summary></div>
+
+              <fieldset class="consents" aria-describedby="consent-note">
+                <legend class="step-sub">Согласия</legend>
+                <label class="check" data-field="pd">
+                  <input type="checkbox" name="pd" aria-describedby="err-pd">
+                  <span>Даю <a href="../legal/consent.html" target="_blank" rel="noopener">согласие на обработку персональных данных</a> <span class="req">*</span></span>
+                </label>
+                <p class="field-error" id="err-pd" hidden></p>
+                <label class="check" data-field="policy">
+                  <input type="checkbox" name="policy" aria-describedby="err-policy">
+                  <span>Ознакомлен(а) с <a href="../legal/privacy.html" target="_blank" rel="noopener">политикой обработки персональных данных</a> <span class="req">*</span></span>
+                </label>
+                <p class="field-error" id="err-policy" hidden></p>
+                <label class="check">
+                  <input type="checkbox" name="media">
+                  <span>Согласен(на) на фото- и видеосъёмку на форуме</span>
+                </label>
+                <label class="check">
+                  <input type="checkbox" name="news">
+                  <span>Хочу получать новости о форумах ТПП Томской области</span>
+                </label>
+                <p class="consent-note" id="consent-note">Сохраним дату, время и версию согласия (ред. 1.0 от 11.11.2026). Данные хранятся на серверах в России.</p>
+              </fieldset>
+              <p class="captcha-note"><span data-icon="lock"></span>Форма защищена от ботов Яндекс SmartCaptcha</p>
+              <p class="form-error" data-form-error role="alert" hidden></p>
+
+              <div class="step-nav">
+                <button class="btn btn-secondary" type="button" data-go="2"><span data-icon="arrow-right" data-icon-class="flip"></span>Назад</button>
+                <button class="btn btn-primary" type="submit" data-submit>Отправить заявку <span data-icon="arrow-right"></span></button>
+              </div>
+            </section>
+          </form>
+
+          <!-- Подтверждение e-mail -->
+          <section class="step center-card" data-step="code" aria-labelledby="code-title" hidden>
+            <span class="big-icon"><span data-icon="mail" data-icon-class="icon-lg"></span></span>
+            <h2 class="step-title" id="code-title">Подтвердите e-mail</h2>
+            <p class="step-lead">Мы отправили код из 4 цифр на <b data-email-masked></b>. Так мы убедимся, что регистрирует сам участник.</p>
+            <div class="field code-field" data-field="code">
+              <label for="f-code">Код из письма</label>
+              <input class="input code-input" id="f-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="4" pattern="[0-9]{4}" aria-describedby="err-code">
+              <p class="field-error" id="err-code" hidden></p>
+            </div>
+            <p class="demo-code" data-demo-code hidden>Прототип не отправляет писем. Ваш код: <b></b></p>
+            <button class="btn btn-primary btn-block" type="button" data-confirm>Подтвердить</button>
+            <div class="code-links">
+              <button class="link-btn" type="button" data-resend disabled>Отправить код ещё раз</button>
+              <button class="link-btn" type="button" data-go="2">Изменить e-mail</button>
+            </div>
+          </section>
+
+          <!-- Готово -->
+          <section class="step" data-step="done" aria-labelledby="done-title" hidden>
+            <div class="success-head">
+              <span class="success-icon"><span data-icon="check" data-icon-class="icon-lg"></span></span>
+              <div>
+                <h2 class="step-title" id="done-title">Вы зарегистрированы!</h2>
+                <p class="step-lead" data-done-lead></p>
+              </div>
+            </div>
+            <div class="success-grid">
+              <div class="qr-card">
+                <div class="qr" data-qr></div>
+                <p>QR-код участника — покажите его на стойке регистрации</p>
+                <p class="reg-id">Номер заявки: <b data-reg-id></b></p>
+              </div>
+              <div>
+                <h3 class="step-sub">Ваша личная ссылка</h3>
+                <p class="field-hint">По ней можно посмотреть свою программу, добавить или отменить события. Пароль не нужен.</p>
+                <div class="copy-row">
+                  <input class="input" type="text" readonly data-personal-link aria-label="Личная ссылка">
+                  <button class="btn btn-secondary" type="button" data-copy>Копировать</button>
+                </div>
+                <div class="done-actions">
+                  <a class="btn btn-primary" data-my-link href="my.html"><span data-icon="bookmark"></span>Моя программа</a>
+                  <a class="btn btn-secondary" data-pdf-link href="my.html"><span data-icon="download"></span>Скачать PDF</a>
+                  <button class="btn btn-secondary" type="button" data-ics-all><span data-icon="calendar"></span>В календарь</button>
+                </div>
+                <h3 class="step-sub">Что дальше</h3>
+                <ol class="next-steps">
+                  <li>Если время или зал выбранных событий изменятся — пришлём письмо.</li>
+                  <li>За день до форума — напоминание с актуальной программой.</li>
+                  <li data-excursion-note hidden>Экскурсии: за 3 дня попросим подтвердить участие. Без подтверждения место перейдёт следующему в листе ожидания.</li>
+                  <li>На стойке регистрации покажите QR-код или назовите фамилию.</li>
+                </ol>
+              </div>
+            </div>
+            <div data-done-events></div>
+          </section>
+        </div>
+
+        <aside class="reg-aside" aria-label="Ваш выбор">
+          <div class="aside-card">
+            <h2 class="aside-title">Ваш выбор <span class="counter" data-aside-count>0</span></h2>
+            <div data-aside-list></div>
+          </div>
+          <div class="aside-help">
+            <span data-icon="phone"></span>
+            <span>Вопросы по регистрации:<br><a href="tel:+79293721986">+7 (929) 372-19-86</a> · <a href="mailto:kfa@tomsktpp.ru">kfa@tomsktpp.ru</a></span>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer on-dark">
+    <div class="container container-wide">
+      <div class="footer-bottom" style="margin-top:0;border-top:0;padding-top:0">
+        <span>© Союз «Торгово-промышленная палата Томской области», 2026 · <a href="../legal/privacy.html">Политика обработки персональных данных</a></span>
+        <span>Вопросы по регистрации: <a href="tel:+79293721986">+7 (929) 372-19-86</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script>window.SITE_ROOT = '../';</script>
+  <script src="../js/icons.js?v=2c4c0eb595b1"></script>
+  <script src="data/forum.js?v=0721c3df1957"></script>
+  <script src="data/program.js?v=a268ac645d5e"></script>
+  <script src="../js/common.js?v=084ded3fb938"></script>
+  <script src="../js/schedule.js?v=c579d9a81dfa"></script>
+  <script src="../js/api.js?v=df0ab0d6d54d"></script>
+  <script src="../js/vendor/qrcode.js?v=18ae399f8118"></script>
+  <script src="../js/register.js?v=77963eb3c891"></script>
+</body>
+</html>
