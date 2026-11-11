@@ -5,29 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>V Сибирский форум по промышленному туризму #ПРОМОТУРТОМСК–2026</title>
   <meta name="description" content="23–24 ноября 2026 года в Томске: итоговая программа, шесть экскурсионных маршрутов, спикеры, биржа субконтрактов, конкурс «Индустриальный код» и регистрация.">
+  <script>
+    // Start editorial data while styles and scripts load; no personal data or writes.
+    window.forumInitialData = {};
+    ["/deployment-config.json", "/api/v1/forums/promtour/program/", "/api/v1/contests/promtour/"].forEach(function (url) {
+      window.forumInitialData[url] = fetch(url, {cache: 'no-store', headers: {Accept: 'application/json'}})
+        .then(function (response) { return response.ok ? response.json() : null; }).catch(function () { return null; });
+    });
+  </script>
   <meta name="theme-color" content="#071466">
-  <link rel="icon" type="image/png" href="../img/favicon.png">
+  <link rel="canonical" href="https://sibforum-tomsk.ru/">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
   <link rel="stylesheet" href="/fonts/fonts.css?v=2a94b395edf2">
-  <link rel="stylesheet" href="../css/style.css?v=331e8efece9c">
-  <link rel="stylesheet" href="../css/register.css?v=a108b268f3dd">
-  <link rel="stylesheet" href="../css/promtour.css?v=842a99d8bc7e">
+  <link rel="stylesheet" href="/css/style.css?v=331e8efece9c">
+  <link rel="stylesheet" href="/css/register.css?v=a108b268f3dd">
+  <link rel="stylesheet" href="/css/promtour.css?v=fe7e5b53d719">
 </head>
 <body class="promtour-page" data-forum-slug="promtour">
   <a class="skip-link" href="#main">Перейти к содержанию</a>
 
   <header class="header header-forum always-solid" id="header">
     <div class="container header-inner">
-      <a class="brand" href="./" aria-label="Промтур — на главную">
-        <img class="brand-logo brand-logo-tpp" src="../img/brand/tpp-tomsk-logo-white.png" alt="Союз «ТПП Томской области»" width="268" height="104" decoding="async">
+      <a class="brand" href="/" aria-label="Промтур — на главную">
+        <img class="brand-logo brand-logo-tpp" src="/img/brand/tpp-tomsk-logo-white.png" alt="Союз «ТПП Томской области»" width="268" height="104" decoding="async">
         <span class="brand-sep" aria-hidden="true"></span>
-        <span class="brand-text">Промышленный туризм<small>Сибирский форум</small></span>
+        <span class="brand-text"><span data-page="brand_name">Промышленный туризм</span><small data-page="brand_subtitle">Сибирский форум</small></span>
       </a>
       <nav class="nav" aria-label="Разделы форума">
-        <ul>
+        <ul data-site-navigation>
           <li><a href="#program">Программа</a></li>
           <li><a href="#routes">Маршруты</a></li>
-          <li><a href="#speakers">Спикеры</a></li>
-          <li><a href="#exchange">Биржа</a></li>
+
+          <li><a href="#exchange">Биржа субконтрактации</a></li>
           <li><a href="#contest">Конкурс</a></li>
           <li><a href="#contacts">Контакты</a></li>
         </ul>
@@ -41,50 +50,70 @@
 
   <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Меню">
     <div class="mobile-menu-top">
-      <span class="brand-text">Промышленный туризм<small>Сибирский форум</small></span>
+      <span class="brand-text"><span data-page="brand_name">Промышленный туризм</span><small data-page="brand_subtitle">Сибирский форум</small></span>
       <button class="burger" type="button" aria-label="Закрыть меню" data-menu-close><span data-icon="x"></span></button>
     </div>
-    <nav aria-label="Меню для телефона">
+    <nav aria-label="Меню для телефона" data-site-mobile-navigation>
       <a href="#program">Программа <span data-icon="arrow-right"></span></a>
       <a href="#routes">Шесть маршрутов <span data-icon="arrow-right"></span></a>
-      <a href="#speakers">Спикеры <span data-icon="arrow-right"></span></a>
-      <a href="#exchange">Биржа субконтрактов <span data-icon="arrow-right"></span></a>
+
+      <a href="#exchange">Биржа субконтрактации <span data-icon="arrow-right"></span></a>
       <a href="#contest">Конкурс «Индустриальный код» <span data-icon="arrow-right"></span></a>
       <a href="#registration">Регистрация <span data-icon="arrow-right"></span></a>
       <a href="#contacts">Контакты и площадки <span data-icon="arrow-right"></span></a>
-      <a href="../index.html#forums">Все форумы <span data-icon="arrow-right"></span></a>
+      <a href="/">Сайт форума <span data-icon="arrow-right"></span></a>
     </nav>
   </div>
 
   <main id="main">
-    <section class="promtour-hero on-dark" aria-labelledby="forum-title">
+    <section class="promtour-hero on-dark" id="hero" aria-labelledby="forum-title">
       <div class="container promtour-hero-grid">
         <div>
-          <p class="eyebrow">V Сибирский форум по промышленному туризму</p>
-          <h1 id="forum-title">#ПРОМОТУРТОМСК–2026</h1>
-          <p class="promtour-hero-dates">23–24 ноября 2026 · Томск</p>
-          <p class="promtour-hero-desc">Два дня о развитии промышленного туризма: посещение действующих предприятий, обмен региональным опытом, деловые переговоры и семейные мероприятия.</p>
+          <p class="eyebrow" data-copy="hero.eyebrow">V Сибирский форум по промышленному туризму</p>
+          <h1 id="forum-title" data-copy="hero.heading">#ПРОМОТУРТОМСК–2026</h1>
+          <p class="promtour-hero-dates" data-page="date_label">23–24 ноября 2026 · Томск</p>
+          <p class="promtour-hero-desc" data-copy="hero.body">Два дня о развитии промышленного туризма: посещение действующих предприятий, обмен региональным опытом, деловые переговоры и семейные мероприятия.</p>
           <div class="promtour-hero-actions">
+            <a class="btn btn-vote" href="/contest/" data-copy="hero.action_label" data-copy-link="hero">Онлайн-голосование</a>
             <a class="btn btn-light" href="#registration">Зарегистрироваться</a>
             <a class="btn btn-ghost-light" href="#program">Смотреть программу</a>
           </div>
         </div>
         <aside class="promtour-hero-card" aria-label="Основная площадка">
-          <span class="promtour-kicker">Основная деловая площадка</span>
-          <strong>ОЭЗ ТВТ «Томск»</strong>
-          <span>пр. Развития, 3, 6 этаж</span>
-          <span class="promtour-hero-card-date">24 ноября · с 10:00</span>
+          <span class="promtour-kicker" data-page="venue_label">Основная деловая площадка</span>
+          <strong data-main-venue-name>ОЭЗ ТВТ «Томск»</strong>
+          <span data-main-venue-address>пр. Развития, 3, 6 этаж</span>
+          <span class="promtour-hero-card-date" data-page="venue_note">24 ноября · с 10:00</span>
           <a href="#contacts">Все площадки</a>
         </aside>
+      </div>
+    </section>
+
+    <section class="section" id="speakers" aria-labelledby="speakers-title">
+      <div class="container">
+        <div class="section-head left">
+          <p class="eyebrow" data-copy="speakers.eyebrow">Эксперты и модераторы</p>
+          <h2 class="section-title" id="speakers-title" data-copy="speakers.heading">Люди форума</h2>
+          <p class="section-lead" data-copy="speakers.body">Эксперты, участники и модераторы. Нажмите на фотографию, чтобы познакомиться.</p>
+        </div>
+        <div class="promtour-people" data-speaker-circles></div>
+        <details class="promtour-all-speakers"><summary>Темы выступлений и подробные карточки</summary>
+        <div class="promtour-speaker-tools">
+          <label class="field" for="speaker-search">Найти спикера</label>
+          <input class="input" id="speaker-search" type="search" placeholder="Фамилия, имя или тема" autocomplete="off" data-speaker-search>
+        </div>
+        <div class="promtour-speakers" data-speakers></div>
+        <p class="promtour-empty" data-speakers-empty hidden>По вашему запросу никого не найдено.</p>
+        </details>
       </div>
     </section>
 
     <section class="section" id="program" aria-labelledby="program-title">
       <div class="container">
         <div class="section-head left">
-          <p class="eyebrow">23 и 24 ноября</p>
-          <h2 class="section-title" id="program-title">Программа форума</h2>
-          <p class="section-lead">В первый день — предприятия и практический мастер-класс. Во второй — общая деловая часть, а затем мероприятия на выбор: одно до обеда и одно после.</p>
+          <p class="eyebrow" data-copy="program.eyebrow">23 и 24 ноября</p>
+          <h2 class="section-title" id="program-title" data-copy="program.heading">Программа форума</h2>
+          <p class="section-lead" data-copy="program.body">В первый день — предприятия и практический мастер-класс. Во второй — общая деловая часть, а затем мероприятия на выбор: одно до обеда и одно после.</p>
         </div>
         <div data-program-days></div>
       </div>
@@ -93,50 +122,29 @@
     <section class="section promtour-section-tinted" id="routes" aria-labelledby="routes-title">
       <div class="container">
         <div class="section-head left">
-          <p class="eyebrow">23 ноября · отправление в 09:15</p>
-          <h2 class="section-title" id="routes-title">Шесть экскурсионных маршрутов</h2>
-          <p class="section-lead">Все маршруты платные и проходят модерацию. Можно выбрать только один. Стоимость — 2500 ₽, оплата после звонка куратора.</p>
+          <p class="eyebrow" data-copy="routes.eyebrow">23 ноября · отправление в 09:15</p>
+          <h2 class="section-title" id="routes-title" data-copy="routes.heading">Экскурсионные маршруты</h2>
+          <p class="section-lead" data-copy="routes.body">Посещение действующих предприятий Томска и Томской области. Выберите маршрут и познакомьтесь с его программой.</p>
         </div>
-        <div class="promtour-choice-note"><strong>Важно:</strong> заявка не является оплатой и не гарантирует место. Куратор свяжется с вами, расскажет об условиях и порядке оплаты.</div>
+        <div class="promtour-choice-note" data-copy="routes.note">Заявка не является оплатой и не гарантирует место. Куратор свяжется с вами и расскажет об условиях участия.</div>
         <div class="promtour-routes" data-routes></div>
-      </div>
-    </section>
-
-    <section class="section" id="speakers" aria-labelledby="speakers-title">
-      <div class="container">
-        <div class="section-head left">
-          <p class="eyebrow">Эксперты и модераторы</p>
-          <h2 class="section-title" id="speakers-title">Спикеры форума</h2>
-          <p class="section-lead">Участники семинара, стратегической сессии, мастер-класса и семейных мероприятий. Откройте карточку, чтобы прочитать регалии, тему и роль в программе.</p>
-        </div>
-        <div class="promtour-speaker-tools">
-          <label class="field" for="speaker-search">Найти спикера</label>
-          <input class="input" id="speaker-search" type="search" placeholder="Фамилия, имя или тема" autocomplete="off" data-speaker-search>
-        </div>
-        <div class="promtour-speakers" data-speakers></div>
-        <p class="promtour-empty" data-speakers-empty hidden>По вашему запросу никого не найдено.</p>
       </div>
     </section>
 
     <section class="section promtour-section-dark on-dark" id="exchange" aria-labelledby="exchange-title">
       <div class="container">
         <div class="section-head left">
-          <p class="eyebrow">24 ноября · 12:30–14:00</p>
-          <h2 class="section-title" id="exchange-title">Биржа субконтрактов</h2>
-          <p class="section-lead">Площадка для переговоров потенциальных исполнителей с заказчиками. Выберите технические запросы, с которыми готовы работать, и отправьте единую заявку на форум.</p>
+          <p class="eyebrow" data-copy="exchange.eyebrow">24 ноября · 12:30–14:00</p>
+          <h2 class="section-title" id="exchange-title" data-copy="exchange.heading">Биржа субконтрактации</h2>
+          <p class="section-lead" data-copy="exchange.body">Площадка для переговоров потенциальных исполнителей с заказчиками. Выберите технические запросы, с которыми готовы работать, и отправьте единую заявку на форум.</p>
         </div>
         <div class="promtour-exchange-grid">
           <article class="promtour-dark-card">
             <h3>Как участвовать исполнителю</h3>
-            <ol class="promtour-steps">
-              <li>Изучите опубликованные лоты и технические материалы.</li>
-              <li>Выберите биржу и нужные лоты в единой регистрации.</li>
-              <li>Дождитесь решения куратора — заявка сначала будет на рассмотрении.</li>
-            </ol>
-            <p>Заказчики не регистрируются. Ваш выбор лотов не публикуется для других посетителей.</p>
+            <p data-copy="exchange.note">Изучите лоты и материалы. Выберите интересующие запросы в регистрации и дождитесь решения куратора.</p>
           </article>
           <div>
-            <h3 class="promtour-subtitle">Лоты и технические материалы</h3>
+            <h3 class="promtour-subtitle" data-copy="exchange.action_label">Лоты и технические материалы</h3>
             <div data-exchange-lots><p>Загружаем опубликованные лоты…</p></div>
           </div>
         </div>
@@ -146,16 +154,16 @@
     <section class="section" id="contest" aria-labelledby="contest-title">
       <div class="container">
         <div class="section-head left">
-          <p class="eyebrow">Конкурс в рамках V форума</p>
-          <h2 class="section-title" id="contest-title">«Индустриальный код»</h2>
-          <p class="section-lead">Восемь номинаций для проектов Томской области в сфере промышленного туризма. Награждение участников состоится 24 ноября в 11:00.</p>
+          <p class="eyebrow" data-copy="contest.eyebrow">Конкурс в рамках V форума</p>
+          <h2 class="section-title" id="contest-title" data-copy="contest.heading">«Индустриальный код»</h2>
+          <p class="section-lead" data-copy="contest.body">Восемь номинаций для проектов Томской области в сфере промышленного туризма. Награждение участников состоится 24 ноября в 11:00.</p>
         </div>
         <div class="promtour-contest-note">
           <p data-contest-state>Проверяем статус голосования…</p>
         </div>
         <div class="promtour-nominations" data-nominations></div>
         <div class="section-actions">
-          <a class="btn btn-primary" href="/contest/">Перейти к голосованию</a>
+          <a class="btn btn-primary" href="/contest/" data-copy="contest.action_label" data-copy-link="contest">Перейти к голосованию</a>
         </div>
       </div>
     </section>
@@ -163,9 +171,9 @@
     <section class="section promtour-registration promtour-section-tinted" id="registration" aria-labelledby="registration-title">
       <div class="container">
         <div class="section-head left">
-          <p class="eyebrow">Одна заявка на все мероприятия</p>
-          <h2 class="section-title" id="registration-title">Регистрация и личный билет</h2>
-          <p class="section-lead">Обычные события подтверждаются после проверки email. Маршруты и биржа отправляются куратору на модерацию. QR и PDF будут доступны на этой странице по личной ссылке.</p>
+          <p class="eyebrow" data-copy="registration.eyebrow">Одна заявка на все мероприятия</p>
+          <h2 class="section-title" id="registration-title" data-copy="registration.heading">Регистрация и личный билет</h2>
+          <p class="section-lead" data-copy="registration.body">Обычные события подтверждаются после проверки email. Маршруты и биржа отправляются куратору на модерацию. QR и PDF будут доступны на этой странице по личной ссылке.</p>
         </div>
         <div class="promtour-notice" data-api-error role="alert" hidden></div>
         <p class="promtour-loading" data-registration-status>Загружаем доступные мероприятия…</p>
@@ -221,24 +229,25 @@
     <section class="section" id="contacts" aria-labelledby="contacts-title">
       <div class="container">
         <div class="section-head left">
-          <p class="eyebrow">Контакты и площадки</p>
-          <h2 class="section-title" id="contacts-title">Как найти форум</h2>
+          <p class="eyebrow" data-copy="contacts.eyebrow">Контакты и площадки</p>
+          <h2 class="section-title" id="contacts-title" data-copy="contacts.heading">Как найти форум</h2>
         </div>
-        <div class="promtour-contacts">
+        <div class="promtour-contacts" data-site-contacts>
           <article class="promtour-contact-card"><span>24 ноября · деловая программа</span><h3>ОЭЗ ТВТ «Томск»</h3><p>Томск, пр. Развития, 3, 6 этаж.</p></article>
           <article class="promtour-contact-card"><span>23 ноября · отправление маршрутов</span><h3>Союз «ТПП Томской области»</h3><p>Сбор участников экскурсий в 09:15.</p></article>
           <article class="promtour-contact-card"><span>23 ноября · 16:00–18:00</span><h3>Точка кипения — Томск</h3><p>Томск, пр. Ленина, 26. Мастер-класс «Город четырёх комфортов».</p></article>
-          <article class="promtour-contact-card"><span>Организатор и связь</span><h3>Союз «ТПП Томской области»</h3><p><a href="mailto:mail@tomsktpp.ru">mail@tomsktpp.ru</a></p></article>
+          <article class="promtour-contact-card"><span>Организатор и связь</span><h3>Союз «ТПП Томской области»</h3><p><a href="mailto:mail@tomsktpp.ru" data-organizer-email>mail@tomsktpp.ru</a></p></article>
         </div>
       </div>
     </section>
+    <section class="section promtour-organization-section" id="organizations"><div class="container" data-site-organizations></div></section>
   </main>
 
   <footer class="footer on-dark">
     <div class="container">
       <div class="footer-bottom promtour-footer">
-        <span>© Союз «Торгово-промышленная палата Томской области», 2026</span>
-        <span><a href="../index.html#forums">Все форумы</a> · <a href="/legal/privacy.html">Политика ПДн</a> · <a href="/legal/cookies.html">Cookie</a> · <a href="mailto:mail@tomsktpp.ru">mail@tomsktpp.ru</a></span>
+        <span><span data-page="footer_text">© Союз «Торгово-промышленная палата Томской области», 2026</span></span>
+        <span><a href="/">Сайт форума</a> · <a href="/legal/privacy.html">Политика ПДн</a> · <a href="/legal/cookies.html">Cookie</a> · <a href="mailto:mail@tomsktpp.ru" data-organizer-email>mail@tomsktpp.ru</a></span>
       </div>
     </div>
   </footer>
@@ -249,11 +258,12 @@
   </dialog>
 
   <noscript><p class="promtour-noscript">Для просмотра программы и регистрации включите JavaScript.</p></noscript>
-  <script src="../js/icons.js?v=2c4c0eb595b1"></script>
-  <script src="../js/common.js?v=084ded3fb938"></script>
-  <script src="content.js?v=198dc1baa3c4"></script>
-  <script src="nominations.js?v=7e5345ff3dd3"></script>
-  <script src="../js/captcha.js?v=e922b1169c85"></script>
-  <script src="../js/promtour.js?v=da8a75cce221"></script>
+  <script src="/js/icons.js?v=2c4c0eb595b1"></script>
+  <script src="/js/common.js?v=1d7a2511978a"></script>
+  <script src="/promtour/content.js?v=198dc1baa3c4"></script>
+  <script src="/promtour/nominations.js?v=09e931831acc"></script>
+  <script src="/js/captcha.js?v=ac1fc080b107"></script>
+  <script src="/js/forum-content.js?v=8a080c1c4f2f"></script>
+  <script src="/js/promtour.js?v=ac5cf105b6d1"></script>
 </body>
 </html>

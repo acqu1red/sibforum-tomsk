@@ -1,0 +1,12 @@
+{% extends 'admin/base_site.html' %}
+{% block content %}
+<p>Вы отменяете <strong>{{ queryset.count }}</strong> выбранных бюллетеней. Они перестанут учитываться в результатах, а посетители смогут проголосовать повторно. История и причина сохранятся. Изменение текста или добавление компании не требует сброса.</p>
+{% if error %}<p class="errornote">{{ error }}</p>{% endif %}
+<form method="post">{% csrf_token %}
+{% for object in queryset %}<input type="hidden" name="_selected_action" value="{{ object.pk }}">{% endfor %}
+<input type="hidden" name="action" value="reset_test_ballots"><input type="hidden" name="select_across" value="{{ select_across }}"><input type="hidden" name="confirm_reset" value="1">
+<p><label for="reason">Причина сброса *</label><br><textarea id="reason" name="reason" rows="4" required style="max-width:100%;width:600px"></textarea></p>
+<p><label for="confirmation">Для подтверждения введите СБРОСИТЬ *</label><br><input id="confirmation" name="confirmation" required autocomplete="off"></p>
+<p><input type="submit" value="Отменить выбранные бюллетени"> <a href="{% url 'admin:voting_ballot_changelist' %}">Вернуться без изменений</a></p>
+</form>
+{% endblock %}

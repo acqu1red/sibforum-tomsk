@@ -1,0 +1,349 @@
+[
+  {
+    "variant": "after",
+    "profile": "veryweak",
+    "path": "/",
+    "elapsed": 11508,
+    "fcp": 1320,
+    "lcp": 1320,
+    "cls": 0,
+    "loadBytes": 453794,
+    "bytes": 487876,
+    "requests": 41,
+    "dom": 978,
+    "images": 51,
+    "initialLoadedImages": 14,
+    "initialDecodedMiB": 5.086585998535156,
+    "heapMiB": 2.4514808654785156,
+    "scrollTaskMs": 396.16499999999985,
+    "scrollLayoutMs": 6.411,
+    "scroll": {
+      "frames": 240,
+      "frameP95": 16.799999999999272,
+      "slowFrames": 0,
+      "mutations": 0
+    },
+    "peakContainerMiB": 205.32421875,
+    "overflow": false,
+    "errors": [],
+    "failed": [],
+    "brokenImages": [],
+    "longTasks": [
+      144,
+      237
+    ],
+    "resources": [
+      {
+        "name": "http://after/fonts/fonts.css?v=2a94b395edf2",
+        "duration": 308.19999999925494,
+        "bytes": 818
+      },
+      {
+        "name": "http://after/css/register.css?v=a108b268f3dd",
+        "duration": 457.19999999925494,
+        "bytes": 4323
+      },
+      {
+        "name": "http://after/css/style.css?v=27271a6bf851",
+        "duration": 757.8000000007451,
+        "bytes": 10960
+      },
+      {
+        "name": "http://after/css/promtour.css?v=984bd3bfd015",
+        "duration": 544.1000000014901,
+        "bytes": 5776
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/brand/tpp-tomsk-logo-white.png",
+        "duration": 794.8000000007451,
+        "bytes": 0
+      },
+      {
+        "name": "http://after/js/icons.js?v=2c4c0eb595b1",
+        "duration": 705.9000000022352,
+        "bytes": 9502
+      },
+      {
+        "name": "http://after/js/common.js?v=1d7a2511978a",
+        "duration": 1141.0999999977648,
+        "bytes": 3457
+      },
+      {
+        "name": "http://after/promtour/content.js?v=198dc1baa3c4",
+        "duration": 1242.3999999985099,
+        "bytes": 5181
+      },
+      {
+        "name": "http://after/promtour/nominations.js?v=09e931831acc",
+        "duration": 1122.2000000029802,
+        "bytes": 667
+      },
+      {
+        "name": "http://after/js/captcha.js?v=ac1fc080b107",
+        "duration": 1092.199999999255,
+        "bytes": 1039
+      },
+      {
+        "name": "http://after/js/forum-content.js?v=8a080c1c4f2f",
+        "duration": 1722,
+        "bytes": 2840
+      },
+      {
+        "name": "http://after/js/promtour.js?v=ac5cf105b6d1",
+        "duration": 2589.800000000745,
+        "bytes": 11697
+      },
+      {
+        "name": "http://after/deployment-config.json",
+        "duration": 370.5,
+        "bytes": 344
+      },
+      {
+        "name": "http://after/api/v1/forums/promtour/program/",
+        "duration": 903.5,
+        "bytes": 10406
+      },
+      {
+        "name": "http://after/api/v1/contests/promtour/",
+        "duration": 1130,
+        "bytes": 20731
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/hero/tomsk-night-640.webp",
+        "duration": 1706.8999999985099,
+        "bytes": 0
+      },
+      {
+        "name": "http://after/fonts/onest-cyrillic.woff2",
+        "duration": 1027.6000000014901,
+        "bytes": 16128
+      },
+      {
+        "name": "http://after/fonts/onest-latin.woff2",
+        "duration": 1985.300000000745,
+        "bytes": 34108
+      },
+      {
+        "name": "http://after/fonts/montserrat-latin.woff2",
+        "duration": 2014.300000000745,
+        "bytes": 35808
+      },
+      {
+        "name": "http://after/fonts/montserrat-cyrillic.woff2",
+        "duration": 1690.0999999977648,
+        "bytes": 21792
+      },
+      {
+        "name": "http://after/api/v1/content-revision/",
+        "duration": 316.8999999985099,
+        "bytes": 352
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/hero/tomsk-night-1280.webp",
+        "duration": 2495,
+        "bytes": 0
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/promtour/speakers/belenok-320.webp",
+        "duration": 767.6999999992549,
+        "bytes": 0
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/promtour/speakers/epikhina-320.webp",
+        "duration": 885.6000000014901,
+        "bytes": 0
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/promtour/speakers/kovaleva-320.webp",
+        "duration": 1082,
+        "bytes": 0
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/promtour/speakers/lukyanova-320.webp",
+        "duration": 1289.8999999985099,
+        "bytes": 0
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/promtour/speakers/gefsimanskaya-320.webp",
+        "duration": 1456.0999999977648,
+        "bytes": 0
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/promtour/speakers/gorbulitskaya-320.webp",
+        "duration": 1347.5,
+        "bytes": 0
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/promtour/speakers/kalyuzhnaya-320.webp",
+        "duration": 1425.199999999255,
+        "bytes": 0
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/promtour/speakers/zharkova-320.webp",
+        "duration": 1512.5,
+        "bytes": 0
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/promtour/speakers/kiselnikova-320.webp",
+        "duration": 1664,
+        "bytes": 0
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/promtour/speakers/akimova-320.webp",
+        "duration": 2126.300000000745,
+        "bytes": 0
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/promtour/speakers/cherenkov-320.webp",
+        "duration": 2023.3999999985099,
+        "bytes": 0
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/promtour/speakers/osoba-320.webp",
+        "duration": 2172,
+        "bytes": 0
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/promtour/speakers/medvedev-320.webp",
+        "duration": 2216.599999997765,
+        "bytes": 0
+      }
+    ]
+  },
+  {
+    "variant": "after",
+    "profile": "veryweak",
+    "path": "/contest/",
+    "elapsed": 9027,
+    "fcp": 1136,
+    "lcp": 2468,
+    "cls": 0.037174541473388674,
+    "loadBytes": 200376,
+    "bytes": 200376,
+    "requests": 21,
+    "dom": 825,
+    "images": 1,
+    "initialLoadedImages": 1,
+    "initialDecodedMiB": 0.1063232421875,
+    "heapMiB": 2.390796661376953,
+    "scrollTaskMs": 127.37700000000007,
+    "scrollLayoutMs": 0,
+    "scroll": {
+      "frames": 241,
+      "frameP95": 16.800000000000182,
+      "slowFrames": 0,
+      "mutations": 0
+    },
+    "peakContainerMiB": 205.32421875,
+    "overflow": false,
+    "errors": [],
+    "failed": [],
+    "brokenImages": [],
+    "longTasks": [
+      157,
+      83
+    ],
+    "resources": [
+      {
+        "name": "http://after/fonts/fonts.css?v=2a94b395edf2",
+        "duration": 323.19999999925494,
+        "bytes": 818
+      },
+      {
+        "name": "http://after/css/register.css?v=a108b268f3dd",
+        "duration": 497,
+        "bytes": 4323
+      },
+      {
+        "name": "http://after/css/promtour.css?v=984bd3bfd015",
+        "duration": 512.6000000014901,
+        "bytes": 5776
+      },
+      {
+        "name": "http://after/css/style.css?v=27271a6bf851",
+        "duration": 586.7000000029802,
+        "bytes": 10960
+      },
+      {
+        "name": "http://after/css/contest.css?v=71b510146427",
+        "duration": 456.69999999925494,
+        "bytes": 1869
+      },
+      {
+        "name": "https://sibforum-tomsk-media-2026.storage.yandexcloud.net/site/img/brand/tpp-tomsk-logo-white.png",
+        "duration": 1787.8999999985099,
+        "bytes": 0
+      },
+      {
+        "name": "http://after/js/icons.js?v=2c4c0eb595b1",
+        "duration": 1246.5999999977648,
+        "bytes": 9502
+      },
+      {
+        "name": "http://after/js/common.js?v=1d7a2511978a",
+        "duration": 1620.4000000022352,
+        "bytes": 3457
+      },
+      {
+        "name": "http://after/js/captcha.js?v=ac1fc080b107",
+        "duration": 1695.699999999255,
+        "bytes": 1039
+      },
+      {
+        "name": "http://after/js/forum-content.js?v=8a080c1c4f2f",
+        "duration": 1935.3999999985099,
+        "bytes": 2840
+      },
+      {
+        "name": "http://after/js/contest.js?v=e93c317efed4",
+        "duration": 1978.5999999977648,
+        "bytes": 5725
+      },
+      {
+        "name": "http://after/deployment-config.json",
+        "duration": 373.79999999701977,
+        "bytes": 344
+      },
+      {
+        "name": "http://after/api/v1/forums/promtour/program/",
+        "duration": 767.1999999992549,
+        "bytes": 10406
+      },
+      {
+        "name": "http://after/api/v1/contests/promtour/",
+        "duration": 1044.9000000022352,
+        "bytes": 20731
+      },
+      {
+        "name": "http://after/api/v1/contests/promtour/voter-session/",
+        "duration": 775.3999999985099,
+        "bytes": 406
+      },
+      {
+        "name": "http://after/fonts/onest-cyrillic.woff2",
+        "duration": 757.7999999970198,
+        "bytes": 16128
+      },
+      {
+        "name": "http://after/fonts/onest-latin.woff2",
+        "duration": 967.8999999985099,
+        "bytes": 34108
+      },
+      {
+        "name": "http://after/api/v1/content-revision/",
+        "duration": 324.4000000022352,
+        "bytes": 352
+      },
+      {
+        "name": "http://after/fonts/montserrat-cyrillic.woff2",
+        "duration": 729.3000000007451,
+        "bytes": 21792
+      },
+      {
+        "name": "http://after/fonts/montserrat-latin.woff2",
+        "duration": 877.1000000014901,
+        "bytes": 35808
+      }
+    ]
+  }
+]

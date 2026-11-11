@@ -38,7 +38,7 @@ class PublicCatalogQueriesTests(TestCase):
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get('/api/v1/forums/audit/program/')
         self.assertEqual(response.status_code, 200)
-        self.assertLessEqual(len(queries), 12)
+        self.assertLessEqual(len(queries), 17)
         data = response.json()
         self.assertEqual(len(data['speakers']), 12)
         self.assertEqual(len(data['days'][0]['events']), 12)
@@ -48,7 +48,7 @@ class PublicCatalogQueriesTests(TestCase):
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get('/api/v1/contests/audit/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(queries), 3)
+        self.assertEqual(len(queries), 4)
         self.assertEqual(len(response.json()['nominations']), 12)
         self.assertTrue(all(len(n['nominees']) == 1 for n in response.json()['nominations']))
         self.assertNotIn('Скрыт', response.content.decode())

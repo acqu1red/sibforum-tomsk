@@ -10,7 +10,7 @@
 - С Mac подключение: `ssh sibforum-timeweb`. Алиас использует существующий ключ и направляет только это SSH-соединение через Wi-Fi `en0`, обходя VPN. При смене сетевого интерфейса proxy потребует корректировки; глобальные маршруты не менялись.
 - Загрузка исходников: `bash deploy/upload.sh root@sibforum-timeweb`.
 - Обновление: `ssh sibforum-timeweb 'cd /opt/sibforum && bash deploy/production.sh update'`.
-- Единственный руководитель: `director`; пароль сохранён вне исходников в `~/.codex/credentials/sibforum-admin.txt`, TOTP нужно настроить при первом входе.
+- Единственный руководитель: `director`; пароль сохранён вне исходников в `~/.codex/credentials/sibforum-admin.txt`, TOTP временно отключён по поручению владельца.
 - Первая копия данных вне VPS: `~/.codex/backups/sibforum/initial-2026-11-11.tar.gz` (600). Автоматический backup раз в сутки хранит последние 14 комплектов на VPS; регулярную внешнюю репликацию ещё нужно подключить.
 - HTTPS для обоих доменов выпущен; проверены dry-run продления и systemd service с reload.
 - Старый сервер `201.51.28.86` не удалён.
@@ -23,7 +23,7 @@
 - SMTP: хост, порт, логин/пароль, `DEFAULT_FROM_EMAIL`, SPF/DKIM/DMARC.
 - Yandex SmartCaptcha: `YANDEX_SMARTCAPTCHA_SECRET` и `YANDEX_SMARTCAPTCHA_CLIENT_ID`.
 - Юридическое утверждение документов в `site/legal/`.
-- Три индивидуальных администратора и TOTP-приложение для каждого.
+- Индивидуальные сотрудники создаются руководителем `director`; TOTP сейчас отключён.
 - Политика хранения ПДн и резервных копий, канал удаления/восстановления доступа.
 - Реальные телефоны стойки и тестовая площадка для QR.
 - Правильная итоговая программа промтура. PDF с именем итоговой программы 09.11 при рендере оказался другим форумом РЦИС на 11.11; использовать его для промтура нельзя. Подробности — `docs/frontend-acceptance.md`.
@@ -98,26 +98,26 @@ docker compose --env-file /etc/sibforum/production.env -f docker-compose.prod.ym
 docker compose --env-file /etc/sibforum/production.env -f docker-compose.prod.yml exec -T backend-prod python manage.py loaddata /tmp/catalog.json
 ```
 
-Повторный импорт перезаписывает каталог; не включайте его в обычное обновление. После импорта создайте индивидуальные учётные записи через `createsuperuser` и настройте TOTP при входе. Не переносите администраторов из БД разработки.
+Повторный импорт перезаписывает каталог; не включайте его в обычное обновление. После импорта создайте индивидуальные учётные записи через `createsuperuser` ; TOTP сейчас отключён по поручению владельца. Не переносите администраторов из БД разработки.
 
 ## 4. Проверка после запуска
 
 - `https://${DOMAIN}/api/v1/health/` возвращает 200.
 - `https://${DOMAIN}/admin/` и `https://${DOMAIN}/api/v1/admin/` возвращают 404.
-- `https://${ADMIN_DOMAIN}/admin/` требует пароль и TOTP; создайте администраторов отдельными командами `createsuperuser`.
+- `https://${ADMIN_DOMAIN}/admin/` требует пароль. Сотрудников создаёт только руководитель в панели.
 - `https://${ADMIN_DOMAIN}/admin/check-in/` работает по HTTPS на телефонах сотрудников.
 - `https://${ADMIN_DOMAIN}/robots.txt` возвращает `Disallow: /`, `sitemap.xml` на admin-домене — 404, заголовок `X-Robots-Tag` — `noindex`.
-- `/contest/` загружает номинации и SmartCaptcha.
-- При `PUBLIC_SUBMISSIONS_ENABLED=0` отправка заявок/голосов и проверка email-кодов закрыты на обоих доменах. После настройки почты и капчи установите `PUBLIC_SUBMISSIONS_ENABLED=1`, примените `update` и проверьте реальную доставку кодов.
+- `/contest/` загружает номинации; в простом режиме голосование не требует почты. SmartCaptcha регистрации загружается при приближении к форме.
+- `PUBLIC_SUBMISSIONS_ENABLED` управляет регистрацией и её кодами на обоих доменах; `PUBLIC_VOTING_ENABLED` отдельно управляет голосованием. Для открытия регистрации нужны Postbox/SMTP и SmartCaptcha; `production.sh` проверяет обязательные настройки.
 - `/esg2026/register.html` и `/esg2026/my.html` в production закрыты: эти страницы используют демонстрационную модель с localStorage. Витрина и программа ESG доступны для просмотра.
-- `https://${ADMIN_DOMAIN}/admin/exports/` доступен только после staff + TOTP.
+- `https://${ADMIN_DOMAIN}/admin/exports/` доступен только с соответствующими правами сотрудника.
 - Письмо с кодом реально доходит в Gmail, Яндекс Почту и Mail.ru.
 - PDF и QR открываются на телефоне, ссылка в QR ведёт на `ADMIN_SITE_URL`.
 - Старый `/api/export.csv` не используется; если нужен, задайте отдельный `LEGACY_EXPORT_TOKEN` вне репозитория.
 
 ## 5. Backup и restore
 
-Сервис `backup` ежедневно создаёт `backup-<timestamp>.json` и `backup-<timestamp>-media.tar.gz` и хранит последние 14 комплектов в volume `production-backups`. База и фотографии спикеров сохраняются вместе; `production-media` подключён к сервису backup в read-only режиме. Системные `contenttypes` и `auth.permission` исключены из дампа, чтобы восстановление не конфликтовало с миграциями.
+Сервис `backup` ежедневно создаёт `backup-<timestamp>.json` и хранит последние 14 комплектов в volume `production-backups`. При Object Storage рядом сохраняется `backup-<timestamp>-s3-inventory.ndjson`: ключи, ETag, размер и точные версии объектов. Файлы остаются в бакете с включённым версионированием и сроком хранения предыдущих версий 30 дней. Опись не является независимой копией файлов. Для локального хранилища сохраняется прежний `-media.tar.gz`. Системные `contenttypes` и `auth.permission` исключены из дампа.
 
 Проверка восстановления обязательна на отдельной БД перед реальными ПДн и затем регулярно:
 
@@ -131,7 +131,7 @@ docker compose --env-file /etc/sibforum/production.env -f docker-compose.prod.ym
 docker compose --env-file /etc/sibforum/production.env -f docker-compose.prod.yml exec -e RESTORE_CONFIRM=1 backend-prod python manage.py restore_data /app/backups/backup-YYYYMMDD-HHMMSS.json
 ```
 
-При наличии одноимённого `backup-<timestamp>-media.tar.gz` команда также восстанавливает media в `MEDIA_ROOT`. Распаковка использует защищённый фильтр tar-файлов. Зафиксируйте фактическое время восстановления и проверьте не только число записей, но и доступность фотографий. Требование: не более 4 часов.
+Команда восстанавливает БД. При локальном хранилище и наличии одноимённого `backup-<timestamp>-media.tar.gz` она также восстанавливает media в `MEDIA_ROOT`. При Object Storage файлы автоматически не откатываются: нужную `IsLatest` версию типа `Versions` из описи можно восстановить копированием указанного `VersionId` в тот же ключ через S3 CopyObject или консоль. Сначала проверить на отдельном бакете; не удалять новые объекты, отсутствующие в старой описи, автоматически. Распаковка использует защищённый фильтр tar-файлов. Зафиксируйте фактическое время восстановления и проверьте не только число записей, но и доступность фотографий. Требование: не более 4 часов.
 
 ## 6. Приёмка перед открытием
 
@@ -156,6 +156,17 @@ docker compose --env-file /etc/sibforum/production.env -f docker-compose.prod.ym
 
 ## 8. Что нельзя сделать без заказчика
 
-- Реальные DNS, внешний SMTP, production SmartCaptcha, юридическое утверждение и финальное наполнение.
+- Юридическое утверждение, финальное наполнение, новые фотографии и утверждённые статусы спонсоров. DNS, Postbox, Object Storage и production SmartCaptcha подключены по разрешению владельца.
 - Полевой тест камер и сети на площадке.
 - Проверка доставки писем в реальные почтовые системы и окончательная оценка спам-фильтров.
+
+## 9. Yandex Cloud
+
+Каталог `sibforum-tomsk` (`b1gtojpt1lm8kgio51be`), сервисный аккаунт `sibforum-platform`, бакет `sibforum-tomsk-media-2026`. Другие проекты облака не изменяются.
+
+- В env вне репозитория: `EMAIL_BACKEND=config.postbox.EmailBackend`, `POSTBOX_ACCESS_KEY_ID`, `POSTBOX_SECRET_ACCESS_KEY`, `DEFAULT_FROM_EMAIL`, `MEDIA_BUCKET_NAME`, `MEDIA_PUBLIC_BASE_URL`, `MEDIA_ACCESS_KEY_ID`, `MEDIA_SECRET_ACCESS_KEY`, `PUBLIC_ASSET_BASE_URL`, два ключа SmartCaptcha. Postbox работает по HTTPS/443.
+- Отправитель `noreply@sibforum-tomsk.ru`; DKIM-записи перечислены в `deploy/postbox-dns.json`. MX, SPF и DMARC прежней входящей почты сохранены. Это исходящая почта сайта, а не новый почтовый ящик.
+- Стартовая квота Postbox — 200 писем/сутки на облако: до массовой регистрации запросить увеличение. Доставка во «Входящие» Яндекса проверена владельцем; это не проверка всех почтовых провайдеров.
+- Публичны только `site/img/*` и `optimized/*`; исходники приватные, ссылки админки подписаны на 15 минут. Список объектов анонимам закрыт.
+- `deploy/public-assets.json` содержит только публичный URL. `tools/deploy-site.sh` собирает отдельный каталог без изображений, переписывая HTML/CSS на бакет. `deploy/upload.sh` передаёт эту сборку. Исходные изображения остаются в GitHub и локально.
+- Обновление встроенных картинок требует загрузить изменённые файлы в `site/img/` бакета до публикации HTML. Файлы с новым именем не конфликтуют с кэшем. Из админки варианты получают имя по содержимому и неизменяемый кэш.

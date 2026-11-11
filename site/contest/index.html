@@ -5,36 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Индустриальный код — онлайн-голосование</title>
   <meta name="description" content="Онлайн-голосование конкурса «Индустриальный код» за лучшие проекты Томской области в сфере промышленного туризма.">
+  <script>
+    // Start editorial data while styles and scripts load; no personal data or writes.
+    window.forumInitialData = {};
+    ["/deployment-config.json", "/api/v1/forums/promtour/program/", "/api/v1/contests/promtour/", "/api/v1/contests/promtour/voter-session/"].forEach(function (url) {
+      window.forumInitialData[url] = fetch(url, {cache: 'no-store', headers: {Accept: 'application/json'}})
+        .then(function (response) { return response.ok ? response.json() : null; }).catch(function () { return null; });
+    });
+  </script>
   <meta name="theme-color" content="#071466">
+  <link rel="canonical" href="https://sibforum-tomsk.ru/contest/">
   <link rel="icon" type="image/png" href="/img/favicon.png">
   <link rel="stylesheet" href="/fonts/fonts.css?v=2a94b395edf2">
   <link rel="stylesheet" href="/css/style.css?v=331e8efece9c">
   <link rel="stylesheet" href="/css/register.css?v=a108b268f3dd">
-  <link rel="stylesheet" href="/css/promtour.css?v=842a99d8bc7e">
-  <link rel="stylesheet" href="/css/contest.css?v=e09979eeb419">
+  <link rel="stylesheet" href="/css/promtour.css?v=fe7e5b53d719">
+  <link rel="stylesheet" href="/css/contest.css?v=71b510146427">
 </head>
 <body class="promtour-page contest-page">
   <a class="skip-link" href="#main">Перейти к голосованию</a>
 
   <header class="header header-forum always-solid" id="header">
     <div class="container header-inner">
-      <a class="brand" href="/promtour/" aria-label="Промтур — на главную">
+      <a class="brand" href="/" aria-label="Промтур — на главную">
         <img class="brand-logo brand-logo-tpp" src="/img/brand/tpp-tomsk-logo-white.png" alt="Союз «ТПП Томской области»" width="268" height="104" decoding="async">
         <span class="brand-sep" aria-hidden="true"></span>
-        <span class="brand-text">Промышленный туризм<small>Сибирский форум</small></span>
+        <span class="brand-text"><span data-page="brand_name">Промышленный туризм</span><small data-page="brand_subtitle">Сибирский форум</small></span>
       </a>
       <nav class="nav" aria-label="Разделы форума">
-        <ul>
-          <li><a href="/promtour/#program">Программа</a></li>
-          <li><a href="/promtour/#routes">Маршруты</a></li>
-          <li><a href="/promtour/#speakers">Спикеры</a></li>
-          <li><a href="/promtour/#exchange">Биржа</a></li>
+        <ul data-site-navigation>
+          <li><a href="/#program">Программа</a></li>
+          <li><a href="/#routes">Маршруты</a></li>
+
+          <li><a href="/#exchange">Биржа субконтрактации</a></li>
           <li><a href="/contest/" aria-current="page">Конкурс</a></li>
-          <li><a href="/promtour/#contacts">Контакты</a></li>
+          <li><a href="/#contacts">Контакты</a></li>
         </ul>
       </nav>
       <div class="header-actions">
-        <a class="btn btn-primary hide-sm" href="/promtour/#registration">Регистрация</a>
+        <a class="btn btn-primary hide-sm" href="/#registration">Регистрация</a>
         <button class="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu" data-menu-open><span data-icon="menu"></span></button>
       </div>
     </div>
@@ -42,18 +51,18 @@
 
   <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Меню">
     <div class="mobile-menu-top">
-      <span class="brand-text">Промышленный туризм<small>Сибирский форум</small></span>
+      <span class="brand-text"><span data-page="brand_name">Промышленный туризм</span><small data-page="brand_subtitle">Сибирский форум</small></span>
       <button class="burger" type="button" aria-label="Закрыть меню" data-menu-close><span data-icon="x"></span></button>
     </div>
-    <nav aria-label="Меню для телефона">
-      <a href="/promtour/#program">Программа <span data-icon="arrow-right"></span></a>
-      <a href="/promtour/#routes">Шесть маршрутов <span data-icon="arrow-right"></span></a>
-      <a href="/promtour/#speakers">Спикеры <span data-icon="arrow-right"></span></a>
-      <a href="/promtour/#exchange">Биржа субконтрактов <span data-icon="arrow-right"></span></a>
+    <nav aria-label="Меню для телефона" data-site-mobile-navigation>
+      <a href="/#program">Программа <span data-icon="arrow-right"></span></a>
+      <a href="/#routes">Шесть маршрутов <span data-icon="arrow-right"></span></a>
+
+      <a href="/#exchange">Биржа субконтрактации <span data-icon="arrow-right"></span></a>
       <a href="/contest/" aria-current="page">Конкурс «Индустриальный код» <span data-icon="arrow-right"></span></a>
-      <a href="/promtour/#registration">Регистрация <span data-icon="arrow-right"></span></a>
-      <a href="/promtour/#contacts">Контакты и площадки <span data-icon="arrow-right"></span></a>
-      <a href="/#forums">Все форумы <span data-icon="arrow-right"></span></a>
+      <a href="/#registration">Регистрация <span data-icon="arrow-right"></span></a>
+      <a href="/#contacts">Контакты и площадки <span data-icon="arrow-right"></span></a>
+
     </nav>
   </div>
 
@@ -61,13 +70,14 @@
     <section class="section contest-ballot" id="vote" aria-labelledby="contest-title">
       <div class="container contest-container">
         <div class="section-head left">
-          <p class="eyebrow">Конкурс в рамках V форума</p>
-          <h1 class="section-title" id="contest-title">«Индустриальный код»</h1>
-          <p class="section-lead"><span data-contest-description>Восемь номинаций для проектов Томской области в сфере промышленного туризма.</span> Награждение участников состоится 24 ноября в 11:00.</p>
+          <p class="eyebrow">Онлайн-голосование</p>
+          <h1 class="section-title" id="contest-title">Индустриальный код</h1>
+          <p class="section-lead"><span data-contest-description>Восемь номинаций для проектов Томской области в сфере промышленного туризма.</span></p>
         </div>
 
         <div class="promtour-contest-note">
-          <p><strong>Можно пропустить незнакомую номинацию.</strong> Откройте номинацию и отметьте кандидатов или пропустите её. Перед отправкой можно проверить весь выбор.</p>
+          <p>Выберите проекты в знакомых вам номинациях. Достаточно поддержать хотя бы одного участника. Регистрироваться на форум не нужно.</p>
+          <p data-contest-rules hidden></p>
           <p data-contest-state>Проверяем статус голосования…</p>
         </div>
         <div class="contest-notice" data-api-error role="alert" hidden></div>
@@ -77,10 +87,10 @@
 
         <form class="contest-form" data-ballot-form hidden novalidate>
           <h2>Подтверждение бюллетеня</h2>
-          <p class="contest-form-intro">Проверьте выбор и укажите email. Мы отправим код для подтверждения голосования.</p>
+          <p class="contest-form-intro" data-ballot-intro>Проверьте выбор и укажите email. Мы отправим код для подтверждения голосования.</p>
           <p class="contest-selection-summary" data-selection-summary>Вы пока не выбрали кандидатов.</p>
-          <div class="field contest-email"><label for="vote-email">E-mail для подтверждения *</label><input class="input" id="vote-email" type="email" autocomplete="email" required></div>
-          <p class="contest-privacy">Email нужен только для подтверждения и защиты от повторного голосования. В отчётах он не публикуется.</p>
+          <div class="field contest-email" data-email-field><label for="vote-email">E-mail для подтверждения *</label><input class="input" id="vote-email" type="email" autocomplete="email" required></div>
+          <p class="contest-privacy" data-email-privacy>Email нужен только для подтверждения и защиты от повторного голосования. В отчётах он не публикуется.</p>
           <div id="smart-captcha" class="smart-captcha" hidden></div>
           <input id="captcha-token" type="hidden" name="captcha_token">
           <p class="form-error" data-form-error role="alert" hidden></p>
@@ -108,8 +118,8 @@
   <footer class="footer on-dark">
     <div class="container">
       <div class="footer-bottom promtour-footer">
-        <span>© Союз «Торгово-промышленная палата Томской области», 2026</span>
-        <span><a href="/promtour/">Сайт форума</a> · <a href="/#forums">Все форумы</a> · <a href="/legal/privacy.html">Политика ПДн</a></span>
+        <span><span data-page="footer_text">© Союз «Торгово-промышленная палата Томской области», 2026</span></span>
+        <span><a href="/">Сайт форума</a> · <a href="/legal/privacy.html">Политика ПДн</a></span>
       </div>
     </div>
   </footer>
@@ -119,10 +129,15 @@
     <div data-ballot-dialog-content></div>
   </dialog>
 
+  <dialog class="promtour-dialog contest-dialog" data-nominee-dialog aria-labelledby="nominee-dialog-title">
+    <button class="promtour-dialog-close" type="button" aria-label="Закрыть карточку проекта" data-dialog-close>×</button>
+    <div data-nominee-dialog-content></div>
+  </dialog>
   <noscript><p class="promtour-noscript">Для голосования включите JavaScript.</p></noscript>
   <script src="/js/icons.js?v=2c4c0eb595b1"></script>
-  <script src="/js/common.js?v=084ded3fb938"></script>
-  <script src="/js/captcha.js?v=e922b1169c85"></script>
-  <script src="/js/contest.js?v=630595f6122f"></script>
+  <script src="/js/common.js?v=1d7a2511978a"></script>
+  <script src="/js/captcha.js?v=ac1fc080b107"></script>
+  <script src="/js/forum-content.js?v=8a080c1c4f2f"></script>
+  <script src="/js/contest.js?v=e93c317efed4"></script>
 </body>
 </html>

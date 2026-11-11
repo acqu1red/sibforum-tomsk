@@ -56,6 +56,11 @@ class ForumAdminSite(AdminSite):
                 ('Билеты', 'registrations', 'ticket', 'Выданные билеты и их статусы'),
             ]),
             ('Содержание форума', [
+                ('Страница сайта', 'forums', 'forumpage', 'Первый экран, название, площадка и связь'),
+                ('Тексты разделов', 'forums', 'pagesection', 'Заголовки, пояснения и кнопки сайта'),
+                ('Меню сайта', 'forums', 'navigationitem', 'Подписи, ссылки и порядок пунктов'),
+                ('Контакты сайта', 'forums', 'contactcard', 'Адреса, почта и полезные ссылки'),
+                ('Организаторы и партнёры', 'forums', 'organizationlogo', 'Три группы логотипов и предприятий'),
                 ('Форумы и площадки', 'forums', 'forum', 'Даты, описание форума и адреса площадок'),
                 ('Программа', 'forums', 'event', 'Мероприятия, время, маршруты и количество мест'),
                 ('Спикеры', 'forums', 'speaker', 'Фотографии, регалии и темы выступлений'),
@@ -63,7 +68,9 @@ class ForumAdminSite(AdminSite):
             ]),
             ('Конкурс', [
                 ('Конкурсы', 'voting', 'contest', 'Сроки голосования, правила и публикация итогов'),
-                ('Номинации и кандидаты', 'voting', 'nomination', 'Список номинаций и их кандидатов'),
+                ('Номинации', 'voting', 'nomination', 'Список номинаций и лимиты выбора'),
+                ('Компании и проекты', 'voting', 'nominee', 'Логотипы, описания и фотографии по номинациям'),
+                ('Бюллетени', 'voting', 'ballot', 'Принятые голоса и ручной сброс тестовых бюллетеней'),
             ]),
             ('Контроль', [
                 ('Письма', 'registrations', 'notificationoutbox', 'Очередь отправки и ошибки доставки'),
@@ -92,6 +99,11 @@ class ForumAdminSite(AdminSite):
             'workspace_public_url': settings.PUBLIC_SITE_URL,
             'workspace_asset_version': workspace_asset_version(),
         })
+        if request.user.is_authenticated and request.user.has_perm('registrations.view_registration'):
+            from django.core import signing
+            from urllib.parse import urlencode
+            token = signing.dumps({'user': request.user.pk}, salt='registration-preview')
+            context['workspace_registration_preview_url'] = settings.PUBLIC_SITE_URL + '/?' + urlencode({'registration-preview': token}) + '#registration'
         return context
 
     def index(self, request, extra_context=None):

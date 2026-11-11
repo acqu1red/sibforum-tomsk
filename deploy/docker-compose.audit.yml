@@ -2,7 +2,7 @@ name: sibforum-audit
 services:
   backend:
     image: siberianforum-backend:deploycheck
-    command: sh -c "python manage.py migrate --noinput && python manage.py collectstatic --noinput && python manage.py loaddata /catalog.json && gunicorn config.wsgi:application --bind 0.0.0.0:8100 --workers 2 --threads 2 --access-logfile /dev/null"
+    command: sh -c "python manage.py migrate --noinput && python manage.py sync_staff_roles && python manage.py collectstatic --noinput && python manage.py seed_public_catalog /catalog.json && gunicorn config.wsgi:application --bind 0.0.0.0:8100 --workers 2 --threads 2 --access-logfile /dev/null"
     environment:
       DEBUG: "1"
       SECRET_KEY: isolated-local-audit-not-a-production-secret
@@ -10,6 +10,7 @@ services:
       ALLOWED_HOSTS: localhost,127.0.0.1,backend,host.docker.internal
       ADMIN_DOMAIN: admin.localhost
       SECURE_SSL_REDIRECT: "0"
+      PUBLIC_SITE_URL: http://localhost:8097
       ADMIN_TOTP_REQUIRED: "0"
       CSRF_TRUSTED_ORIGINS: http://localhost:8097,http://admin.localhost:8097,http://after
     volumes:
@@ -17,6 +18,7 @@ services:
       - ./catalog.json:/catalog.json:ro
       - audit-data:/data
       - audit-static:/app/staticfiles
+      - audit-media:/app/media
     mem_limit: 256m
     cpus: 1
     healthcheck:
@@ -42,6 +44,7 @@ services:
       - ./nginx-performance.conf:/etc/nginx/conf.d/performance.conf:ro
       - ./nginx-assets.conf:/etc/nginx/project/nginx-assets.conf:ro
       - audit-static:/static:ro
+      - audit-media:/media:ro
     mem_limit: 64m
     depends_on:
       backend:
@@ -49,3 +52,4 @@ services:
 volumes:
   audit-data:
   audit-static:
+  audit-media:

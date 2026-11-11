@@ -104,6 +104,9 @@ def submit_ballot(contest, email, selections, captcha_token=None, ip_address=Non
         check_captcha(captcha_token, ip_address)
     except RegistrationError as error:
         raise VotingError(error.code, error.message, status=error.status) from error
+    from .models import Contest
+    contest = Contest.objects.select_for_update().get(pk=contest.pk)
+    ensure_voting_open(contest)
     email = normalize_email(email)
     normalized = normalize_selection(contest, selections)
     ballot = contest.ballots.select_for_update().filter(email=email).first()
@@ -136,7 +139,7 @@ def complete_ballot_verification(ballot_id, code):
     ballot = Ballot.objects.select_for_update().select_related('contest').get(id=ballot_id)
     if ballot.status == Ballot.Status.SUBMITTED:
         raise VotingError('already_voted', 'Бюллетень уже принят.', status=409)
-    if ballot.verification_attempts > 5 or ballot.verification_expires_at <= timezone.now() or not check_password(code, ballot.code_hash):
+    if ballot.status != Ballot.Status.PENDING_EMAIL or ballot.verification_attempts > 5 or ballot.verification_expires_at <= timezone.now() or not check_password(code, ballot.code_hash):
         raise VotingError('invalid_code', 'Код недействителен или истёк.')
     normalized = normalize_selection(ballot.contest, ballot.pending_selection)
     now = timezone.now()
@@ -165,7 +168,7 @@ def verify_ballot(contest, email, code):
     ballot = contest.ballots.filter(email=email).first()
     if ballot and ballot.status == Ballot.Status.SUBMITTED:
         raise VotingError('already_voted', 'Бюллетень уже принят.', status=409)
-    if not ballot or ballot.verification_attempts >= 5 or ballot.verification_expires_at <= timezone.now():
+    if not ballot or ballot.status != Ballot.Status.PENDING_EMAIL or ballot.verification_attempts >= 5 or ballot.verification_expires_at <= timezone.now():
         raise VotingError('invalid_code', 'Код недействителен или истёк.')
     ballot.verification_attempts += 1
     ballot.save(update_fields=('verification_attempts', 'updated_at'))
@@ -175,26 +178,20 @@ def verify_ballot(contest, email, code):
 
 
 def stats_payload(contest):
+    from django.db.models import Count
     ballots = contest.ballots.filter(status=Ballot.Status.SUBMITTED)
     total = ballots.count()
+    counts = {(str(r['nomination_id']), str(r['nominee_id'])): r['votes'] for r in
+              VoteSelection.objects.filter(ballot__in=ballots).values('nomination_id', 'nominee_id').annotate(votes=Count('id'))}
+    voters = {str(r['nomination_id']): r['voters'] for r in
+              VoteSelection.objects.filter(ballot__in=ballots).values('nomination_id').annotate(voters=Count('ballot_id', distinct=True))}
     nominations = []
     for nomination in contest.nominations.filter(is_active=True).prefetch_related('nominees'):
-        selections = VoteSelection.objects.filter(ballot__in=ballots, nomination=nomination)
-        voted_ballots = selections.values('ballot').distinct().count()
-        nominees = []
-        for nominee in nomination.nominees.filter(is_active=True):
-            nominees.append({
-                'id': str(nominee.id),
-                'name': nominee.name,
-                'votes': selections.filter(nominee=nominee).count(),
-            })
+        voted_ballots = voters.get(str(nomination.pk), 0)
+        nominees = [{'id': str(n.pk), 'name': n.name, 'votes': counts.get((str(nomination.pk), str(n.pk)), 0)}
+                    for n in nomination.nominees.all() if n.is_active]
         nominees.sort(key=lambda item: (-item['votes'], item['name']))
-        nominations.append({
-            'id': str(nomination.id),
-            'title': nomination.title,
-            'visual_group': nomination.visual_group,
-            'total_voters': voted_ballots,
-            'skipped': total - voted_ballots,
-            'nominees': nominees,
-        })
+        nominations.append({'id': str(nomination.pk), 'title': nomination.title,
+            'visual_group': nomination.visual_group, 'total_voters': voted_ballots,
+            'skipped': total - voted_ballots, 'nominees': nominees})
     return {'total_ballots': total, 'nominations': nominations}

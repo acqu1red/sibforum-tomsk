@@ -256,9 +256,12 @@ class Speaker(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name='Идентификатор')
     forum = models.ForeignKey(Forum, on_delete=models.CASCADE, related_name='speakers', verbose_name='Форум')
     full_name = models.CharField(max_length=240, verbose_name='ФИО')
+    short_name = models.CharField('Короткое имя на сайте', max_length=160, blank=True, help_text='Например Ирина Беленок. Если пусто, имя составляется из ФИО без отчества.')
+    short_position = models.CharField('Короткая должность', max_length=240, blank=True, help_text='Подпись под круглой фотографией; полные регалии остаются ниже.')
     credentials = models.TextField('Должность и регалии', blank=True)
     topic = models.TextField(blank=True, verbose_name='Тема выступления')
     photo = models.ImageField(upload_to='speakers/', blank=True, max_length=300, verbose_name='Фотография')
+    photo_variants = models.JSONField(default=dict, editable=False)
     static_photo = models.CharField(max_length=300, blank=True, help_text='Путь к фотографии на сайте, например /img/promtour/speakers/name.webp.', verbose_name='Готовое фото из материалов форума')
     position = models.PositiveIntegerField(default=0, verbose_name='Порядок отображения')
     is_published = models.BooleanField(default=True, verbose_name='Показать на сайте')
@@ -276,9 +279,28 @@ class Speaker(TimeStampedModel):
 
     @property
     def photo_url(self):
-        return self.photo.url if self.photo else self.static_photo
+        from .media import public_asset
+        return self.photo_variants.get('960') or (self.photo.url if self.photo else public_asset(self.static_photo))
+
+    @property
+    def display_name(self):
+        if self.short_name:
+            return self.short_name
+        parts = self.full_name.split()
+        return ' '.join([parts[1], parts[0]]) if len(parts) >= 2 else self.full_name
+
+    def save(self, *args, **kwargs):
+        from .media import image_variants
+        super().save(*args, **kwargs)
+        variants = image_variants(self.photo, self.photo_variants)
+        if variants != self.photo_variants:
+            self.photo_variants = variants
+            type(self).objects.filter(pk=self.pk).update(photo_variants=variants)
 
     def clean(self):
+        from .media import validate_image_upload
+        if self.photo and not self.photo._committed:
+            validate_image_upload(self.photo)
         if self.static_photo:
             parsed = urlparse(self.static_photo)
             local_path = self.static_photo.startswith('/') and not self.static_photo.startswith('//')
@@ -336,3 +358,8 @@ class RouteEnterprise(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
+
+
+# Imported after the core catalog to keep the public models in small files.
+from .content_models import (ContactCard, ContentRevision, ForumPage, NavigationItem,
+                             OrganizationLogo, PageSection, SpeakerPhoto)  # noqa: E402,F401

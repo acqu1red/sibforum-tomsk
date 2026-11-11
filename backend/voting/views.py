@@ -5,12 +5,17 @@ from django.http import JsonResponse
 from django.db.models import Prefetch
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_protect
+from django.middleware.csrf import get_token
+import secrets
 from django.views.decorators.http import require_GET, require_POST
 
 from forums.security import client_ip
+from forums.media import public_asset
 from registrations.reports import XLSX_MIME, csv_bytes, file_response, log_export, timestamp, xlsx_bytes
 from .models import Contest, Nomination, Nominee
 from .workflow import VotingError, check_rate_limit, stats_payload, submit_ballot, verify_ballot
+from .simple import browser_identity, set_browser_cookie, submit_simple, voter_status
 
 
 def json_response(data, status=200):
@@ -58,7 +63,7 @@ def contest_by_slug(slug, catalog=False):
     if catalog:
         queryset = queryset.prefetch_related(Prefetch(
             'nominations', queryset=Nomination.objects.filter(is_active=True).prefetch_related(
-                Prefetch('nominees', queryset=Nominee.objects.filter(is_active=True), to_attr='public_nominees')
+                Prefetch('nominees', queryset=Nominee.objects.filter(is_active=True).prefetch_related('photos'), to_attr='public_nominees')
             ), to_attr='public_nominations',
         ))
     contest = queryset.first()
@@ -72,6 +77,7 @@ def contest_payload(contest):
         'title': contest.title,
         'description': contest.description,
         'rules_text': contest.rules_text,
+        'voting_mode': contest.voting_mode,
         'is_open': contest.is_open,
         'voting_opens_at': contest.voting_opens_at.isoformat() if contest.voting_opens_at else None,
         'voting_closes_at': contest.voting_closes_at.isoformat() if contest.voting_closes_at else None,
@@ -84,6 +90,7 @@ def contest_payload(contest):
             'id': str(nomination.id),
             'title': nomination.title,
             'description': nomination.description,
+            'selection_hint': nomination.selection_hint,
             'visual_group': nomination.visual_group,
             'min_selections': nomination.min_selections,
             'max_selections': nomination.max_selections,
@@ -93,6 +100,8 @@ def contest_payload(contest):
                     'name': nominee.name,
                     'description': nominee.description,
                     'website_url': nominee.website_url,
+                    'logo': nominee.logo_variants.get('400') or (nominee.logo.url if nominee.logo else public_asset(nominee.static_logo)),
+                    'photos': [{'url': p.variants.get('960') or p.image.url, 'thumbnail': p.variants.get('160') or p.image.url, 'caption': p.caption} for p in nominee.photos.all()],
                 }
                 for nominee in nomination.public_nominees
             ],
@@ -102,6 +111,7 @@ def contest_payload(contest):
     return payload
 
 
+@never_cache
 @require_GET
 @voting_api
 def contest_detail(request, slug):
@@ -117,7 +127,7 @@ def contest_results(request, slug):
     return json_response(stats_payload(contest))
 
 
-@csrf_exempt
+@csrf_protect
 @require_POST
 @voting_api
 def submit(request, slug):
@@ -125,6 +135,9 @@ def submit(request, slug):
     payload = parse_json(request)
     ip_address = client_ip(request)
     check_rate_limit(ip_address, 'submit')
+    if contest.voting_mode == 'simple':
+        ballot = submit_simple(contest, browser_identity(request), ip_address, payload.get('selections'))
+        return json_response({'ok': True, 'status': 'submitted', 'ballot_id': str(ballot.id), 'submitted_at': ballot.submitted_at.isoformat()})
     result = submit_ballot(
         contest,
         payload.get('email'),
@@ -133,6 +146,17 @@ def submit(request, slug):
         ip_address=ip_address,
     )
     return json_response(result)
+
+
+@never_cache
+@require_GET
+@voting_api
+def voter_session(request, slug):
+    contest = contest_by_slug(slug)
+    browser = browser_identity(request) or secrets.token_hex(32)
+    response = json_response({'csrf_token': get_token(request), 'already_voted': voter_status(contest, browser, client_ip(request)) if contest.voting_mode == 'simple' else False})
+    set_browser_cookie(response, browser)
+    return response
 
 
 @csrf_exempt

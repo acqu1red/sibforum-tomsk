@@ -4,14 +4,21 @@
 
   // Production shares this switch with the Nginx write gate.
   // Local prototype servers do not expose this endpoint.
-  window.publicSubmissionsReady = fetch('/deployment-config.json', { cache: 'no-store' })
+  window.consumeInitialData = function (url) {
+    var initial = window.forumInitialData && window.forumInitialData[url];
+    if (initial) delete window.forumInitialData[url];
+    return initial || null;
+  };
+  window.publicDeploymentReady = (window.consumeInitialData('/deployment-config.json') || fetch('/deployment-config.json', { cache: 'no-store' }))
     .then(function (response) {
-      if (response.status === 404) return { submissions_enabled: 1 };
+      if (response && typeof response.json !== 'function') return response;
+      if (!response) throw new Error('Deployment status unavailable');
+      if (response.status === 404) return { submissions_enabled: 1, voting_enabled: 1 };
       if (!response.ok) throw new Error('Deployment status unavailable');
       return response.json();
-    })
-    .then(function (config) { return config.submissions_enabled === 1 || config.submissions_enabled === true; })
-    .catch(function () { return false; });
+    }).catch(function () { return { submissions_enabled: 0, voting_enabled: 0 }; });
+  window.publicSubmissionsReady = window.publicDeploymentReady.then(function(c){return c.submissions_enabled === 1 || c.submissions_enabled === true;});
+  window.publicVotingReady = window.publicDeploymentReady.then(function(c){return c.voting_enabled === 1 || c.voting_enabled === true;});
 
   // Безопасная работа с localStorage (может быть недоступен в приватном режиме)
   window.store = {
@@ -27,6 +34,7 @@
   // (esg2026/ — как поддомен) и задают window.SITE_ROOT = '../'.
   window.asset = function (path) {
     if (!path || /^(https?:|data:|\/)/.test(path)) return path;
+    if (window.PUBLIC_ASSET_BASE_URL && path.indexOf('img/') === 0) return window.PUBLIC_ASSET_BASE_URL + '/' + path;
     return (window.SITE_ROOT || '') + path;
   };
 
@@ -131,7 +139,9 @@
           if (first) first.focus();
         }, 280);
       });
-      menu.querySelectorAll('[data-menu-close], a').forEach(function (el) { el.addEventListener('click', close); });
+      menu.addEventListener('click', function (event) {
+        if (event.target.closest('[data-menu-close], a')) close();
+      });
       document.addEventListener('keydown', function (e) {
         if (!menu.classList.contains('is-open')) return;
         if (e.key === 'Escape') close();

@@ -5,7 +5,8 @@ from django.http import JsonResponse
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET
 
-from .models import ChoiceGroup, ChoiceGroupEvent, Event, EventSpeaker, Forum, Speaker
+from .models import ChoiceGroup, ChoiceGroupEvent, ContactCard, Event, EventSpeaker, Forum, Speaker
+from .content import page_payload, revision_token, speaker_photos
 
 
 def json_payload(data, status=200):
@@ -41,13 +42,17 @@ def speaker_payload(speaker):
     return {
         'id': str(speaker.id),
         'name': speaker.full_name,
+        'short_name': speaker.display_name,
+        'short_position': speaker.short_position,
         'position': speaker.credentials,
         'topic': speaker.topic,
         'photo': speaker.photo_url,
+        'photos': speaker_photos(speaker),
         'events': [
             {
                 'id': str(link.event_id),
                 'title': link.event.title,
+                'slug': link.event.slug,
                 'role': link.role,
                 'topic': link.topic,
             }
@@ -72,7 +77,7 @@ def event_payload(event):
         'external_url': event.external_url,
         'capacity_target': event.capacity_target,
         'is_paid': event.is_paid,
-        'venue': venue_payload(event.venue) if event.venue else None,
+        'venue': venue_payload(event.venue) if event.venue and event.venue.is_published else None,
         'speakers': [
             {
                 'id': str(link.speaker_id),
@@ -133,10 +138,13 @@ def forum_list(request):
     return json_payload({'items': [forum_payload(forum) for forum in forums]})
 
 
+@never_cache
 @require_GET
 def forum_program(request, slug):
-    forum = Forum.objects.filter(slug=slug, status=Forum.Status.PUBLISHED).prefetch_related(
+    forum = Forum.objects.filter(slug=slug, status=Forum.Status.PUBLISHED).select_related('page__main_venue', 'contest').prefetch_related(
         'venues',
+        'page_sections', 'navigation', 'organization_logos',
+        Prefetch('contact_cards', queryset=ContactCard.objects.select_related('venue')),
         Prefetch('days__events', queryset=Event.objects.select_related('venue').prefetch_related(
             'lots', 'enterprises',
             Prefetch('speaker_links', queryset=EventSpeaker.objects.select_related('speaker')),
@@ -145,6 +153,7 @@ def forum_program(request, slug):
             Prefetch('event_links', queryset=ChoiceGroupEvent.objects.select_related('event')),
         )),
         Prefetch('speakers', queryset=Speaker.objects.filter(is_published=True).prefetch_related(
+            'photo_placements',
             Prefetch('event_links', queryset=EventSpeaker.objects.select_related('event')),
         ), to_attr='public_speakers'),
     ).first()
@@ -182,4 +191,27 @@ def forum_program(request, slug):
         'venues': [venue_payload(venue) for venue in forum.venues.all() if venue.is_published],
         'days': days,
         'speakers': [speaker_payload(speaker) for speaker in forum.public_speakers],
+        'page': page_payload(forum),
+        'revision': revision_token(),
     })
+
+
+@never_cache
+@require_GET
+def content_revision(request):
+    return json_payload({'revision': revision_token()})
+
+
+@never_cache
+@require_GET
+def registration_preview(request):
+    from django.core import signing
+    from django.contrib.auth import get_user_model
+    try:
+        data = signing.loads(request.GET.get('token', ''), salt='registration-preview', max_age=900)
+        user = get_user_model().objects.get(pk=data['user'], is_active=True, is_staff=True)
+        if not user.has_perm('registrations.view_registration'):
+            raise ValueError
+    except (signing.BadSignature, KeyError, ValueError, get_user_model().DoesNotExist):
+        return json_payload({'ok': False, 'message': 'Ссылка предпросмотра недействительна. Откройте новую ссылку из админки.'}, status=403)
+    return json_payload({'ok': True, 'preview': True})

@@ -99,6 +99,8 @@
     }
   }
   function api(path, options) {
+    var initial = !options && window.consumeInitialData(API + path);
+    if (initial) return initial.then(function (data) { return data || api(path, {}); });
     options = options || {};
     options.headers = Object.assign({ 'Accept': 'application/json' }, options.headers || {});
     if (options.body) options.headers['Content-Type'] = 'application/json';
@@ -117,11 +119,14 @@
 
   function speakerButtons(links) {
     if (!links || !links.length) return '';
-    return '<div class="promtour-event-speakers"><span>Спикеры и ведущие</span><div>' + links.map(function (link) {
+    return '<div class="promtour-event-speakers"><div>' + links.map(function (link) {
       var id = typeof link === 'string' ? link : link.id;
       var speaker = speakerById(id);
-      var role = typeof link === 'object' && link.role && link.role !== 'Спикер' ? ' · ' + link.role : '';
-      return speaker ? '<button type="button" data-speaker-id="' + esc(id) + '">' + esc(speaker.name + role) + '</button>' : '';
+      if (!speaker) return '';
+      var role = typeof link === 'object' && link.role ? link.role : '';
+      var topic = typeof link === 'object' && link.topic ? link.topic : '';
+      return '<article class="promtour-talk">' + (topic ? '<p class="promtour-talk-topic">' + esc(topic) + '</p>' : '') +
+        '<button type="button" data-speaker-id="' + esc(id) + '">' + window.forumContent.photo(speaker, 'program', 'promtour-program-photo') + '<span><b>' + esc(speaker.short_name || speaker.name) + '</b>' + (role ? '<small>' + esc(role) + '</small>' : '') + '</span></button></article>';
     }).join('') + '</div></div>';
   }
 
@@ -138,8 +143,8 @@
         var externalLink = externalUrl && validExternalUrl(externalUrl)
           ? '<a class="link-arrow" href="' + esc(externalUrl) + '" target="_blank" rel="noopener noreferrer">Внешняя регистрация<span class="visually-hidden"> (откроется в новой вкладке)</span> <span aria-hidden="true">→</span></a>'
           : (event.registration_policy === 'external' ? '<p class="promtour-event-meta">Ссылка на страницу внешней регистрации уточняется организатором.</p>' : '');
-        var annotation = event.annotation || (fallback ? fallback.annotation : '');
-        if (event.slug === 'routes' && routeCount) annotation = routeCount + ' ' + window.plural(routeCount, ['маршрут', 'маршрута', 'маршрутов']) + ' с отправлением от Союза «ТПП Томской области» в 09:15. Можно выбрать только один маршрут.';
+        var annotation = event.annotation;
+
         return {
           id: event.slug || event.id,
           time: event.start_time + '–' + event.end_time,
@@ -187,12 +192,12 @@
       var day = state.program ? dayById(route.id) : null;
       var enterprises = route.enterprises || [];
       return '<article class="promtour-route" data-route-number="' + number + '">' +
-        '<div class="promtour-route-top"><span class="promtour-route-number">' + String(number).padStart(2, '0') + '</span><span class="promtour-paid">' + (route.is_paid === false ? 'Условия уточняются' : 'Платно') + '</span></div>' +
+        '<div class="promtour-route-top"><span class="promtour-route-number">' + String(number).padStart(2, '0') + '</span><span class="promtour-paid">' + (route.is_paid === false ? 'Бесплатно' : 'Платно') + '</span></div>' +
         '<h3>' + esc(route.title) + '</h3>' +
         (enterprises.length ? '<ul class="promtour-enterprises">' + enterprises.map(function (enterprise) {
           return '<li><strong>' + esc(enterprise.name) + '</strong><span>' + esc(enterprise.description) + '</span></li>';
         }).join('') + '</ul>' : '<p>Состав предприятий уточняется организатором.</p>') +
-        '<div class="promtour-route-facts"><p><b>Дата:</b> ' + esc(day ? formatDay(day.date) : '23.11.2026') + '</p><p><b>Отправление:</b> ' + esc(route.venue ? route.venue.name + ', ' + route.venue.address : 'от ТПП в 09:15') + ' в ' + esc(route.start_time || '09:15') + '</p><p><b>Стоимость:</b> ' + esc(formatPrice(route.price === undefined ? 2500 : route.price)) + '</p><p><b>Оплата:</b> ' + esc(route.payment_note || 'После звонка куратора. Заявка не является оплатой.') + '</p><p><b>Статус:</b> ' + esc(POLICY[route.registration_policy] || 'заявка на рассмотрении') + '</p></div>' +
+        '<div class="promtour-route-facts"><p><b>Дата:</b> ' + esc(day ? formatDay(day.date) : 'Дата уточняется') + '</p><p><b>Отправление:</b> ' + esc(route.venue ? route.venue.name + ', ' + route.venue.address : 'Место уточняется') + ' · ' + esc(route.start_time || 'Время уточняется') + '</p><p><b>Стоимость:</b> ' + esc(route.is_paid === false ? 'Бесплатно' : formatPrice(route.price)) + '</p><p><b>Оплата:</b> ' + esc(route.payment_note || (route.is_paid === false ? 'Не требуется' : 'Условия уточняются куратором.')) + '</p><p><b>Статус:</b> ' + esc(POLICY[route.registration_policy] || 'заявка на рассмотрении') + '</p></div>' +
         '<p class="promtour-route-rule">Можно выбрать только один маршрут</p>' +
         '<button class="btn btn-secondary btn-block" type="button" data-route-select="' + number + '" disabled>Проверяем запись…</button>' +
         '</article>';
@@ -200,18 +205,14 @@
   }
 
   function speakerPhoto(speaker, className) {
-    if (speaker.photo) {
-      var responsive = speaker.photo.indexOf('/img/promtour/speakers/') === 0 && /\.webp$/.test(speaker.photo);
-      var stem = speaker.photo.replace(/\.webp$/, '');
-      var sources = responsive ? ' srcset="' + esc(stem) + '-320.webp 320w, ' + esc(stem) + '-640.webp 640w" sizes="(min-width: 1024px) 240px, (min-width: 560px) 45vw, 90vw"' : '';
-      return '<img class="' + className + '" src="' + esc(responsive ? stem + '-640.webp' : speaker.photo) + '"' + sources + ' alt="' + esc(speaker.name) + '" loading="lazy" decoding="async" width="320" height="360">';
-    }
-    var initials = speaker.name.split(' ').slice(0, 2).map(function (part) { return part.charAt(0); }).join('');
-    return '<span class="' + className + ' promtour-photo-placeholder" role="img" aria-label="Фотография не предоставлена"><b>' + esc(initials) + '</b><small>Фото не предоставлено</small></span>';
+    return window.forumContent.photo(speaker, className === 'promtour-dialog-photo' ? 'dialog' : 'card', className);
   }
 
   function renderSpeakers() {
     var speakers = state.speakers || content.speakers;
+    $('[data-speaker-circles]').innerHTML = speakers.map(function (speaker) {
+      return '<button class="promtour-person" type="button" data-speaker-id="' + esc(speaker.id) + '">' + window.forumContent.photo(speaker, 'circle', 'promtour-circle-photo') + '<b>' + esc(speaker.short_name || speaker.name) + '</b>' + (speaker.short_position ? '<span>' + esc(speaker.short_position) + '</span>' : '') + '</button>';
+    }).join('');
     $('[data-speakers]').innerHTML = speakers.map(function (speaker) {
       var events = (speaker.events || []).map(speakerEventName);
       var search = [speaker.name, speaker.position, speaker.topic].concat(events).join(' ').toLowerCase();
@@ -229,12 +230,15 @@
     var speaker = speakerById(id);
     if (!speaker) return;
     state.lastFocus = document.activeElement;
-    var events = (speaker.events || []).map(speakerEventName);
+    var events = speaker.events || [];
+    var hasTopics = events.some(function (event) { return typeof event === 'object' && event.topic; });
     $('[data-speaker-dialog-content]').innerHTML = '<div class="promtour-dialog-person">' + speakerPhoto(speaker, 'promtour-dialog-photo') +
       '<div><p class="eyebrow">Участник форума</p><h2 id="speaker-dialog-title">' + esc(speaker.name) + '</h2></div></div>' +
       '<h3>Должность и регалии</h3><p>' + esc(speaker.position) + '</p>' +
-      (speaker.topic ? '<h3>Тема</h3><p>' + esc(speaker.topic) + '</p>' : '') +
-      (events.length ? '<h3>Мероприятия и роль</h3><ul>' + events.map(function (event) { return '<li>' + esc(event) + '</li>'; }).join('') + '</ul>' : '');
+      (!hasTopics && speaker.topic ? '<h3>Тема</h3><p>' + esc(speaker.topic) + '</p>' : '') +
+      (events.length ? '<h3>Выступления и участие</h3><ul class="promtour-person-talks">' + events.map(function (event) {
+        return '<li><strong>' + esc(speakerEventName(event)) + '</strong>' + (typeof event === 'object' && event.topic ? '<p>' + esc(event.topic) + '</p>' : '') + '</li>';
+      }).join('') + '</ul>' : '');
     $('[data-speaker-dialog]').showModal();
   }
 
@@ -243,15 +247,9 @@
       $('[data-nominations]').innerHTML = '<p>Загружаем номинации…</p>';
       return;
     }
-    var primary = content.nominations.filter(function (nomination) { return Number(nomination.visualGroup) === 1; });
-    var rest = content.nominations.filter(function (nomination) { return Number(nomination.visualGroup) !== 1; });
-    function nominationHtml(nomination) {
-      return '<article class="promtour-nomination promtour-nomination-static"><span class="promtour-nomination-number">' + String(nomination.number).padStart(2, '0') + '</span>' +
-        '<div><h3>' + esc(nomination.title) + '</h3><p>' + nomination.nomineeCount + ' ' + window.plural(nomination.nomineeCount, ['номинант', 'номинанта', 'номинантов']) + '</p></div></article>';
-    }
-    var html = '';
-    if (primary.length) html += '<div class="promtour-nomination-group"><h3>Бренд, маршрут и музей</h3><p>Три самостоятельные номинации.</p>' + primary.map(nominationHtml).join('') + '</div>';
-    $('[data-nominations]').innerHTML = html + rest.map(nominationHtml).join('');
+    $('[data-nominations]').innerHTML = content.nominations.map(function (nomination) {
+      return '<a class="promtour-nomination promtour-nomination-static" href="/contest/#nomination-' + esc(nomination.id) + '"><span class="promtour-nomination-number">' + String(nomination.number).padStart(2, '0') + '</span><div><h3>' + esc(nomination.title) + '</h3><p>' + nomination.nomineeCount + ' ' + window.plural(nomination.nomineeCount, ['номинант', 'номинанта', 'номинантов']) + '</p></div><span aria-hidden="true">→</span></a>';
+    }).join('');
   }
 
   function contentEventFor(event) {
@@ -280,9 +278,9 @@
       title: backendEvent.title || (view && view.title) || '',
       time: backendEvent.start_time ? backendEvent.start_time + '–' + backendEvent.end_time : (view && view.time) || '',
       day: day ? formatDay(day.date) : (backendEvent.day ? formatDay(backendEvent.day) : backendEvent.day_title || ''),
-      annotation: backendEvent.annotation || (enterprises ? enterprises.map(function (item) { return item.name; }).join(' · ') : (view && view.annotation) || ''),
+      annotation: backendEvent.annotation !== undefined ? backendEvent.annotation : (enterprises ? enterprises.map(function (item) { return item.name; }).join(' · ') : (view && view.annotation) || ''),
       paid: backendEvent.is_paid !== undefined ? !!backendEvent.is_paid : route,
-      price: backendEvent.price !== undefined ? backendEvent.price : (route ? 2500 : null),
+      price: backendEvent.price !== undefined ? backendEvent.price : null,
       payment_note: backendEvent.payment_note || 'Оплата после звонка куратора. Заявка не является оплатой.',
       enterprises: enterprises || []
     };
@@ -332,7 +330,7 @@
 
   function renderRegistration() {
     if (state.submissionsEnabled === false) {
-      $('[data-registration-status]').textContent = 'Приём заявок временно недоступен. Программа и описание маршрутов доступны для просмотра.';
+      $('[data-registration-status]').textContent = state.program && state.program.page ? state.program.page.registration_notice : 'Приём заявок временно недоступен. Программа и описание маршрутов доступны для просмотра.';
       $('[data-registration-status]').hidden = false;
       $('[data-registration-form]').hidden = true;
       $$('[data-route-select]').forEach(function (button) {
@@ -460,6 +458,7 @@
     var selectionError = validateSelection();
     if (selectionError) { showError('[data-form-error]', selectionError); return; }
     if (!form.reportValidity()) return;
+    if (state.preview) { showError('[data-form-error]', 'Поля заполнены корректно. Это предпросмотр: заявка не отправлена и данные не сохранены.'); return; }
     var button = $('[data-submit]');
     button.disabled = true;
     var person = personPayload(form);
@@ -542,9 +541,11 @@
   function loadBackend() {
     return Promise.all([api('/forums/' + encodeURIComponent(slug) + '/program/'), window.publicSubmissionsReady]).then(function (values) {
       var program = values[0];
-      state.submissionsEnabled = values[1];
+      state.submissionsEnabled = !!(values[1] || state.preview);
       state.program = program;
+      state.revision = program.revision;
       state.speakers = program.speakers || [];
+      window.forumContent.apply(program.page);
       state.routeEvents = {};
       state.exchangeEvents = [];
       var routeIndex = 0;
@@ -579,6 +580,45 @@
       $('[data-exchange-lots]').innerHTML = '<div class="promtour-dark-note"><p>Не удалось загрузить лоты. Попробуйте обновить страницу позже.</p></div>';
       showError('[data-api-error]', error.message);
       $$('[data-route-select]').forEach(function (button) { button.disabled = true; button.textContent = 'Сервис записи недоступен'; });
+    });
+  }
+
+  function refreshContent() {
+    var openIds = $$('.promtour-event-details[open]').map(function (el) { return el.closest('article').id; });
+    var search = $('[data-speaker-search]').value;
+    return Promise.all([api('/forums/' + encodeURIComponent(slug) + '/program/'), loadContest()]).then(function (values) {
+      var program = values[0];
+      state.program = program; state.speakers = program.speakers || [];
+      window.forumContent.apply(program.page);
+      state.routeEvents = {}; state.exchangeEvents = [];
+      program.days.forEach(function (day) { day.events.forEach(function (event) {
+        if (event.kind === 'route') state.routeEvents[routeNumberFor(event) || Object.keys(state.routeEvents).length + 1] = event;
+        if (event.kind === 'exchange') state.exchangeEvents.push(event);
+      }); });
+      var removed = false;
+      selectedIds().forEach(function (id) {
+        var event = eventById(id);
+        if (!event) { delete state.selected[id]; removed = true; return; }
+        var validLots = (event.lots || []).map(function (lot) { return lot.id; });
+        state.selected[id] = state.selected[id].filter(function (lot) { return validLots.indexOf(lot) !== -1; });
+      });
+      renderProgram(); renderRoutes(); renderSpeakers(); renderExchange(); renderRegistration();
+      if (removed) showError('[data-api-error]', 'Организатор обновил программу. Снятое с публикации мероприятие убрано из вашего выбора; проверьте заявку.');
+      openIds.forEach(function (id) { var el=document.getElementById(id);if(el&&$('details',el))$('details',el).open=true; });
+      if(search){$('[data-speaker-search]').value=search;$('[data-speaker-search]').dispatchEvent(new Event('input'));}
+    });
+  }
+
+  function loadContest() {
+    return window.loadPromtourNominations().then(function (contest) {
+      content.nominations = contest.nominations.map(function (nomination, index) {
+        return { id: nomination.id, number: index + 1, title: nomination.title, nomineeCount: nomination.nominees.length };
+      });
+      document.getElementById('contest-title').textContent = contest.title;
+      var now = Date.now();
+      var open = contest.is_open && (!contest.voting_opens_at || now >= new Date(contest.voting_opens_at).getTime()) && (!contest.voting_closes_at || now <= new Date(contest.voting_closes_at).getTime());
+      $('[data-contest-state]').textContent = open ? 'Поддержите проекты в знакомых вам номинациях. Регистрироваться на форум для голосования не нужно.' : 'Номинации и проекты доступны для просмотра. Голосование закрыто или ещё не началось.';
+      renderNominations();
     });
   }
 
@@ -643,18 +683,16 @@
       });
     });
     document.addEventListener('keydown', trapMobileMenu);
-    window.loadPromtourNominations().then(function (contest) {
-      content.nominations = contest.nominations.map(function (nomination, index) {
-        return { number: index + 1, title: nomination.title, visualGroup: nomination.visual_group, nomineeCount: nomination.nominees.length };
-      });
-      var now = Date.now();
-      var open = contest.is_open && (!contest.voting_opens_at || now >= new Date(contest.voting_opens_at).getTime()) && (!contest.voting_closes_at || now <= new Date(contest.voting_closes_at).getTime());
-      $('[data-contest-state]').textContent = open ? 'Онлайн-голосование открыто. Подтвердите email, чтобы отправить бюллетень и защитить конкурс от повторных голосов.' : 'Голосование закрыто или ещё не началось. Актуальный статус доступен на странице конкурса.';
-      renderNominations();
-    }).catch(function () {
+    loadContest().catch(function () {
       $('[data-contest-state]').textContent = 'Не удалось проверить статус голосования. Обновите страницу позже.';
       $('[data-nominations]').innerHTML = '<p role="alert">Не удалось загрузить номинации. Попробуйте обновить страницу позже.</p>';
     });
-    loadBackend();
+    var previewToken = new URLSearchParams(location.search).get('registration-preview');
+    var ready = previewToken ? api('/registration-preview/?token=' + encodeURIComponent(previewToken)).then(function () {
+      state.preview = true;
+      showError('[data-api-error]', 'Предпросмотр регистрации для организатора. Можно проверить поля и выбор мероприятий; заявки и письма не отправляются.');
+      history.replaceState(null, '', location.pathname + '#registration');
+    }).catch(function (error) { showError('[data-api-error]', error.message); }) : Promise.resolve();
+    ready.then(loadBackend).then(function () { window.forumContent.watch(refreshContent, state.revision); });
   });
 })();

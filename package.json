@@ -2,7 +2,7 @@
   "name": "sibforum-tomsk",
   "private": true,
   "scripts": {
-    "build": "node tools/performance/render-home.cjs && node tools/performance/version-assets.cjs"
+    "build": "node tools/performance/publish-forum.cjs && node tools/performance/version-assets.cjs"
   },
   "engines": { "node": ">=20" }
 }

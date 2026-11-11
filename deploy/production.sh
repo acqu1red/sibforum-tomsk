@@ -20,7 +20,11 @@ c = json.load(sys.stdin)
 n = c["services"]["nginx"]["environment"]
 if str(n.get("PUBLIC_SUBMISSIONS_ENABLED", "0")) == "1":
     e = c["services"]["backend-prod"]["environment"]
-    needed = ("EMAIL_HOST", "DEFAULT_FROM_EMAIL", "YANDEX_SMARTCAPTCHA_SECRET", "YANDEX_SMARTCAPTCHA_CLIENT_ID")
+    needed = ["DEFAULT_FROM_EMAIL", "YANDEX_SMARTCAPTCHA_SECRET", "YANDEX_SMARTCAPTCHA_CLIENT_ID"]
+    if e.get("EMAIL_BACKEND") == "config.postbox.EmailBackend":
+        needed += ["POSTBOX_ACCESS_KEY_ID", "POSTBOX_SECRET_ACCESS_KEY"]
+    else:
+        needed += ["EMAIL_HOST"]
     missing = [name for name in needed if not e.get(name)]
     if missing:
         sys.exit("Cannot open public submissions; missing: " + ", ".join(missing))

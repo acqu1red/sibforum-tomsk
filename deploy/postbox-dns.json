@@ -1,0 +1,15 @@
+{
+  "domain": "sibforum-tomsk.ru",
+  "records": [
+    {
+      "type": "CNAME",
+      "name": "egt6qk593juhaadbamlv-1._domainkey",
+      "value": "egt6qk593juhaadbamlv-1.dkim.pstbx.ru"
+    },
+    {
+      "type": "CNAME",
+      "name": "egt6qk593juhaadbamlv-2._domainkey",
+      "value": "egt6qk593juhaadbamlv-2.dkim.pstbx.ru"
+    }
+  ]
+}

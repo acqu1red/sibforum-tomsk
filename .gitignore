@@ -27,3 +27,9 @@ node_modules/
 /screens_ishodniy_site/
 /screens_referens/
 /контент/
+
+# Private meeting recordings and working transcripts.
+/*.webm
+/meeting-analysis-private/
+
+/.deploy-site/

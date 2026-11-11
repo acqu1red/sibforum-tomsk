@@ -164,3 +164,30 @@ YANDEX_SMARTCAPTCHA_URL = os.environ.get('YANDEX_SMARTCAPTCHA_URL', 'https://sma
 YANDEX_SMARTCAPTCHA_CLIENT_ID = os.environ.get('YANDEX_SMARTCAPTCHA_CLIENT_ID', '')
 if not DEBUG and YANDEX_SMARTCAPTCHA_SECRET and not YANDEX_SMARTCAPTCHA_CLIENT_ID:
     raise RuntimeError('YANDEX_SMARTCAPTCHA_CLIENT_ID must be set when SmartCaptcha is enabled')
+
+# Public source assets and uploaded media can live entirely in Object Storage.
+PUBLIC_ASSET_BASE_URL = os.environ.get('PUBLIC_ASSET_BASE_URL', '').rstrip('/')
+MEDIA_BUCKET_NAME = os.environ.get('MEDIA_BUCKET_NAME', '')
+MEDIA_PUBLIC_BASE_URL = os.environ.get('MEDIA_PUBLIC_BASE_URL', '').rstrip('/')
+if MEDIA_BUCKET_NAME:
+    STORAGES = {
+        'default': {
+            'BACKEND': 'config.storage.ForumMediaStorage',
+            'OPTIONS': {
+                'bucket_name': MEDIA_BUCKET_NAME,
+                'access_key': os.environ.get('MEDIA_ACCESS_KEY_ID', ''),
+                'secret_key': os.environ.get('MEDIA_SECRET_ACCESS_KEY', ''),
+                'endpoint_url': 'https://storage.yandexcloud.net',
+                'region_name': 'ru-central1',
+                'signature_version': 's3v4',
+                'default_acl': None,
+                'file_overwrite': False,
+                'querystring_auth': True,
+                'querystring_expire': 900,
+            },
+        },
+        'staticfiles': {'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage'},
+    }
+POSTBOX_ENDPOINT_URL = os.environ.get('POSTBOX_ENDPOINT_URL', 'https://postbox.cloud.yandex.net')
+POSTBOX_ACCESS_KEY_ID = os.environ.get('POSTBOX_ACCESS_KEY_ID', '')
+POSTBOX_SECRET_ACCESS_KEY = os.environ.get('POSTBOX_SECRET_ACCESS_KEY', '')

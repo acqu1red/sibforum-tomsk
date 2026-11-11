@@ -1,235 +1,459 @@
 (function () {
   'use strict';
-  var API = '/api/v1/contests/promtour';
-  var esc = window.escapeHtml;
-  var state = { contest: null, email: '', open: false, lastFocus: null };
-
-  function $(selector, root) { return (root || document).querySelector(selector); }
-  function $$(selector, root) { return Array.prototype.slice.call((root || document).querySelectorAll(selector)); }
-  function showError(selector, message) {
-    var box = $(selector);
-    box.textContent = message || '';
-    box.hidden = !message;
+  var API = '/api/v1/contests/promtour',
+    esc = window.escapeHtml;
+  var state = {
+    contest: null,
+    open: false,
+    email: '',
+    csrf: '',
+    already: false,
+    lastFocus: null,
+    gallery: [],
+    photoIndex: 0,
+    complete: false
+  };
+  function $(s, r) {
+    return (r || document).querySelector(s);
+  }
+  function $$(s, r) {
+    return Array.prototype.slice.call((r || document).querySelectorAll(s));
+  }
+  function error(s, message) {
+    var el = $(s);
+    el.textContent = message || '';
+    el.hidden = !message;
   }
   function api(path, options) {
+    var initial = !options && window.consumeInitialData(API + path);
+    if (initial) return initial.then(function (data) { return data || api(path, {}); });
     options = options || {};
-    options.headers = Object.assign({ 'Accept': 'application/json' }, options.headers || {});
-    if (options.body) options.headers['Content-Type'] = 'application/json';
-    return fetch(API + path, options).then(function (response) {
-      return response.json().catch(function () { throw new Error('Сервер вернул некорректный ответ.'); }).then(function (data) {
-        if (!response.ok) throw new Error(data.message || 'Не удалось выполнить запрос.');
-        return data;
+    options.cache = 'no-store';
+    options.headers = Object.assign({ Accept: 'application/json' }, options.headers || {});
+    if (options.body) {
+      options.headers['Content-Type'] = 'application/json';
+      options.headers['X-CSRFToken'] = state.csrf;
+    }
+    return fetch(API + path, options)
+      .then(function (r) {
+        return r.json().then(function (d) {
+          if (!r.ok) {
+            var e = Error(d.message || 'Не удалось выполнить запрос.');
+            e.code = d.error;
+            throw e;
+          }
+          return d;
+        });
+      })
+      .catch(function (e) {
+        if (e instanceof TypeError) throw Error('Сервис временно недоступен. Попробуйте позже.');
+        throw e;
       });
-    }).catch(function (error) {
-      if (error instanceof TypeError) throw new Error('Сервис временно недоступен. Попробуйте обновить страницу позже.');
-      throw error;
-    });
   }
-  function votingIsOpen(contest) {
+  function canVote(c) {
     var now = Date.now();
-    return contest.is_open && (!contest.voting_opens_at || now >= new Date(contest.voting_opens_at).getTime()) && (!contest.voting_closes_at || now <= new Date(contest.voting_closes_at).getTime());
+    return (
+      c.is_open &&
+      (!c.voting_opens_at || now >= new Date(c.voting_opens_at).getTime()) &&
+      (!c.voting_closes_at || now <= new Date(c.voting_closes_at).getTime())
+    );
   }
-  function safeWebsiteUrl(value) {
-    try {
-      var url = new URL(value);
-      return url.protocol === 'https:' || url.protocol === 'http:' ? url.href : '';
-    } catch (error) {
-      return '';
+  function selected() {
+    var map = {};
+    $$('input[data-nominee]:checked').forEach(function (el) {
+      var id = el.dataset.nomination;
+      (map[id] || (map[id] = [])).push(el.dataset.nominee);
+    });
+    return Object.keys(map).map(function (id) {
+      return { nomination_id: id, nominee_ids: map[id] };
+    });
+  }
+  function nominationFor(id) {
+    return state.contest.nominations.find(function (n) {
+      return n.id === id;
+    });
+  }
+  function nomineeFor(id) {
+    for (var i = 0; i < state.contest.nominations.length; i++) {
+      var n = state.contest.nominations[i],
+        candidate = n.nominees.find(function (c) {
+          return c.id === id;
+        });
+      if (candidate) return { nomination: n, nominee: candidate };
     }
+    return null;
   }
-
-  function candidateHtml(nomination, nominee) {
-    var website = safeWebsiteUrl(nominee.website_url);
-    return '<article class="promtour-nominee"><label class="check"><input type="checkbox" data-nomination="' + esc(nomination.id) + '" data-nominee="' + esc(nominee.id) + '"><span><b>' + esc(nominee.name) + '</b></span></label>' +
-      (nominee.description ? '<p>' + esc(nominee.description) + '</p>' : '') +
-      (website ? '<p class="contest-nominee-site"><a href="' + esc(website) + '" target="_blank" rel="noopener noreferrer">Сайт компании<span class="visually-hidden"> (откроется в новой вкладке)</span></a></p>' : '') + '</article>';
+  function candidateHtml(n, c) {
+    var logo = window.forumContent.safeLink(c.logo);
+    return (
+      '<article class="contest-candidate"><label><input type="checkbox" data-nomination="' +
+      esc(n.id) +
+      '" data-nominee="' +
+      esc(c.id) +
+      '"><span class="contest-candidate-logo">' +
+      (logo
+        ? '<img src="' +
+          esc(logo) +
+          '" alt="" width="160" height="90" loading="lazy" decoding="async">'
+        : '<span class="contest-logo-text">' + esc(c.name) + '</span>') +
+      '</span>' +
+      (logo ? '<b>' + esc(c.name) + '</b>' : '') +
+      '<span class="contest-candidate-selection">Выбрать</span></label><button type="button" class="contest-details-button" data-nominee-info="' +
+      esc(c.id) +
+      '">О проекте<span class="visually-hidden">: ' +
+      esc(c.name) +
+      '</span></button></article>'
+    );
   }
-
-  function nominationHtml(nomination) {
-    var count = nomination.nominees.length;
-    var limit = nomination.max_selections === 1 ? 'Можно выбрать одного кандидата.' : 'Можно выбрать не более ' + nomination.max_selections + ' кандидатов.';
-    return '<details class="promtour-nomination" data-nomination-card="' + esc(nomination.id) + '">' +
-      '<summary><span class="promtour-nomination-number">' + String(nomination.number).padStart(2, '0') + '</span><span><b>' + esc(nomination.title) + '</b><small>' + count + ' ' + window.plural(count, ['номинант', 'номинанта', 'номинантов']) + ' · можно пропустить</small></span></summary>' +
-      '<div class="promtour-nomination-body"><label class="check promtour-skip"><input type="checkbox" data-skip-nomination="' + esc(nomination.id) + '"><span>Я не знаком(а) с этой номинацией — пропустить</span></label>' +
-      '<p class="contest-nomination-limit">' + limit + '</p><div class="promtour-nominees">' + nomination.nominees.map(function (nominee) { return candidateHtml(nomination, nominee); }).join('') + '</div></div></details>';
-  }
-
-  function renderContest() {
-    var contest = state.contest;
-    state.open = votingIsOpen(contest);
-    $('[data-contest-description]').textContent = contest.description || 'Восемь номинаций для проектов Томской области в сфере промышленного туризма.';
-    $('[data-contest-state]').textContent = state.open
-      ? 'Онлайн-голосование открыто. Подтвердите email, чтобы отправить бюллетень и защитить конкурс от повторных голосов.'
-      : 'Голосование закрыто или ещё не началось. Номинации и кандидаты доступны для просмотра.';
-    var primary = contest.nominations.filter(function (nomination) { return Number(nomination.visual_group) === 1; });
-    var rest = contest.nominations.filter(function (nomination) { return Number(nomination.visual_group) !== 1; });
-    var html = '';
-    if (primary.length) html += '<div class="promtour-nomination-group"><h2>Бренд, маршрут и музей</h2><p>Три самостоятельные номинации с раздельным выбором.</p>' + primary.map(nominationHtml).join('') + '</div>';
-    html += rest.map(nominationHtml).join('');
-    $('[data-nominations]').innerHTML = html;
+  function render() {
+    var previous = selected(),
+      opened = $$('[data-nomination-card][open]').map(function (el) {
+        return el.dataset.nominationCard;
+      });
+    var c = state.contest;
+    state.open = state.enabled && canVote(c) && !state.already && !state.complete;
+    document.title = c.title + ' — онлайн-голосование';
+    $('#contest-title').textContent = c.title;
+    $('[data-contest-description]').textContent = c.description || '';
+    $('[data-contest-rules]').textContent = c.rules_text || '';
+    $('[data-contest-rules]').hidden = !c.rules_text;
+    $('[data-contest-state]').textContent = state.already
+      ? 'Ваш бюллетень уже принят. Повторное голосование ограничено.'
+      : state.open
+        ? 'Голосование открыто. Выберите проекты и отправьте бюллетень.'
+        : 'Голосование закрыто или ещё не началось. Номинации и проекты доступны для просмотра.';
+    $('[data-nominations]').innerHTML = c.nominations
+      .map(function (n, i) {
+        var limit =
+          'Выберите не более ' +
+          n.max_selections +
+          ' ' +
+          window.plural(n.max_selections, ['участника', 'участников', 'участников']);
+        return (
+          '<details class="promtour-nomination" id="nomination-' +
+          esc(n.id) +
+          '" data-nomination-card="' +
+          esc(n.id) +
+          '"><summary><span class="promtour-nomination-number">' +
+          String(i + 1).padStart(2, '0') +
+          '</span><span><b>' +
+          esc(n.title) +
+          '</b><small>' +
+          n.nominees.length +
+          ' ' +
+          window.plural(n.nominees.length, ['участник', 'участника', 'участников']) +
+          '</small></span></summary><div class="promtour-nomination-body"><p class="contest-nomination-limit">' +
+          limit +
+          '</p>' +
+          (n.selection_hint
+            ? '<p class="contest-selection-hint">' + esc(n.selection_hint) + '</p>'
+            : '') +
+          (n.description ? '<p>' + esc(n.description) + '</p>' : '') +
+          '<div class="contest-candidates">' +
+          n.nominees
+            .map(function (c) {
+              return candidateHtml(n, c);
+            })
+            .join('') +
+          '</div></div></details>'
+        );
+      })
+      .join('');
+    previous.forEach(function (s) {
+      var n = nominationFor(s.nomination_id);
+      if (!n) return;
+      s.nominee_ids.slice(0, n.max_selections).forEach(function (id) {
+        var el = $('input[data-nominee="' + id + '"]');
+        if (el) el.checked = true;
+      });
+    });
+    $$('[data-nomination-card]').forEach(function (el) {
+      el.open = opened.indexOf(el.dataset.nominationCard) !== -1;
+    });
+    $$('[data-nominee]').forEach(function (el) {
+      el.disabled = !state.open;
+    });
     $('[data-ballot-form]').hidden = !state.open;
-    $$('[data-nomination-card]').forEach(syncNomination);
-    updateSelectionSummary();
+    var emailMode = c.voting_mode === 'email';
+    $('[data-email-field]').hidden = !emailMode;
+    $('[data-email-privacy]').hidden = !emailMode;
+    $('#vote-email').required = emailMode;
+    $('[data-ballot-intro]').textContent = emailMode
+      ? 'Проверьте выбор и укажите email. Мы отправим код для подтверждения.'
+      : 'Проверьте выбранные проекты. После отправки бюллетень будет принят сразу; повторное голосование с этой сети и браузера ограничено.';
+    $('[data-submit-ballot]').textContent = emailMode
+      ? 'Получить код подтверждения'
+      : 'Отправить голос';
+    updateSummary();
+    openHash();
   }
-
-  function syncNomination(card) {
-    var skipped = $('[data-skip-nomination]', card).checked;
-    $$('[data-nominee]', card).forEach(function (input) {
-      input.disabled = skipped || !state.open;
-      if (skipped) input.checked = false;
+  function updateSummary() {
+    var choices = selected(),
+      count = choices.reduce(function (a, s) {
+        return a + s.nominee_ids.length;
+      }, 0);
+    $('[data-selection-summary]').textContent = count
+      ? 'Выбрано: ' +
+        count +
+        ' ' +
+        window.plural(count, ['участник', 'участника', 'участников']) +
+        ' в ' +
+        choices.length +
+        ' ' +
+        window.plural(choices.length, ['номинации', 'номинациях', 'номинациях']) +
+        '.'
+      : 'Выберите хотя бы одного участника в любой знакомой номинации.';
+    $$('[data-nominee]').forEach(function (el) {
+      var card = el.closest('.contest-candidate');
+      card.classList.toggle('is-selected', el.checked);
+      $('.contest-candidate-selection', card).textContent = el.checked ? 'Выбрано' : 'Выбрать';
     });
-    $('[data-skip-nomination]', card).disabled = !state.open;
-    card.classList.toggle('is-skipped', skipped);
   }
-
-  function updateSelectionSummary() {
-    var selected = $$('input[data-nominee]:checked');
-    var nominations = {};
-    selected.forEach(function (input) { nominations[input.getAttribute('data-nomination')] = true; });
-    var nominationCount = Object.keys(nominations).length;
-    $('[data-selection-summary]').textContent = selected.length
-      ? 'Выбрано: ' + selected.length + ' ' + window.plural(selected.length, ['кандидат', 'кандидата', 'кандидатов']) + ' в ' + nominationCount + ' ' + window.plural(nominationCount, ['номинации', 'номинациях', 'номинациях']) + '.'
-      : 'Вы пока не выбрали кандидатов. Незнакомые номинации можно пропустить.';
+  function openHash() {
+    if (!/^#nomination-[a-f0-9-]+$/.test(location.hash)) return;
+    var el = document.getElementById(location.hash.slice(1));
+    if (el) {
+      el.open = true;
+      requestAnimationFrame(function () {
+        el.scrollIntoView({ block: 'start' });
+      });
+    }
   }
-
-  function selectionPayload() {
-    var selections = {};
-    $$('input[data-nominee]:checked').forEach(function (input) {
-      var nomination = input.getAttribute('data-nomination');
-      if (!selections[nomination]) selections[nomination] = [];
-      selections[nomination].push(input.getAttribute('data-nominee'));
-    });
-    return Object.keys(selections).map(function (id) { return { nomination_id: id, nominee_ids: selections[id] }; });
-  }
-
-  function openBallotReview() {
-    if (!state.contest) return;
+  function showDialog(selector) {
     state.lastFocus = document.activeElement;
-    var html = '<h2 id="ballot-dialog-title">Проверка бюллетеня</h2><p>Проверьте выбранных кандидатов перед подтверждением email.</p><div class="promtour-ballot-review">';
-    state.contest.nominations.forEach(function (nomination) {
-      var card = $('[data-nomination-card="' + nomination.id + '"]');
-      var skipped = $('[data-skip-nomination]', card).checked;
-      var selected = $$('[data-nominee]:checked', card).map(function (input) {
-        var nominee = nomination.nominees.find(function (item) { return item.id === input.getAttribute('data-nominee'); });
-        return nominee ? nominee.name : '';
-      }).filter(Boolean);
-      html += '<section><h3>' + esc(nomination.title) + '</h3>' +
-        (selected.length ? '<ul>' + selected.map(function (name) { return '<li>' + esc(name) + '</li>'; }).join('') + '</ul>' : '<p>' + (skipped ? 'Номинация пропущена' : 'Выбор не сделан') + '</p>') + '</section>';
-    });
-    html += '</div><p class="promtour-contest-disclaimer">Голос ещё не отправлен. Он будет зарегистрирован только после ввода кода из письма.</p><p><button class="btn btn-primary" type="button" data-dialog-close>Вернуться к бюллетеню</button></p>';
-    $('[data-ballot-dialog-content]').innerHTML = html;
-    $('[data-ballot-dialog]').showModal();
+    $(selector).showModal();
   }
-
-  function submitBallot(event) {
+  function openCandidate(id) {
+    var pair = nomineeFor(id);
+    if (!pair) return;
+    var c = pair.nominee,
+      n = pair.nomination,
+      logo = window.forumContent.safeLink(c.logo),
+      site = window.forumContent.safeLink(c.website_url);
+    state.gallery = c.photos || [];
+    state.photoIndex = 0;
+    $('[data-nominee-dialog-content]').innerHTML =
+      '<p class="contest-dialog-nomination">' +
+      esc(n.title) +
+      '</p><h2 id="nominee-dialog-title">' +
+      esc(c.name) +
+      '</h2>' +
+      (logo
+        ? '<img class="contest-dialog-logo" src="' +
+          esc(logo) +
+          '" alt="" width="180" height="100">'
+        : '') +
+      (c.description
+        ? '<p class="contest-project-description">' + esc(c.description) + '</p>'
+        : '<p>Описание проекта готовит организатор.</p>') +
+      (state.gallery.length
+        ? '<figure class="contest-gallery"><img data-gallery-image alt="" width="800" height="560"><figcaption data-gallery-caption></figcaption></figure><div class="contest-gallery-controls"><button type="button" data-gallery-step="-1" aria-label="Предыдущая фотография">Назад</button><span data-gallery-count aria-live="polite"></span><button type="button" data-gallery-step="1" aria-label="Следующая фотография">Далее</button></div>'
+        : '') +
+      (site
+        ? '<p><a class="btn btn-secondary" href="' +
+          esc(site) +
+          '" target="_blank" rel="noopener noreferrer">Сайт проекта<span class="visually-hidden"> (откроется в новой вкладке)</span></a></p>'
+        : '');
+    showDialog('[data-nominee-dialog]');
+    renderGallery();
+  }
+  function renderGallery() {
+    if (!state.gallery.length) return;
+    var photo = state.gallery[state.photoIndex];
+    $('[data-gallery-image]').src = window.forumContent.safeLink(photo.url);
+    $('[data-gallery-image]').alt = photo.caption || 'Фотография проекта';
+    $('[data-gallery-caption]').textContent = photo.caption || '';
+    $('[data-gallery-count]').textContent = state.photoIndex + 1 + ' из ' + state.gallery.length;
+    $$('[data-gallery-step]').forEach(function (b) {
+      b.disabled = state.gallery.length < 2;
+    });
+  }
+  function review() {
+    var choices = selected();
+    var html = '<h2 id="ballot-dialog-title">Ваш выбор</h2><div class="promtour-ballot-review">';
+    choices.forEach(function (s) {
+      var n = nominationFor(s.nomination_id);
+      html +=
+        '<section><h3>' +
+        esc(n.title) +
+        '</h3><ul>' +
+        s.nominee_ids
+          .map(function (id) {
+            var p = nomineeFor(id);
+            return p ? '<li>' + esc(p.nominee.name) + '</li>' : '';
+          })
+          .join('') +
+        '</ul></section>';
+    });
+    html +=
+      '</div><p>' +
+      (choices.length
+        ? 'Голос ещё не отправлен. Закройте это окно и нажмите кнопку отправки бюллетеня.'
+        : 'Пока нет выбранных проектов.') +
+      '</p><button type="button" class="btn btn-secondary" data-dialog-close>Вернуться к выбору</button>';
+    $('[data-ballot-dialog-content]').innerHTML = html;
+    showDialog('[data-ballot-dialog]');
+  }
+  function complete(result) {
+    state.complete = true;
+    state.already = true;
+    $('[data-ballot-form]').hidden = true;
+    $('[data-verify]').hidden = true;
+    $$('[data-nominee]').forEach(function (el) {
+      el.disabled = true;
+    });
+    $('[data-complete]').innerHTML =
+      '<h2>Ваш голос принят</h2><p>Спасибо за участие. Бюллетень <b>' +
+      esc(result.ballot_id) +
+      '</b> сохранён.</p><p>Итоги появятся после публикации организатором.</p><a class="btn btn-secondary" href="/#contest">Вернуться на сайт форума</a>';
+    $('[data-complete]').hidden = false;
+    $('[data-complete]').focus();
+    $('[data-contest-state]').textContent = 'Ваш бюллетень принят. Спасибо за участие.';
+  }
+  function submit(event) {
     event.preventDefault();
-    var form = event.currentTarget;
-    showError('[data-form-error]', '');
-    if (!state.open) {
-      showError('[data-form-error]', 'Голосование закрыто или ещё не началось.');
+    error('[data-form-error]', '');
+    if (!state.open) return;
+    var choices = selected();
+    if (!choices.length) {
+      error('[data-form-error]', 'Выберите хотя бы одного участника.');
       return;
     }
-    var selections = selectionPayload();
-    if (!selections.length) {
-      showError('[data-form-error]', 'Выберите хотя бы одного кандидата в любой номинации.');
-      return;
-    }
-    if (!form.reportValidity()) return;
-    var email = $('#vote-email').value.trim();
-    state.email = email;
+    if (!event.currentTarget.reportValidity()) return;
     var button = $('[data-submit-ballot]');
     button.disabled = true;
     button.setAttribute('aria-busy', 'true');
+    state.email = $('#vote-email').value.trim();
     api('/ballots/', {
       method: 'POST',
-      body: JSON.stringify({ email: email, selections: selections, captcha_token: $('#captcha-token').value })
-    }).then(function (result) {
-      $('[data-nominations]').hidden = true;
-      showError('[data-selection-error]', '');
-      form.hidden = true;
-      $('[data-verify-email]').textContent = email;
-      var debug = $('[data-debug-code]');
-      debug.hidden = !result.debug_code;
-      if (result.debug_code) debug.textContent = 'Локальный DEBUG-код: ' + result.debug_code;
-      $('[data-verify]').hidden = false;
-      $('#vote-code').focus();
-    }).catch(function (error) {
-      showError('[data-form-error]', error.message);
-    }).finally(function () {
-      button.disabled = false;
-      button.removeAttribute('aria-busy');
-    });
+      body: JSON.stringify({
+        email: state.email,
+        selections: choices,
+        captcha_token: $('#captcha-token').value
+      })
+    })
+      .then(function (result) {
+        if (result.status === 'submitted') {
+          complete(result);
+          return;
+        }
+        $('[data-ballot-form]').hidden = true;
+        $('[data-verify-email]').textContent = state.email;
+        $('[data-verify]').hidden = false;
+        var debug = $('[data-debug-code]');
+        debug.hidden = !result.debug_code;
+        if (result.debug_code) debug.textContent = 'Локальный тестовый код: ' + result.debug_code;
+        $('#vote-code').focus();
+      })
+      .catch(function (e) {
+        error('[data-form-error]', e.message);
+        if (e.code === 'already_voted') {
+          state.already = true;
+          $$('[data-nominee]').forEach(function (el) {
+            el.disabled = true;
+          });
+        }
+      })
+      .finally(function () {
+        button.disabled = false;
+        button.removeAttribute('aria-busy');
+      });
   }
-
-  function verifyBallot(event) {
+  function verify(event) {
     event.preventDefault();
-    var form = event.currentTarget;
-    if (!form.reportValidity()) return;
-    var button = $('[type="submit"]', form);
+    if (!event.currentTarget.reportValidity()) return;
+    var button = $('button', event.currentTarget);
     button.disabled = true;
-    button.setAttribute('aria-busy', 'true');
-    showError('[data-verify-error]', '');
+    error('[data-verify-error]', '');
     api('/ballots/verify/', {
       method: 'POST',
       body: JSON.stringify({ email: state.email, code: $('#vote-code').value.trim() })
-    }).then(function (result) {
-      $('[data-verify]').hidden = true;
-      $('[data-complete]').innerHTML = '<h2>Ваш голос принят</h2><p>Бюллетень <b>' + esc(result.ballot_id) + '</b> зарегистрирован. Спасибо за участие.</p><p>Итоги будут опубликованы после завершения голосования.</p><p><a class="btn btn-secondary" href="/promtour/#contest">Вернуться на сайт форума</a></p>';
-      $('[data-complete]').hidden = false;
-      $('[data-complete]').focus();
-    }).catch(function (error) {
-      showError('[data-verify-error]', error.message);
-    }).finally(function () {
-      button.disabled = false;
-      button.removeAttribute('aria-busy');
+    })
+      .then(complete)
+      .catch(function (e) {
+        error('[data-verify-error]', e.message);
+      })
+      .finally(function () {
+        button.disabled = false;
+      });
+  }
+  function load() {
+    return Promise.all([
+      api('/'),
+      api('/voter-session/'),
+      window.publicVotingReady,
+      (window.consumeInitialData('/api/v1/forums/promtour/program/') || fetch('/api/v1/forums/promtour/program/', { cache: 'no-store' })).then(function (r) {
+        if (r && typeof r.json !== 'function') return r;
+        if (!r || !r.ok) throw Error('Не удалось загрузить страницу форума.');
+        return r.json();
+      })
+    ]).then(function (values) {
+      state.contest = values[0];
+      state.revision = values[3].revision;
+      state.csrf = values[1].csrf_token;
+      state.already = values[1].already_voted;
+      state.enabled = values[2];
+      window.forumContent.apply(values[3].page);
+      render();
+      if (state.open && state.contest.voting_mode === 'email')
+        window.ForumCaptcha.init('smart-captcha', 'captcha-token');
     });
   }
-
   document.addEventListener('DOMContentLoaded', function () {
     window.hydrateIcons();
-    window.ForumCaptcha.init('smart-captcha', 'captcha-token');
     $('[data-nominations]').addEventListener('change', function (event) {
-      var card = event.target.closest('[data-nomination-card]');
-      if (!card || !state.contest) return;
-      showError('[data-selection-error]', '');
-      if (event.target.matches('[data-nominee]') && event.target.checked) {
-        var nominationId = event.target.getAttribute('data-nomination');
-        var nomination = state.contest.nominations.find(function (item) { return item.id === nominationId; });
-        var checked = $$('input[data-nomination="' + nominationId + '"]:checked');
-        if (checked.length > nomination.max_selections) {
-          event.target.checked = false;
-          var message = nomination.max_selections === 1
-            ? 'В номинации «' + nomination.title + '» можно выбрать только одного кандидата.'
-            : 'В номинации «' + nomination.title + '» можно выбрать не более ' + nomination.max_selections + ' кандидатов.';
-          showError('[data-selection-error]', message);
-        } else {
-          $('[data-skip-nomination]', card).checked = false;
-        }
+      var input = event.target;
+      if (!input.matches('[data-nominee]')) return;
+      error('[data-selection-error]', '');
+      var n = nominationFor(input.dataset.nomination);
+      if (
+        input.checked &&
+        $$('input[data-nomination="' + n.id + '"]:checked').length > n.max_selections
+      ) {
+        input.checked = false;
+        error(
+          '[data-selection-error]',
+          'В номинации «' +
+            n.title +
+            '» можно выбрать не более ' +
+            n.max_selections +
+            ' участников.'
+        );
       }
-      syncNomination(card);
-      updateSelectionSummary();
+      updateSummary();
     });
-    $('[data-ballot-form]').addEventListener('submit', submitBallot);
-    $('[data-verify-form]').addEventListener('submit', verifyBallot);
+    $('[data-ballot-form]').addEventListener('submit', submit);
+    $('[data-verify-form]').addEventListener('submit', verify);
     document.addEventListener('click', function (event) {
-      if (event.target.closest('[data-ballot-review]')) openBallotReview();
+      var info = event.target.closest('[data-nominee-info]');
+      if (info) openCandidate(info.dataset.nomineeInfo);
+      if (event.target.closest('[data-ballot-review]')) review();
+      var step = event.target.closest('[data-gallery-step]');
+      if (step) {
+        state.photoIndex =
+          (state.photoIndex + Number(step.dataset.galleryStep) + state.gallery.length) %
+          state.gallery.length;
+        renderGallery();
+      }
       var close = event.target.closest('[data-dialog-close]');
       if (close) close.closest('dialog').close();
       if (event.target.matches('dialog.contest-dialog')) event.target.close();
     });
-    $('[data-ballot-dialog]').addEventListener('close', function () {
-      if (state.lastFocus && document.contains(state.lastFocus)) state.lastFocus.focus();
+    $$('dialog').forEach(function (d) {
+      d.addEventListener('close', function () {
+        if (state.lastFocus && document.contains(state.lastFocus)) state.lastFocus.focus();
+      });
     });
-    Promise.all([api(''), window.publicSubmissionsReady]).then(function (values) {
-      var contest = values[0];
-      if (!values[1]) contest.is_open = false;
-      contest.nominations.forEach(function (nomination, index) { nomination.number = index + 1; });
-      state.contest = contest;
-      renderContest();
-    }).catch(function (error) {
-      showError('[data-api-error]', error.message);
-      $('[data-contest-state]').textContent = 'Не удалось проверить статус голосования.';
-      $('[data-nominations]').innerHTML = '<p role="alert">Не удалось загрузить номинации. Попробуйте обновить страницу позже.</p>';
-    });
+    window.addEventListener('hashchange', openHash);
+    load()
+      .then(function () {
+        window.forumContent.watch(load, state.revision);
+      })
+      .catch(function (e) {
+        error('[data-api-error]', e.message);
+        $('[data-contest-state]').textContent = 'Не удалось проверить статус голосования.';
+        $('[data-nominations]').innerHTML =
+          '<p role="alert">Не удалось загрузить номинации. Обновите страницу позже.</p>';
+      });
   });
 })();

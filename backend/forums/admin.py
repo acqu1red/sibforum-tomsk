@@ -2,6 +2,10 @@ from django.contrib import admin
 from django.utils.html import format_html
 
 from .models import ChoiceGroup, ChoiceGroupEvent, Event, EventDay, EventSpeaker, Forum, RouteEnterprise, Speaker, Venue
+from .content_admin import SpeakerPhotoInline
+from .content import speaker_photos
+from .media import public_asset
+from django.utils.html import format_html_join
 
 
 class VenueInline(admin.TabularInline):
@@ -58,7 +62,7 @@ class VenueAdmin(admin.ModelAdmin):
 class EventSpeakerInline(admin.TabularInline):
     model = EventSpeaker
     extra = 0
-    raw_id_fields = ('speaker',)
+    autocomplete_fields = ('speaker',)
     fields = ('speaker', 'role', 'topic', 'position')
 
 
@@ -73,7 +77,7 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ('title', 'day', 'start_time', 'end_time', 'kind', 'registration_policy', 'is_paid', 'is_published')
     list_filter = ('day__forum', 'kind', 'registration_policy', 'is_paid', 'is_published')
     search_fields = ('title', 'annotation', 'description', 'day__forum__title')
-    raw_id_fields = ('day', 'venue')
+    autocomplete_fields = ('day', 'venue')
     inlines = (RouteEnterpriseInline, EventSpeakerInline)
     fieldsets = (
         ('Событие', {'fields': ('day', 'venue', 'kind', 'title', 'slug', 'annotation', 'description', 'start_time', 'end_time', 'position', 'is_published')}),
@@ -87,7 +91,7 @@ class EventAdmin(admin.ModelAdmin):
 class SpeakerEventInline(admin.TabularInline):
     model = EventSpeaker
     extra = 0
-    raw_id_fields = ('event',)
+    autocomplete_fields = ('event',)
     fields = ('event', 'role', 'topic', 'position')
 
 
@@ -96,19 +100,26 @@ class SpeakerAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'forum', 'topic', 'is_published', 'position')
     list_filter = ('forum', 'is_published')
     search_fields = ('full_name', 'credentials', 'topic')
-    raw_id_fields = ('forum',)
+    autocomplete_fields = ('forum',)
     readonly_fields = ('photo_preview',)
-    inlines = (SpeakerEventInline,)
+    inlines = (SpeakerPhotoInline, SpeakerEventInline)
     fieldsets = (
-        ('Спикер', {'fields': ('forum', 'full_name', 'credentials', 'topic', 'is_published', 'position')}),
-        ('Фотография', {'fields': ('photo', 'static_photo', 'photo_preview')}),
+        ('Спикер', {'fields': ('forum', 'full_name', 'short_name', 'short_position', 'credentials', 'topic', 'is_published', 'position')}),
+        ('Общая фотография и предпросмотр', {'fields': ('photo', 'static_photo', 'photo_preview'), 'description': 'Загрузите одну фотографию для всех мест. Если в каком-то месте кадр не подходит, задайте отдельный вариант ниже. Предпросмотр обновится сразу, ещё до сохранения.'}),
     )
 
     @admin.display(description='Текущая фотография')
     def photo_preview(self, obj):
-        if not obj.photo_url:
-            return 'Фотография не предоставлена'
-        return format_html('<img src="{}" alt="" style="max-width:240px;max-height:280px;object-fit:contain">', obj.photo_url)
+        photos = speaker_photos(obj) if obj.pk and obj._state.adding is False else {}
+        cards = []
+        for key, title in SpeakerPhotoInline.model.PLACEMENTS:
+            photo = photos.get(key, {})
+            cards.append((key, title, public_asset(photo.get('url', ''), absolute=True), public_asset(photo.get('url', ''), absolute=True), photo.get('fit', 'contain' if key == 'dialog' else 'cover'), photo.get('x', 50), photo.get('y', 25), obj.display_name if obj.full_name else 'Имя спикера', obj.short_position))
+        return format_html('<div class="speaker-preview" data-speaker-preview data-base-url="{}">{}</div>', public_asset(obj.photo_url, absolute=True), format_html_join('', '<figure data-photo-context="{}"><figcaption>{}</figcaption><div class="speaker-preview-frame"><img src="{}" data-original="{}" data-fit="{}" data-x="{}" data-y="{}" alt="Предпросмотр"><span>Нет фотографии</span></div><b data-preview-name>{}</b><small data-preview-position>{}</small></figure>', cards))
+
+    class Media:
+        css = {'all': ('workspace/content-editor.css',)}
+        js = ('workspace/speaker-preview.js',)
 
 
 class ChoiceGroupEventInline(admin.TabularInline):

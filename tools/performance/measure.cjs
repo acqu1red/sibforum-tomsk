@@ -36,8 +36,11 @@ const profiles = {
     cdp.on('Network.requestWillBeSent',()=>requests++);
     const start=Date.now();
     let navigationError;
-    try { await page.goto(`http://${variant}${path}`,{waitUntil:'load',timeout:30000}); }
+    try { await page.goto(`${process.env.BASE_URL||'http://'+variant}${path}`,{waitUntil:'load',timeout:30000}); }
     catch(e){ navigationError=e.message.split('\n')[0]; }
+    if (!navigationError && variant === 'after') {
+      await page.locator(path.includes('contest') ? '[data-nomination-card]' : '[data-speaker-circles] button').first().waitFor({timeout:20000});
+    }
     await page.waitForTimeout(1500);
     const initial=await page.evaluate(()=>({
       ...window.__perf, fcp:performance.getEntriesByName('first-contentful-paint')[0]?.startTime||0,
@@ -48,6 +51,7 @@ const profiles = {
       resources:performance.getEntriesByType('resource').map(r=>({name:r.name,duration:r.duration,bytes:r.transferSize})),
     }));
     const loadBytes=bytes;
+    if (!navigationError && (!initial.fcp || !initial.lcp)) throw new Error('Browser did not report a paint; do not publish a zero LCP');
     const beforeScroll=(await cdp.send('Performance.getMetrics')).metrics;
     const scroll=await page.evaluate(async()=>{
       const frames=[];let previous=0; const start=performance.now();
