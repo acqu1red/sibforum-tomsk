@@ -147,6 +147,7 @@
 
         return {
           id: event.slug || event.id,
+          editorId: event.id,
           time: event.start_time + '–' + event.end_time,
           title: event.title,
           annotation: annotation,
@@ -169,7 +170,7 @@
           var extra = speakerButtons(event.speakers || event.speakerIds) + (event.description ? '<p>' + esc(event.description) + '</p>' : '') + (event.extra || '');
           if (event.anchor) extra += '<a class="link-arrow" href="#' + esc(event.anchor) + '">' + esc(event.anchorLabel) + ' <span aria-hidden="true">→</span></a>';
           if (event.externalUrl) extra += '<p class="promtour-event-meta">Ссылка на страницу внешней регистрации уточняется организатором.</p>';
-          return '<article class="promtour-event" id="event-' + esc(event.id) + '">' +
+          return '<article class="promtour-event" data-edit="event:' + esc(event.editorId || event.id) + '" id="event-' + esc(event.id) + '">' +
             '<time class="promtour-event-time">' + esc(event.time) + '</time>' +
             '<div class="promtour-event-body"><h4>' + esc(event.title) + '</h4><p>' + esc(event.annotation) + '</p>' +
             (event.venue ? '<p class="promtour-event-meta">' + esc(event.venue) + '</p>' : '') +
@@ -191,7 +192,7 @@
       var number = route.number || routeNumberFor(route) || index + 1;
       var day = state.program ? dayById(route.id) : null;
       var enterprises = route.enterprises || [];
-      return '<article class="promtour-route" data-route-number="' + number + '">' +
+      return '<article class="promtour-route" data-edit="event:' + esc(route.id) + '" data-route-number="' + number + '">' +
         '<div class="promtour-route-top"><span class="promtour-route-number">' + String(number).padStart(2, '0') + '</span><span class="promtour-paid">' + (route.is_paid === false ? 'Бесплатно' : 'Платно') + '</span></div>' +
         '<h3>' + esc(route.title) + '</h3>' +
         (enterprises.length ? '<ul class="promtour-enterprises">' + enterprises.map(function (enterprise) {
@@ -297,7 +298,7 @@
     });
     $('[data-exchange-lots]').innerHTML = allLots.length ? '<div class="promtour-public-lots">' + allLots.map(function (item) {
       var lot = item.lot;
-      return '<article class="promtour-public-lot"><span>Лот ' + esc(lot.number) + '</span><h4>' + esc(lot.title) + '</h4>' +
+      return '<article class="promtour-public-lot" data-edit="lot:' + esc(lot.id) + '"><span>Лот ' + esc(lot.number) + '</span><h4>' + esc(lot.title) + '</h4>' +
         (lot.customer_name ? '<p>' + esc(lot.customer_name) + '</p>' : '') +
         '<a href="' + esc(validExternalUrl(lot.technical_url)) + '" target="_blank" rel="noopener noreferrer">Технические материалы <span class="visually-hidden">(откроется в новой вкладке)</span></a></article>';
     }).join('') + '</div>' : '<div class="promtour-dark-note"><p>Лоты и ссылки на технические задания пока не опубликованы. Они появятся здесь после загрузки организатором.</p><p>До публикации лотов выбор биржи в регистрации недоступен: отправить заявку без технического запроса нельзя.</p></div>';
@@ -516,7 +517,7 @@
     var ticket = registration.ticket;
     var ticketHtml = '';
     if (ticket) {
-      ticketHtml = '<section class="promtour-ticket"><div><p class="eyebrow">Личный билет</p><h3>Электронный билет с QR</h3><p>Покажите QR на стойке. Он предназначен только для отметки прибытия сотрудником и не открывает редактирование заявки.</p>' +
+      ticketHtml = '<section class="promtour-ticket"><div><p class="eyebrow">Личный билет</p><h3>Электронный билет с QR</h3>' + (ticket.code ? '<p><b>Номер билета: ' + esc(ticket.code) + '</b></p>' : '') + '<p>Покажите QR на стойке. Он предназначен только для отметки прибытия сотрудником и не открывает редактирование заявки.</p>' +
         '<a class="btn btn-primary" href="' + esc(ticket.pdf_path + '?t=' + encodeURIComponent(state.token)) + '">Скачать билет в PDF</a>' +
         (ticket.checked_in_at ? '<p class="promtour-status promtour-status-confirmed">Прибытие отмечено: ' + esc(new Date(ticket.checked_in_at).toLocaleString('ru-RU')) + '</p>' : '') + '</div>' +
         '<img src="' + esc(ticket.qr_path + '?t=' + encodeURIComponent(state.token)) + '" alt="QR-код для стойки регистрации" width="220" height="220"></section>';

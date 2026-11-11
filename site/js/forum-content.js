@@ -60,7 +60,7 @@
       (context === 'circle' ? 112 : context === 'program' ? 56 : 360) +
       '" style="' +
       style +
-      '">'
+                    '">'
     );
   }
   function apply(page) {
@@ -116,7 +116,7 @@
     var links = page.navigation
       .map(function (n) {
         var url = safeLink(n.target);
-        return url ? '<li><a href="' + esc(url) + '">' + esc(n.label) + '</a></li>' : '';
+        return url ? '<li><a data-edit="menu:' + esc(n.id) + '" href="' + esc(url) + '">' + esc(n.label) + '</a></li>' : '';
       })
       .join('');
     document.querySelectorAll('[data-site-navigation]').forEach(function (el) {
@@ -137,7 +137,7 @@
         .map(function (c) {
           var link = safeLink(c.link_url);
           return (
-            '<article class="promtour-contact-card">' +
+            '<article class="promtour-contact-card" data-edit="contact:' + esc(c.id) + '">' +
             (c.subtitle ? '<span>' + esc(c.subtitle) + '</span>' : '') +
             '<h3>' +
             esc(c.title) +
@@ -161,7 +161,7 @@
           });
           if (!logos.length || (section && !section.is_published)) return '';
           return (
-            '<section class="promtour-logo-group"><h2>' +
+            '<section class="promtour-logo-group" data-editor-section="' + group + '"><h2>' +
             esc(section ? section.heading : group) +
             '</h2>' +
             (section && section.body ? '<p>' + esc(section.body) + '</p>' : '') +
@@ -176,14 +176,16 @@
                     '" alt="' +
                     esc(l.name) +
                     '" loading="lazy" decoding="async" width="180" height="90">'
-                  : '<span>' + esc(l.name) + '</span>';
+                  : '';
+                content += '<span class="promtour-logo-caption">' + esc(l.name) + '</span>';
+                var background = l.background === 'dark' ? ' class="promtour-logo-dark"' : '';
                 return url
-                  ? '<a href="' +
+                  ? '<a' + background + ' data-edit="logo:' + esc(l.id) + '" href="' +
                       esc(url) +
                       '" target="_blank" rel="noopener noreferrer">' +
                       content +
                       '</a>'
-                  : '<div>' + content + '</div>';
+                  : '<div' + background + ' data-edit="logo:' + esc(l.id) + '">' + content + '</div>';
               })
               .join('') +
             '</div></section>'

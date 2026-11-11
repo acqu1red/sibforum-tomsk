@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="/fonts/fonts.css?v=2a94b395edf2">
   <link rel="stylesheet" href="/css/style.css?v=331e8efece9c">
   <link rel="stylesheet" href="/css/register.css?v=a108b268f3dd">
-  <link rel="stylesheet" href="/css/promtour.css?v=fe7e5b53d719">
+  <link rel="stylesheet" href="/css/promtour.css?v=8d83ec54c17b">
 </head>
 <body class="promtour-page" data-forum-slug="promtour">
   <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -193,7 +193,7 @@
             <div class="field"><label for="phone">Телефон *</label><input class="input" id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+7 (999) 123-45-67" required></div>
             <div class="field"><label for="organization">Организация *</label><input class="input" id="organization" name="organization" autocomplete="organization" required></div>
             <div class="field"><label for="position">Должность *</label><input class="input" id="position" name="position" autocomplete="organization-title" required></div>
-            <div class="field"><label for="category">Категория *</label><select class="select" id="category" name="category" required><option value="">Выберите</option><option value="business">Бизнес</option><option value="plant">Промышленное предприятие</option><option value="university">Вуз</option><option value="school">Школа, колледж</option><option value="government">Орган власти</option><option value="media">СМИ</option><option value="other">Другое</option></select></div>
+            <div class="field"><label for="category">Категория *</label><select class="select" id="category" name="category" data-enhance-select required><option value="">Выберите категорию</option><option value="business">Бизнес</option><option value="plant">Промышленное предприятие</option><option value="university">Вуз</option><option value="school">Школа, колледж</option><option value="government">Орган власти</option><option value="media">СМИ</option><option value="other">Другое</option></select></div>
             <div class="field"><label for="city">Город</label><input class="input" id="city" name="city" autocomplete="address-level2"></div>
             <div class="field"><label for="source">Откуда узнали о форуме</label><input class="input" id="source" name="source"></div>
             <div class="field promtour-field-wide"><label for="comment">Комментарий</label><textarea class="input" id="comment" name="comment" rows="3" maxlength="1000"></textarea></div>
@@ -263,7 +263,8 @@
   <script src="/promtour/content.js?v=198dc1baa3c4"></script>
   <script src="/promtour/nominations.js?v=09e931831acc"></script>
   <script src="/js/captcha.js?v=ac1fc080b107"></script>
-  <script src="/js/forum-content.js?v=8a080c1c4f2f"></script>
-  <script src="/js/promtour.js?v=ac5cf105b6d1"></script>
+  <script src="/js/select.js?v=973ca541eade" defer></script>
+  <script src="/js/forum-content.js?v=0e2ad40d055d"></script>
+  <script src="/js/promtour.js?v=883b1277d098"></script>
 </body>
 </html>

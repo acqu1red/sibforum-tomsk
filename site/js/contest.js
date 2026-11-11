@@ -86,7 +86,7 @@
   function candidateHtml(n, c) {
     var logo = window.forumContent.safeLink(c.logo);
     return (
-      '<article class="contest-candidate"><label><input type="checkbox" data-nomination="' +
+      '<article class="contest-candidate" data-edit="nominee:' + esc(c.id) + '"><label><input type="checkbox" data-nomination="' +
       esc(n.id) +
       '" data-nominee="' +
       esc(c.id) +

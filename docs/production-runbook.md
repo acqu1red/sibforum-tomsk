@@ -11,7 +11,7 @@
 - Загрузка исходников: `bash deploy/upload.sh root@sibforum-timeweb`.
 - Обновление: `ssh sibforum-timeweb 'cd /opt/sibforum && bash deploy/production.sh update'`.
 - Единственный руководитель: `director`; пароль сохранён вне исходников в `~/.codex/credentials/sibforum-admin.txt`, TOTP временно отключён по поручению владельца.
-- Первая копия данных вне VPS: `~/.codex/backups/sibforum/initial-2026-11-11.tar.gz` (600). Автоматический backup раз в сутки хранит последние 14 комплектов на VPS; регулярную внешнюю репликацию ещё нужно подключить.
+- Первая копия данных вне VPS: `~/.codex/backups/sibforum/initial-2026-11-11.tar.gz` (600). Автоматический backup раз в сутки хранит последние 14 комплектов на VPS; регулярную независимую внешнюю репликацию ещё нужно подключить; ежедневная опись версий S3 уже настроена.
 - HTTPS для обоих доменов выпущен; проверены dry-run продления и systemd service с reload.
 - Старый сервер `201.51.28.86` не удалён.
 
@@ -19,7 +19,7 @@
 
 - Домен и admin-поддомен: DNS A/AAAA-записи `${DOMAIN}` и `${ADMIN_DOMAIN}` на production-сервер.
 - Сервер в РФ с Docker и открытыми портами 80/443.
-- Для первого этапа сайт и админка могут работать с `PUBLIC_SUBMISSIONS_ENABLED=0`: новые заявки и подтверждения голосов возвращают 503 с понятным сообщением. Для открытия форм нужны действующие SMTP и SmartCaptcha.
+- Для первого этапа сайт и админка могут работать с `PUBLIC_SUBMISSIONS_ENABLED=0`: новые регистрации возвращают 503 с понятным сообщением. Голосование имеет отдельный выключатель `PUBLIC_VOTING_ENABLED`. Для регистрации нужны Postbox/SMTP и SmartCaptcha.
 - SMTP: хост, порт, логин/пароль, `DEFAULT_FROM_EMAIL`, SPF/DKIM/DMARC.
 - Yandex SmartCaptcha: `YANDEX_SMARTCAPTCHA_SECRET` и `YANDEX_SMARTCAPTCHA_CLIENT_ID`.
 - Юридическое утверждение документов в `site/legal/`.
@@ -62,7 +62,7 @@ bash deploy/production.sh bootstrap /etc/sibforum/production.env
 
 Compose требует `SECRET_KEY`, `POSTGRES_PASSWORD` и `DOMAIN`. `TLS_EMAIL` необязателен: без него Certbot регистрирует ACME-аккаунт без контактной почты; продление выполняет systemd-таймер. SMTP и SmartCaptcha можно оставить пустыми только на этапе закрытых форм (`PUBLIC_SUBMISSIONS_ENABLED=0`, значение по умолчанию). Этот же флаг управляет отображением закрытых форм через `/deployment-config.json` (без кеширования); при открытии не нужно отдельно править HTML. `deploy/production.sh` проверяет наличие этих параметров перед запуском с открытыми формами. `ADMIN_DOMAIN` по умолчанию задан как `admin.sibforum-tomsk.ru` (без `https://` и пути). Секреты не выводите через обычный `docker compose config`: используйте `config --quiet`.
 
-Полный путь для Timeweb: `/opt/sibforum`, защищённый env-файл: `/etc/sibforum/production.env`, права 600. Исходники загружаются с локального компьютера командой `bash deploy/upload.sh root@201.51.28.86`. Скрипт передаёт только backend, сайт и deploy-конфигурацию; базы разработки, SSH-ключи, профили браузера и документы заказчика не передаются.
+Полный путь для Timeweb: `/opt/sibforum`, защищённый env-файл: `/etc/sibforum/production.env`, права 600. Исходники загружаются с локального компьютера командой `bash deploy/upload.sh root@sibforum-timeweb`. Скрипт передаёт только backend, сайт и deploy-конфигурацию; базы разработки, SSH-ключи, профили браузера и документы заказчика не передаются.
 
 ## 3. HTTPS и certbot
 
@@ -85,7 +85,7 @@ Compose требует `SECRET_KEY`, `POSTGRES_PASSWORD` и `DOMAIN`. `TLS_EMAIL
    systemctl list-timers sibforum-certbot.timer
    ```
 
-`bootstrap` предназначен только для первого запуска без сертификата. Для обновлений используйте `bash deploy/production.sh update /etc/sibforum/production.env`: сначала сборка и backup, затем остановка worker/backup на время смены backend и перезагрузка Nginx.
+`bootstrap` предназначен только для первого запуска без сертификата. Для обновлений используйте `bash deploy/production.sh update /etc/sibforum/production.env`: сначала проверка отрендеренного шаблона Nginx в отдельном контейнере, сборка и backup, затем остановка worker/backup на время смены backend и перезагрузка Nginx.
 
 ### Первичное наполнение
 
@@ -111,7 +111,7 @@ docker compose --env-file /etc/sibforum/production.env -f docker-compose.prod.ym
 - `PUBLIC_SUBMISSIONS_ENABLED` управляет регистрацией и её кодами на обоих доменах; `PUBLIC_VOTING_ENABLED` отдельно управляет голосованием. Для открытия регистрации нужны Postbox/SMTP и SmartCaptcha; `production.sh` проверяет обязательные настройки.
 - `/esg2026/register.html` и `/esg2026/my.html` в production закрыты: эти страницы используют демонстрационную модель с localStorage. Витрина и программа ESG доступны для просмотра.
 - `https://${ADMIN_DOMAIN}/admin/exports/` доступен только с соответствующими правами сотрудника.
-- Письмо с кодом реально доходит в Gmail, Яндекс Почту и Mail.ru.
+- Подтверждена доставка во «Входящие» Яндекса. Gmail и Mail.ru проверить на согласованных адресах до массовой рассылки.
 - PDF и QR открываются на телефоне, ссылка в QR ведёт на `ADMIN_SITE_URL`.
 - Старый `/api/export.csv` не используется; если нужен, задайте отдельный `LEGACY_EXPORT_TOKEN` вне репозитория.
 
@@ -139,7 +139,7 @@ docker compose --env-file /etc/sibforum/production.env -f docker-compose.prod.ym
 - Двойной выбор маршрута невозможен и в UI, и через API.
 - Заявки на маршруты и биржу идут на модерацию, обычные подтверждаются.
 - Письма, PDF, QR, личная ссылка и статусы работают в одном цикле.
-- Повторный голос с того же email не засчитывается, пропуск номинаций разрешён, статистика только агрегированная.
+- В простом режиме повтор ограничен подписанным идентификатором браузера и лимитом сети; в почтовом режиме — подтверждённым email. Пропуск номинаций разрешён, статистика только агрегированная.
 - Нет демо-данных, debug_code, открытых exports, `href="#"` и старой публичной уязвимости повторной регистрации.
 - Все обязательные поля и документы юридически утверждены, согласия имеют версию.
 - 360/768/1280/1920 px, клавиатура, контраст и последние браузеры проверены.
@@ -170,3 +170,21 @@ docker compose --env-file /etc/sibforum/production.env -f docker-compose.prod.ym
 - Публичны только `site/img/*` и `optimized/*`; исходники приватные, ссылки админки подписаны на 15 минут. Список объектов анонимам закрыт.
 - `deploy/public-assets.json` содержит только публичный URL. `tools/deploy-site.sh` собирает отдельный каталог без изображений, переписывая HTML/CSS на бакет. `deploy/upload.sh` передаёт эту сборку. Исходные изображения остаются в GitHub и локально.
 - Обновление встроенных картинок требует загрузить изменённые файлы в `site/img/` бакета до публикации HTML. Файлы с новым именем не конфликтуют с кэшем. Из админки варианты получают имя по содержимому и неизменяемый кэш.
+
+## 10. Визуальный редактор, логотипы и стойка регистрации
+
+- Визуальный редактор: `/admin/site-editor/`, предпросмотр реальной страницы доступен только в iframe этого же admin-домена. Обычные страницы админки сохраняют `X-Frame-Options: DENY`; исключение `SAMEORIGIN` действует только на `/admin/site-editor/preview/`. Публичные формы в этом предпросмотре отключены.
+- Backend читает готовую публичную сборку из readonly-монтажа `/public-site`; `PUBLIC_SITE_ROOT` должен указывать туда. На публичном сайте скриптов редактора нет.
+- Только сотрудники с правами изменения соответствующей модели могут сохранять её через редактор. CSRF, журнал автора и проверка устаревшей версии записи обязательны.
+- Миграция `forums.0010_reference_logos` добавляет фон логотипа и внутренний признак однократного переноса. Перед переносом 23 файлов из `deploy/reference-logos.json` должны быть загружены в `site/img/logos/reference-forum/` бакета. Проверить публичное чтение и SHA256 по локальным оригиналам.
+- После обновления один раз скопировать манифест в backend и запустить:
+
+  ```bash
+  docker compose --env-file /etc/sibforum/production.env -f docker-compose.prod.yml cp deploy/reference-logos.json backend-prod:/tmp/reference-logos.json
+  docker compose --env-file /etc/sibforum/production.env -f docker-compose.prod.yml exec -T backend-prod python manage.py import_reference_logos /tmp/reference-logos.json
+  ```
+
+  Повторный запуск сохраняет последующие правки редакторов. Старые записи двух групп остаются в БД без публикации; спонсоры не меняются. Общий `catalog.json` повторно не импортировать.
+- `/admin/check-in/`: камера по HTTPS, загрузка фото QR, поиск по ФИО/email/телефону/короткому номеру билета. Фото распознаётся на устройстве и не отправляется на сервер. При отсутствии BarcodeDetector используется локальная копия jsQR 1.4.0 (лицензия рядом).
+- QR открывает билет сотруднику с правом отметки; личной ссылки на изменение заявки в QR нет. Отметка требует отдельного подтверждения и записывается атомарно. Повтор виден; отозванный билет не принимается.
+- Инструкция организатору: [content-editor-guide.md](content-editor-guide.md). Актуальные ограничения и завершённые проверки: [release-audit-2026-11-11.md](release-audit-2026-11-11.md).

@@ -1,4 +1,4 @@
-<!doctype html>
+{% load static %}<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="utf-8">
@@ -24,10 +24,12 @@
     .item { padding: 12px 0; border-bottom: 1px solid #d9dceb; }
     .item:last-child { border-bottom: 0; }
     #camera-status { min-height: 24px; }
+    .desk-nav {display:flex;justify-content:space-between;gap:16px;margin-bottom:24px;align-items:center}.desk-nav a{color:#3146ad;text-underline-offset:4px}.desk-nav b{color:#071466}.camera-actions{display:flex;gap:12px;flex-wrap:wrap}.file-button{display:inline-flex;align-items:center;min-height:48px;padding:12px 20px;margin-top:12px;border:1px solid #cad2e7;border-radius:8px;cursor:pointer;color:#3146ad;font-weight:650;background:#f5f7fc}.file-button input{position:absolute;width:1px;height:1px;opacity:0;min-height:0;padding:0}.file-button:focus-within{outline:3px solid #00aeea;outline-offset:3px}.desk-result{display:block;padding:14px 0;border-top:1px solid #d9dceb;color:#142b47;text-decoration:none}.desk-result b,.desk-result span{display:block}.desk-result small{color:#4a5070}.desk-back{color:#3146ad}.desk-person-name{font-size:clamp(24px,5vw,38px);line-height:1.25;overflow-wrap:anywhere}.desk-invalid{background:#fff0ee;border-color:#f0c6c0}.desk-confirm{width:100%;min-height:58px;font-size:18px}.desk-preview{border:1px dashed #cad2e7;border-radius:8px;background:#f8faff;padding:14px}.desk-preview a{color:#3146ad;margin-right:16px}#camera-upload-status{font-size:14px}.desk-number{font-weight:700;letter-spacing:1px;color:#3146ad}.camera-note{font-size:13px;color:#5f6f88}
   </style>
 </head>
 <body>
 <main>
+  <nav class="desk-nav"><b>Сибирский форум</b><a href="/admin/">Панель организатора</a></nav>
   <h1>{{ title }}</h1>
   {% if messages %}
     {% for message in messages %}<p class="{{ message.tags }}">{{ message }}</p>{% endfor %}
@@ -35,32 +37,40 @@
   {% if scanner %}
     <section>
       <h2>Сканировать QR</h2>
-      <p class="muted">Разрешите доступ к камере. Отдельное приложение не требуется.</p>
-      <button type="button" id="camera-start">Включить камеру</button>
-      <p id="camera-status" class="muted"></p>
+      <p class="muted">Наведите камеру на билет с телефона или бумаги. Доступ к камере включается только по кнопке.</p>
+      <div class="camera-actions"><button type="button" id="camera-start">Включить камеру</button><label class="file-button">Распознать с фотографии<input type="file" id="qr-file" accept="image/*"></label></div>
+      <p id="camera-status" class="muted" role="status" aria-live="polite"></p>
       <video id="camera" playsinline muted></video>
+      <p class="camera-note">Фотография распознаётся на устройстве и не загружается на сервер. После чтения кода откроется карточка участника.</p>
     </section>
     <section>
-      <h2>Или введите код вручную</h2>
+      <h2>Найти по имени или номеру билета</h2>
+      <form method="post">{% csrf_token %}<label for="participant-search">Имя, телефон, e-mail или первые 8 символов номера</label><input id="participant-search" name="search" value="{{ query }}" minlength="3" maxlength="120" autocomplete="off" required><button type="submit">Найти билет</button></form>
+      {% for match in matches %}<a class="desk-result" href="{% url 'check-in-ticket' match.public_id %}"><b>{{ match.registration.participant.full_name }}</b><span>{{ match.registration.participant.organization }}</span><small>{% if match.checkins.all %}Прибытие уже отмечено{% else %}Ожидаем участника{% endif %} · {{ match.public_id|stringformat:'s'|slice:':8'|upper }}</small></a>{% endfor %}
+    </section>
+    <details class="desk-preview"><summary>Вставить ссылку из QR или полный номер</summary>
       <form method="post">
         {% csrf_token %}
-        <label for="ticket-code">UUID билета или содержимое QR</label>
+        <label for="ticket-code">Ссылка из QR или полный номер билета</label>
         <input id="ticket-code" name="code" required autocomplete="off">
         <button type="submit">Найти участника</button>
       </form>
-    </section>
+    </details>
+  {% elif invalid_ticket %}
+    <section class="desk-invalid"><h2>{{ title }}</h2><p>{{ invalid_message }}</p><a class="button" href="/admin/check-in/">Вернуться к сканеру</a></section>
   {% else %}
     <section>
-      <h2>{{ participant.full_name }}</h2>
+      <h2 class="desk-person-name">{{ participant.full_name }}</h2>
       <p>{{ participant.organization }} · {{ participant.position }}</p>
-      <p class="muted">Заявка {{ registration.id }} · Билет {{ ticket.public_id }}</p>
+      <p class="desk-number">Билет {{ ticket.public_id|stringformat:'s'|slice:':8'|upper }}</p>
+      <div class="desk-preview"><a href="/api/v1/tickets/{{ ticket.public_id }}/ticket.pdf">Скачать PDF-билет</a><a href="/api/v1/tickets/{{ ticket.public_id }}/qr.png" target="_blank" rel="noopener">Открыть QR</a></div>
       {% if checkin %}
         <p class="success"><b>Прибытие отмечено:</b> {{ checkin.created_at|date:'d.m.Y H:i' }} · {{ checkin.admin_user.get_username }}</p>
       {% else %}
         <form method="post">
           {% csrf_token %}
           <input type="hidden" name="action" value="confirm">
-          <button type="submit">Подтвердить прибытие</button>
+          <button type="submit" class="desk-confirm">Подтвердить прибытие</button>
         </form>
       {% endif %}
       <a class="button secondary" href="/admin/check-in/">Сканировать следующий</a>
@@ -79,56 +89,6 @@
     </section>
   {% endif %}
 </main>
-{% if scanner %}
-<script>
-(function () {
-  var button = document.getElementById('camera-start');
-  var video = document.getElementById('camera');
-  var status = document.getElementById('camera-status');
-  var stream;
-  var timer;
-  function stop() {
-    clearInterval(timer);
-    if (stream) stream.getTracks().forEach(function (track) { track.stop(); });
-    stream = null;
-    video.classList.remove('active');
-    button.textContent = 'Включить камеру';
-  }
-  async function start() {
-    if (!('BarcodeDetector' in window) || !navigator.mediaDevices) {
-      status.textContent = 'Сканирование камерой не поддерживается этим браузером. Используйте ручной ввод.';
-      return;
-    }
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
-      video.srcObject = stream;
-      video.classList.add('active');
-      await video.play();
-      button.textContent = 'Выключить камеру';
-      status.textContent = 'Наведите камеру на QR участника.';
-      var formats = await BarcodeDetector.getSupportedFormats();
-      if (formats.indexOf('qr_code') === -1) throw new Error('QR не поддерживается');
-      var detector = new BarcodeDetector({ formats: ['qr_code'] });
-      timer = setInterval(async function () {
-        if (!stream || video.readyState < 2) return;
-        try {
-          var codes = await detector.detect(video);
-          if (codes.length) {
-            document.getElementById('ticket-code').value = codes[0].rawValue;
-            stop();
-            document.getElementById('ticket-code').form.submit();
-          }
-        } catch (error) { /* кадр не распознан */ }
-      }, 450);
-    } catch (error) {
-      stop();
-      status.textContent = 'Не удалось открыть камеру. Проверьте разрешение и HTTPS или введите код вручную.';
-    }
-  }
-  button.addEventListener('click', function () { if (stream) stop(); else start(); });
-  window.addEventListener('pagehide', stop);
-})();
-</script>
-{% endif %}
+{% if scanner %}<script src="{% static 'workspace/checkin.js' %}?v=2" defer></script>{% endif %}
 </body>
 </html>

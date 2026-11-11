@@ -100,7 +100,7 @@ def build_ticket_pdf(registration):
     ]
     qr = Image(BytesIO(ticket_qr_png(ticket)), width=47 * mm, height=47 * mm)
     details = [
-        Paragraph(f"Номер заявки:<br/><b>{registration.id}</b>", body),
+        Paragraph(f"Номер билета: <b>{str(ticket.public_id).split('-')[0].upper()}</b>", body),
         Spacer(1, 3 * mm),
         Paragraph('QR предназначен для стойки регистрации. Он не открывает изменение вашей заявки.', small),
         Spacer(1, 3 * mm),
@@ -139,6 +139,7 @@ def ticket_payload(ticket):
     checkin = ticket.checkins.first()
     return {
         'id': str(ticket.public_id),
+        'code': str(ticket.public_id).split('-')[0].upper(),
         'status': ticket.status,
         'version': ticket.version,
         'qr_path': f'/api/v1/tickets/{ticket.public_id}/qr.png',

@@ -7,6 +7,7 @@ x-app-env: &app-env
   ALLOWED_HOSTS: "${DOMAIN},${ADMIN_DOMAIN:-admin.sibforum-tomsk.ru},localhost,127.0.0.1,backend-prod"
   CSRF_TRUSTED_ORIGINS: "https://${DOMAIN},https://${ADMIN_DOMAIN:-admin.sibforum-tomsk.ru}"
   PUBLIC_SITE_URL: "https://${DOMAIN}"
+  PUBLIC_SITE_ROOT: /public-site
   PUBLIC_BACKEND_URL: "https://${DOMAIN}"
   ADMIN_DOMAIN: "${ADMIN_DOMAIN:-admin.sibforum-tomsk.ru}"
   ADMIN_OWNER_USERNAME: "${ADMIN_OWNER_USERNAME:-director}"
@@ -71,6 +72,7 @@ services:
       - production-static:/app/staticfiles
       - production-media:/app/media
       - production-backups:/app/backups
+      - ./site:/public-site:ro
     depends_on:
       db:
         condition: service_healthy

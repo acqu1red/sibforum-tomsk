@@ -11,6 +11,7 @@ services:
       ADMIN_DOMAIN: admin.localhost
       SECURE_SSL_REDIRECT: "0"
       PUBLIC_SITE_URL: http://localhost:8097
+      PUBLIC_SITE_ROOT: /public-site
       ADMIN_TOTP_REQUIRED: "0"
       CSRF_TRUSTED_ORIGINS: http://localhost:8097,http://admin.localhost:8097,http://after
     volumes:
@@ -19,6 +20,7 @@ services:
       - audit-data:/data
       - audit-static:/app/staticfiles
       - audit-media:/app/media
+      - ../site:/public-site:ro
     mem_limit: 256m
     cpus: 1
     healthcheck:

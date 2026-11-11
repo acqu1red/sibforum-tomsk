@@ -1,0 +1,191 @@
+{
+  "source": "https://promtour.tomsk.siberianforum.ru/",
+  "root_source": "https://siberianforum.ru/",
+  "note": "Visible footer: three organizers and twenty logos in Promtourism in Tomsk; earlier hidden duplicate and anniversary logo excluded.",
+  "records": [
+    {
+      "group": "organizers",
+      "name": "Союз «Торгово-промышленная палата Томской области»",
+      "image": "/img/logos/reference-forum/organizers-1.png",
+      "background": "dark",
+      "position": 0,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/1cf73b4ca93d5e0d30ac8f7fc1226101.png"
+    },
+    {
+      "group": "organizers",
+      "name": "Администрация Томской области",
+      "image": "/img/logos/reference-forum/organizers-2.png",
+      "background": "dark",
+      "position": 1,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/3d8d00d48d02f962ae1c028e5bf909a5.png"
+    },
+    {
+      "group": "organizers",
+      "name": "Агентство стратегических инициатив",
+      "image": "/img/logos/reference-forum/organizers-3.png",
+      "background": "dark",
+      "position": 2,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/edb386279c580d0746c1c6ed939aa98a.png"
+    },
+    {
+      "group": "enterprises",
+      "name": "Русатом Инфраструктурные решения",
+      "image": "/img/logos/reference-forum/enterprises-1.jpg",
+      "background": "light",
+      "position": 0,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/422a395811faa00df1897cef76c1a625.jpg"
+    },
+    {
+      "group": "enterprises",
+      "name": "ТомИндуктор",
+      "image": "/img/logos/reference-forum/enterprises-2.jpg",
+      "background": "light",
+      "position": 1,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/3e5a94914b833180af931f66fd6a7ddc.jpg"
+    },
+    {
+      "group": "enterprises",
+      "name": "Сибирский Кедр",
+      "image": "/img/logos/reference-forum/enterprises-3.jpg",
+      "background": "light",
+      "position": 2,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/737a1b2ed6e984d1bddfa56d6c29e59a.jpg"
+    },
+    {
+      "group": "enterprises",
+      "name": "СИБУР",
+      "image": "/img/logos/reference-forum/enterprises-4.jpg",
+      "background": "light",
+      "position": 3,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/1c7fbf9ff3428168162d2cc3f7a4d9fb.jpg"
+    },
+    {
+      "group": "enterprises",
+      "name": "Томский инструмент",
+      "image": "/img/logos/reference-forum/enterprises-5.jpg",
+      "background": "light",
+      "position": 4,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/4c0e72dfa06c27966792ddc998e6090e.jpg"
+    },
+    {
+      "group": "enterprises",
+      "name": "ТЭМЗ",
+      "image": "/img/logos/reference-forum/enterprises-6.jpg",
+      "background": "light",
+      "position": 5,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/a62b8ef932c9e3692eea624cbbd4cfc9.jpg"
+    },
+    {
+      "group": "enterprises",
+      "name": "Манотомь",
+      "image": "/img/logos/reference-forum/enterprises-7.png",
+      "background": "light",
+      "position": 6,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/6328f59f50ddbb7265a17e374032b521.png"
+    },
+    {
+      "group": "enterprises",
+      "name": "Швейная фабрика «Дива»",
+      "image": "/img/logos/reference-forum/enterprises-8.png",
+      "background": "light",
+      "position": 7,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/672aa02945eeaa0c076b17f34dd809f0.png"
+    },
+    {
+      "group": "enterprises",
+      "name": "Van Classen",
+      "image": "/img/logos/reference-forum/enterprises-9.jpg",
+      "background": "light",
+      "position": 8,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/52e30b8958ab284c5b135c0ba1eb945f.jpg"
+    },
+    {
+      "group": "enterprises",
+      "name": "Микран",
+      "image": "/img/logos/reference-forum/enterprises-10.png",
+      "background": "light",
+      "position": 9,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/94e29cb03d402ef12aac567fe72a1e2b.png"
+    },
+    {
+      "group": "enterprises",
+      "name": "Томский политехнический университет",
+      "image": "/img/logos/reference-forum/enterprises-11.png",
+      "background": "light",
+      "position": 10,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/bb49b8e69882f1831848339752b316bc.png"
+    },
+    {
+      "group": "enterprises",
+      "name": "Томский государственный университет",
+      "image": "/img/logos/reference-forum/enterprises-12.png",
+      "background": "light",
+      "position": 11,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/11e8d895714fad1f4e86a2e66c09d23a.png"
+    },
+    {
+      "group": "enterprises",
+      "name": "Томский промышленно-гуманитарный колледж",
+      "image": "/img/logos/reference-forum/enterprises-13.jpg",
+      "background": "light",
+      "position": 12,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/f54b81f501914d3b9fe8e91c4dd62711.jpg"
+    },
+    {
+      "group": "enterprises",
+      "name": "Томский индустриальный техникум",
+      "image": "/img/logos/reference-forum/enterprises-14.jpg",
+      "background": "light",
+      "position": 13,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/8e5430207f75563e8c36ad3ece3d65ef.jpg"
+    },
+    {
+      "group": "enterprises",
+      "name": "ТЭПК",
+      "image": "/img/logos/reference-forum/enterprises-15.jpg",
+      "background": "light",
+      "position": 14,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/5c3b6acf92e87f55e992b1680ca51e57.jpg"
+    },
+    {
+      "group": "enterprises",
+      "name": "Томский техникум информационных технологий",
+      "image": "/img/logos/reference-forum/enterprises-16.png",
+      "background": "light",
+      "position": 15,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/92e718a8ff70ea2193a749175a53206f.png"
+    },
+    {
+      "group": "enterprises",
+      "name": "Томский политехнический техникум",
+      "image": "/img/logos/reference-forum/enterprises-17.png",
+      "background": "light",
+      "position": 16,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/c01931bd74d9dbb1f1390125bef352a8.png"
+    },
+    {
+      "group": "enterprises",
+      "name": "Сибирский политехнический колледж",
+      "image": "/img/logos/reference-forum/enterprises-18.jpg",
+      "background": "light",
+      "position": 17,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/e78b9050ce7ffe8974f194423ba85897.jpg"
+    },
+    {
+      "group": "enterprises",
+      "name": "Туристическая компания «Парк-Тур»",
+      "image": "/img/logos/reference-forum/enterprises-19.png",
+      "background": "light",
+      "position": 18,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/0529e77b983f184dd356fcdf718a7b01.png"
+    },
+    {
+      "group": "enterprises",
+      "name": "Центр инжиниринга и инноваций Томской области",
+      "image": "/img/logos/reference-forum/enterprises-20.png",
+      "background": "light",
+      "position": 19,
+      "source_url": "https://promtour.tomsk.siberianforum.ru/m/375d5197051d2adae40a40c789d0c227/42697a07171cf1ba42c4fdc07ea3c980.png"
+    }
+  ]
+}

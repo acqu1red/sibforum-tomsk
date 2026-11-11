@@ -12,7 +12,7 @@ cd "$project_dir"
 staging_dir=$(mktemp -d "${TMPDIR:-/tmp}/sibforum-upload.XXXXXXXX")
 # The staging folder contains generated public files only; keep it for inspection.
 bash tools/deploy-site.sh "$staging_dir/site"
-ssh_options=(-i "$ssh_key" -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=15 -o StrictHostKeyChecking=accept-new)
+ssh_options=(-i "$ssh_key" -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=15 -o StrictHostKeyChecking=accept-new -o ControlPath=none -o ControlMaster=no)
 ssh "${ssh_options[@]}" "$target" 'install -d -m 755 /opt/sibforum'
 # Explicit source list: never transmit local databases, browser profiles or SSH keys.
 COPYFILE_DISABLE=1 tar --no-xattrs \

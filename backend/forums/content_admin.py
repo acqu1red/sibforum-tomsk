@@ -68,13 +68,13 @@ class OrganizationLogoAdmin(WebsiteAdmin):
     list_filter = ('forum', 'group', 'is_published')
     search_fields = ('name',)
     readonly_fields = ('preview',)
-    fields = ('forum', 'group', 'name', 'image', 'static_image', 'preview', 'website_url', 'position', 'is_published')
+    fields = ('forum', 'group', 'name', 'image', 'static_image', 'image_background', 'preview', 'website_url', 'position', 'is_published')
 
     @admin.display(description='Логотип')
     def preview(self, obj):
         from .media import public_asset
         url = obj.variants.get('400') or (obj.image.url if obj.image else public_asset(obj.static_image, absolute=True))
-        return format_html('<img src="{}" alt="" style="width:120px;height:64px;object-fit:contain;background:#e9edf6;padding:8px;border-radius:8px">', url) if url else 'Логотип ещё не загружен'
+        return format_html('<img src="{}" alt="" style="width:120px;height:64px;object-fit:contain;background:{};padding:8px;border-radius:8px">', url, '#071466' if obj.image_background == 'dark' else '#fff') if url else 'Логотип ещё не загружен'
 
 
 class SpeakerPhotoInline(admin.StackedInline):

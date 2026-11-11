@@ -33,14 +33,15 @@ def page_payload(forum):
         'hero_image': page.hero_variants.get('960') or (page.hero_image.url if page.hero_image else public_asset(page.hero_static_image)),
         'registration_notice': page.registration_notice,
         'sections': sections,
-        'navigation': [{'label': n.label, 'target': n.target} for n in forum.navigation.all() if n.is_published],
+        'navigation': [{'id': str(n.pk), 'label': n.label, 'target': n.target} for n in forum.navigation.all() if n.is_published],
         'contacts': [{
+            'id': str(c.pk),
             'title': c.title or (c.venue.name if c.venue else ''),
             'subtitle': c.subtitle,
             'body': ((c.venue.address + '\n') if c.venue else '') + c.body,
             'link_label': c.link_label, 'link_url': c.link_url,
         } for c in forum.contact_cards.all() if c.is_published and (not c.venue or c.venue.is_published)],
-        'logos': [{'group': l.group, 'name': l.name, 'website_url': l.website_url,
+        'logos': [{'id': str(l.pk), 'group': l.group, 'name': l.name, 'background': l.image_background, 'website_url': l.website_url,
                    'image': l.variants.get('400') or (l.image.url if l.image else public_asset(l.static_image))}
                   for l in forum.organization_logos.all() if l.is_published],
     }

@@ -9,7 +9,8 @@ from pathlib import Path
 @lru_cache(maxsize=1)
 def workspace_asset_version():
     folder = Path(settings.BASE_DIR) / 'accounts/static/workspace'
-    return sha256(b''.join((folder / name).read_bytes() for name in ('admin.css', 'admin.js'))).hexdigest()[:12]
+    names = ('admin.css', 'admin.js', 'editor.css', 'editor.js', 'editor-preview.js', 'checkin.js')
+    return sha256(b''.join((folder / name).read_bytes() for name in names)).hexdigest()[:12]
 
 
 class WorkspaceTitles:
@@ -99,6 +100,8 @@ class ForumAdminSite(AdminSite):
             'workspace_public_url': settings.PUBLIC_SITE_URL,
             'workspace_asset_version': workspace_asset_version(),
         })
+        if request.user.is_authenticated and any(request.user.has_perm('forums.change_' + name) for name in ('forumpage', 'pagesection', 'speaker', 'event')):
+            context['workspace_editor_url'] = reverse('site-editor')
         if request.user.is_authenticated and request.user.has_perm('registrations.view_registration'):
             from django.core import signing
             from urllib.parse import urlencode

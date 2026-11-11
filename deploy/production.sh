@@ -45,6 +45,8 @@ case "$action" in
     "${compose[@]}" exec -T nginx nginx -t
     ;;
   update)
+    # Reject template errors before touching the running backend or proxy.
+    "${compose[@]}" run --rm --no-deps nginx sh /etc/nginx/project/check-nginx.sh
     "${compose[@]}" build
     "${compose[@]}" exec -T backend-prod python manage.py backup_data
     "${compose[@]}" stop worker backup

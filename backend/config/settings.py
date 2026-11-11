@@ -167,6 +167,7 @@ if not DEBUG and YANDEX_SMARTCAPTCHA_SECRET and not YANDEX_SMARTCAPTCHA_CLIENT_I
 
 # Public source assets and uploaded media can live entirely in Object Storage.
 PUBLIC_ASSET_BASE_URL = os.environ.get('PUBLIC_ASSET_BASE_URL', '').rstrip('/')
+PUBLIC_SITE_ROOT = os.environ.get('PUBLIC_SITE_ROOT', str(BASE_DIR.parent / 'site'))
 MEDIA_BUCKET_NAME = os.environ.get('MEDIA_BUCKET_NAME', '')
 MEDIA_PUBLIC_BASE_URL = os.environ.get('MEDIA_PUBLIC_BASE_URL', '').rstrip('/')
 if MEDIA_BUCKET_NAME:

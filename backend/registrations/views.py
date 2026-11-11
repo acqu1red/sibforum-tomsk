@@ -137,7 +137,7 @@ def authorized_ticket(request, public_id):
     ticket = Ticket.objects.filter(public_id=public_id, status=Ticket.Status.ACTIVE).select_related('registration__participant').first()
     if not ticket:
         raise RegistrationError('not_found', 'Билет не найден.', status=404)
-    if request.user.is_authenticated and request.user.is_staff:
+    if request.user.is_authenticated and request.user.is_staff and (request.user.has_perm('registrations.view_ticket') or request.user.has_perm('registrations.add_checkin')):
         return ticket
     registration = registration_by_token(request.GET.get('t', ''))
     if not registration or registration.id != ticket.registration_id:

@@ -35,6 +35,7 @@ class ForumPage(TimeStampedModel):
     registration_notice = models.TextField('Сообщение при закрытой регистрации', default='Приём заявок временно недоступен. Программа и описание маршрутов доступны для просмотра.')
     initialized = models.BooleanField(default=False, editable=False)
     meeting_revision = models.CharField(max_length=40, blank=True, editable=False)
+    reference_logos_imported = models.BooleanField(default=False, editable=False)
 
     class Meta:
         verbose_name = 'страница форума'
@@ -143,6 +144,8 @@ class OrganizationLogo(TimeStampedModel):
     name = models.CharField('Организация', max_length=240)
     image = models.ImageField('Логотип', upload_to='logos/', blank=True, validators=[validate_image_upload])
     static_image = models.CharField('Готовое изображение на сайте', max_length=300, blank=True, validators=[safe_public_link])
+    image_background = models.CharField('Фон под логотипом', max_length=10,
+        choices=(('light', 'Светлый — для цветных и тёмных логотипов'), ('dark', 'Синий — для белых логотипов')), default='light')
     website_url = models.URLField('Сайт организации', blank=True)
     position = models.PositiveIntegerField('Порядок', default=0)
     is_published = models.BooleanField('Показать на сайте', default=True)
