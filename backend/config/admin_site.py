@@ -59,6 +59,7 @@ class ForumAdminSite(AdminSite):
             ('Содержание форума', [
                 ('Страница сайта', 'forums', 'forumpage', 'Первый экран, название, площадка и связь'),
                 ('Тексты разделов', 'forums', 'pagesection', 'Заголовки, пояснения и кнопки сайта'),
+                ('Подписи и пояснения', 'forums', 'interfacetext', 'Тексты выбора маршрута, регистрации и описания компаний'),
                 ('Меню сайта', 'forums', 'navigationitem', 'Подписи, ссылки и порядок пунктов'),
                 ('Контакты сайта', 'forums', 'contactcard', 'Адреса, почта и полезные ссылки'),
                 ('Организаторы и партнёры', 'forums', 'organizationlogo', 'Три группы логотипов и предприятий'),
@@ -100,6 +101,17 @@ class ForumAdminSite(AdminSite):
             'workspace_public_url': settings.PUBLIC_SITE_URL,
             'workspace_asset_version': workspace_asset_version(),
         })
+        tasks = [
+            ('Контакты маршрутов', 'Имя и телефон контактного лица каждого маршрута', 'forums', 'event', '?kind__exact=route'),
+            ('Логотипы предприятий маршрутов', 'Загрузить, заменить логотип или изменить название', 'forums', 'organizationlogo', '?group__exact=enterprises'),
+            ('Логотипы организаторов и партнёров', 'Добавить организацию, загрузить логотип, изменить порядок', 'forums', 'organizationlogo', ''),
+            ('Логотипы компаний конкурса', 'Логотип и описание компании в каждой номинации', 'voting', 'nominee', ''),
+        ]
+        context['workspace_content_tasks'] = [
+            {'label': label, 'description': description, 'url': reverse(f'admin:{app}_{model}_changelist') + query}
+            for label, description, app, model, query in tasks
+            if request.user.is_authenticated and request.user.has_perm(f'{app}.change_{model}')
+        ]
         if request.user.is_authenticated and any(request.user.has_perm('forums.change_' + name) for name in ('forumpage', 'pagesection', 'speaker', 'event')):
             context['workspace_editor_url'] = reverse('site-editor')
         if request.user.is_authenticated and request.user.has_perm('registrations.view_registration'):

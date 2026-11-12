@@ -14,8 +14,18 @@
     token: new URLSearchParams(location.search).get('t') || '',
     routeEvents: {},
     exchangeEvents: [],
-    lastFocus: null
+    lastFocus: null,
+    registration: null,
+    editing: false,
+    preview: !!window.FORUM_EDITOR_PREVIEW
   };
+  function text(key, fallback) { return window.forumContent.text(key, fallback); }
+  function copy(key, fallback) { return '<span data-ui="' + key + '">' + esc(text(key, fallback)) + '</span>'; }
+  function contactHtml(event) {
+    if (!event.contact_name && !event.contact_phone) return '';
+    var phone = String(event.contact_phone || ''), tel = phone.replace(/[^+0-9]/g, '');
+    return '<p class="promtour-route-contact">' + copy('route_contact', 'Контактное лицо') + ': ' + esc(event.contact_name || '') + (phone ? ' <a href="tel:' + esc(tel) + '">' + esc(phone) + '</a>' : '') + '</p>';
+  }
   var STATUS = {
     confirmed: 'Подтверждено', pending_review: 'На рассмотрении', approved: 'Одобрено',
     rejected: 'Отклонено', cancelled_by_user: 'Отменено участником', cancelled_by_admin: 'Отменено администратором'
@@ -137,8 +147,8 @@
       var routeCount = day.events.filter(function (event) { return event.kind === 'route'; }).length;
       var events = day.events.filter(function (event) { return !(hasSummary && event.kind === 'route'); }).map(function (event) {
         var fallback = staticEventFor(event.slug);
-        var anchors = { routes: ['routes', 'Выбрать маршрут'], seminar: ['speakers', 'Спикеры и темы'], exchange: ['exchange', 'О бирже и лотах'], awards: ['contest', 'Номинации конкурса'] };
-        var anchor = anchors[event.slug] || (fallback && fallback.anchor ? [fallback.anchor, fallback.anchorLabel] : null);
+        var anchors = { routes: ['routes', 'Выбрать маршрут'], exchange: ['exchange', 'О бирже и лотах'], awards: ['contest', 'Номинации конкурса'] };
+        var anchor = event.kind === 'seminar' ? null : anchors[event.slug] || (fallback && fallback.anchor && fallback.anchor !== 'speakers' ? [fallback.anchor, fallback.anchorLabel] : null);
         var externalUrl = safeHttpsUrl(event.external_url);
         var externalLink = externalUrl && validExternalUrl(externalUrl)
           ? '<a class="link-arrow" href="' + esc(externalUrl) + '" target="_blank" rel="noopener noreferrer">Внешняя регистрация<span class="visually-hidden"> (откроется в новой вкладке)</span> <span aria-hidden="true">→</span></a>'
@@ -168,7 +178,7 @@
         (day.venue ? '<p class="promtour-day-venue">' + esc(day.venue) + '</p>' : '') + '</div>' +
         '<div class="promtour-timeline">' + day.events.map(function (event) {
           var extra = speakerButtons(event.speakers || event.speakerIds) + (event.description ? '<p>' + esc(event.description) + '</p>' : '') + (event.extra || '');
-          if (event.anchor) extra += '<a class="link-arrow" href="#' + esc(event.anchor) + '">' + esc(event.anchorLabel) + ' <span aria-hidden="true">→</span></a>';
+          if (event.anchor && event.anchor !== 'speakers') extra += '<a class="link-arrow" href="#' + esc(event.anchor) + '">' + esc(event.anchorLabel) + ' <span aria-hidden="true">→</span></a>';
           if (event.externalUrl) extra += '<p class="promtour-event-meta">Ссылка на страницу внешней регистрации уточняется организатором.</p>';
           return '<article class="promtour-event" data-edit="event:' + esc(event.editorId || event.id) + '" id="event-' + esc(event.id) + '">' +
             '<time class="promtour-event-time">' + esc(event.time) + '</time>' +
@@ -199,7 +209,7 @@
           return '<li><strong>' + esc(enterprise.name) + '</strong><span>' + esc(enterprise.description) + '</span></li>';
         }).join('') + '</ul>' : '<p>Состав предприятий уточняется организатором.</p>') +
         '<div class="promtour-route-facts"><p><b>Дата:</b> ' + esc(day ? formatDay(day.date) : 'Дата уточняется') + '</p><p><b>Отправление:</b> ' + esc(route.venue ? route.venue.name + ', ' + route.venue.address : 'Место уточняется') + ' · ' + esc(route.start_time || 'Время уточняется') + '</p><p><b>Стоимость:</b> ' + esc(route.is_paid === false ? 'Бесплатно' : formatPrice(route.price)) + '</p><p><b>Оплата:</b> ' + esc(route.payment_note || (route.is_paid === false ? 'Не требуется' : 'Условия уточняются куратором.')) + '</p><p><b>Статус:</b> ' + esc(POLICY[route.registration_policy] || 'заявка на рассмотрении') + '</p></div>' +
-        '<p class="promtour-route-rule">Можно выбрать только один маршрут</p>' +
+        contactHtml(route) + '<p class="promtour-route-rule" data-ui="route_rule"' + (text('route_rule', '') ? '' : ' hidden') + '>' + esc(text('route_rule', '')) + '</p>' +
         '<button class="btn btn-secondary btn-block" type="button" data-route-select="' + number + '" disabled>Проверяем запись…</button>' +
         '</article>';
     }).join('');
@@ -214,17 +224,6 @@
     $('[data-speaker-circles]').innerHTML = speakers.map(function (speaker) {
       return '<button class="promtour-person" type="button" data-speaker-id="' + esc(speaker.id) + '">' + window.forumContent.photo(speaker, 'circle', 'promtour-circle-photo') + '<b>' + esc(speaker.short_name || speaker.name) + '</b>' + (speaker.short_position ? '<span>' + esc(speaker.short_position) + '</span>' : '') + '</button>';
     }).join('');
-    $('[data-speakers]').innerHTML = speakers.map(function (speaker) {
-      var events = (speaker.events || []).map(speakerEventName);
-      var search = [speaker.name, speaker.position, speaker.topic].concat(events).join(' ').toLowerCase();
-      return '<article class="promtour-speaker" data-speaker-card="' + esc(speaker.id) + '" data-search="' + esc(search) + '">' +
-        '<button class="promtour-speaker-photo" type="button" data-speaker-id="' + esc(speaker.id) + '" aria-label="Подробнее: ' + esc(speaker.name) + '">' + speakerPhoto(speaker, 'promtour-speaker-image') + '</button>' +
-        '<div class="promtour-speaker-body"><h3>' + esc(speaker.name) + '</h3>' +
-        '<p class="promtour-speaker-position">' + esc(speaker.position) + '</p>' +
-        (speaker.topic ? '<p class="promtour-speaker-topic"><span>Тема</span>' + esc(speaker.topic) + '</p>' : '') +
-        '<p class="promtour-event-meta">' + esc(events.join(' · ')) + '</p>' +
-        '<button class="btn btn-secondary btn-sm" type="button" data-speaker-id="' + esc(speaker.id) + '">Подробнее</button></div></article>';
-    }).join('') || '<p class="promtour-empty">Список спикеров уточняется организатором.</p>';
   }
 
   function openSpeaker(id) {
@@ -234,10 +233,10 @@
     var events = speaker.events || [];
     var hasTopics = events.some(function (event) { return typeof event === 'object' && event.topic; });
     $('[data-speaker-dialog-content]').innerHTML = '<div class="promtour-dialog-person">' + speakerPhoto(speaker, 'promtour-dialog-photo') +
-      '<div><p class="eyebrow">Участник форума</p><h2 id="speaker-dialog-title">' + esc(speaker.name) + '</h2></div></div>' +
-      '<h3>Должность и регалии</h3><p>' + esc(speaker.position) + '</p>' +
+      '<div><h2 id="speaker-dialog-title">' + esc(speaker.name) + '</h2></div></div>' +
+      '<h3>' + copy('speaker_credentials', 'Должность, звание') + '</h3><p>' + esc(speaker.position) + '</p>' +
       (!hasTopics && speaker.topic ? '<h3>Тема</h3><p>' + esc(speaker.topic) + '</p>' : '') +
-      (events.length ? '<h3>Выступления и участие</h3><ul class="promtour-person-talks">' + events.map(function (event) {
+      (events.length ? '<h3>' + copy('speaker_participation', 'Выступления и участие') + '</h3><ul class="promtour-person-talks">' + events.map(function (event) {
         return '<li><strong>' + esc(speakerEventName(event)) + '</strong>' + (typeof event === 'object' && event.topic ? '<p>' + esc(event.topic) + '</p>' : '') + '</li>';
       }).join('') + '</ul>' : '');
     $('[data-speaker-dialog]').showModal();
@@ -321,12 +320,13 @@
       '<label class="promtour-event-head"><input type="checkbox" data-event-select="' + esc(event.id) + '"' + (unavailable ? ' disabled' : '') + '><span><span class="promtour-event-title">' + esc(view.title) + '</span><span class="promtour-event-time">' + esc(view.day) + ' · ' + esc(view.time) + '</span></span></label>' +
       '<span class="promtour-policy">' + esc(POLICY[event.registration_policy] || '') + '</span>' +
       (view.paid ? '<div class="promtour-price"><strong>Платное участие</strong><small>Стоимость: ' + esc(formatPrice(view.price)) + '. ' + esc(view.payment_note) + '</small></div>' : '') +
-      (event.kind === 'route' ? '<p class="promtour-event-meta">Можно выбрать только один маршрут</p>' : '') + lotsHtml(event) + '</article>';
+      (event.kind === 'route' ? contactHtml(event) + '<p class="promtour-event-meta" data-ui="route_rule"' + (text('route_rule', '') ? '' : ' hidden') + '>' + esc(text('route_rule', '')) + '</p>' : '') + lotsHtml(event) + '</article>';
   }
 
-  function registrationGroup(title, note, events) {
+  function registrationGroup(title, key, fallback, events) {
     if (!events.length) return '';
-    return '<section class="promtour-registration-group"><h3>' + esc(title) + '</h3>' + (note ? '<p>' + esc(note) + '</p>' : '') + '<div class="promtour-registration-grid">' + events.map(registrationEventHtml).join('') + '</div></section>';
+    var note = text(key, fallback);
+    return '<section class="promtour-registration-group"><h3>' + title + '</h3><p data-ui="' + key + '"' + (note ? '' : ' hidden') + '>' + esc(note) + '</p><div class="promtour-registration-grid">' + events.map(registrationEventHtml).join('') + '</div></section>';
   }
 
   function renderRegistration() {
@@ -349,17 +349,17 @@
     var plenary = otherEvents.filter(function (event) { return event.kind === 'plenary'; });
     var morning = otherEvents.filter(function (event) { return event.kind === 'seminar' || event.kind === 'exchange'; });
     var afternoon = otherEvents.filter(function (event) { return event.kind === 'session' || event.kind === 'roundtable' || event.kind === 'quiz'; });
-    $('[data-registration-events]').innerHTML = registrationGroup(routeDay ? formatDay(routeDay.date) + ' · экскурсии' : 'Экскурсии', 'Только один платный маршрут. Заявка проходит модерацию.', routeEvents) +
-      registrationGroup(businessDay ? formatDay(businessDay.date) + ' · общая часть' : 'Общая часть', 'Обычное событие подтверждается после проверки email.', plenary) +
-      registrationGroup(businessDay ? formatDay(businessDay.date) + ' · до обеда' : 'До обеда', 'Семинар или биржа — не более одного события.', morning) +
-      registrationGroup(businessDay ? formatDay(businessDay.date) + ' · после обеда' : 'После обеда', 'Не более одного параллельного мероприятия.', afternoon);
+    $('[data-registration-events]').innerHTML = registrationGroup((routeDay ? esc(formatDay(routeDay.date)) + ' · ' : '') + copy('route_group', 'Экскурсии'), 'route_note', 'Каждый участник может выбрать один маршрут.', routeEvents) +
+      registrationGroup((businessDay ? esc(formatDay(businessDay.date)) + ' · ' : '') + copy('common_group', 'Общая часть'), 'common_note', 'Обычное событие подтверждается после проверки email.', plenary) +
+      registrationGroup((businessDay ? esc(formatDay(businessDay.date)) + ' · ' : '') + copy('morning_group', 'До обеда'), 'morning_note', '', morning) +
+      registrationGroup((businessDay ? esc(formatDay(businessDay.date)) + ' · ' : '') + copy('afternoon_group', 'После обеда'), 'afternoon_note', '', afternoon);
     $('[data-registration-status]').hidden = true;
-    $('[data-registration-form]').hidden = !!state.token;
+    $('[data-registration-form]').hidden = !!state.token && !state.editing;
     $$('[data-route-select]').forEach(function (button) {
       var number = button.getAttribute('data-route-select');
-      var available = !!state.routeEvents[number] && !state.token;
+      var available = !!state.routeEvents[number] && (!state.token || state.editing);
       button.disabled = !available;
-      button.textContent = state.routeEvents[number] ? (state.token ? 'Заявка уже оформлена' : 'Выбрать маршрут') : 'Онлайн-запись пока недоступна';
+      button.textContent = state.routeEvents[number] ? (state.token && !state.editing ? 'Заявка уже оформлена' : text('route_select', 'Выбрать маршрут')) : 'Онлайн-запись пока недоступна';
     });
     syncSelection();
   }
@@ -510,6 +510,8 @@
   }
 
   function renderResult(registration) {
+    state.registration = registration;
+    state.editing = false;
     $('[data-registration-form]').hidden = true;
     $('[data-verify]').hidden = true;
     $('[data-registration-status]').hidden = true;
@@ -525,6 +527,7 @@
       ticketHtml = '<section class="promtour-ticket-note"><p>Электронный билет с QR появится здесь после подтверждения хотя бы одного события.</p></section>';
     }
     var html = '<div class="promtour-result-head"><div><p class="eyebrow">Заявка ' + esc(registration.id) + '</p><h3>Вы зарегистрированы</h3></div><p><b>' + esc(registration.participant.full_name) + '</b><br>' + esc(registration.participant.organization) + '</p></div>' +
+      (state.submissionsEnabled ? '<div class="promtour-result-actions"><button type="button" class="btn btn-secondary" data-edit-registration>Изменить мероприятия</button><p>Можно добавить маршрут или изменить выбор. Сохранение — после подтверждения почты; маршруты проходят модерацию.</p></div>' : '') +
       '<p class="promtour-personal-link"><a href="' + esc(personalLink) + '">Личная ссылка на билет и статусы</a></p>' + ticketHtml +
       '<div class="promtour-result-items">' + registration.items.map(function (item) {
         var view = registrationView(item.event);
@@ -537,6 +540,30 @@
     $('[data-result]').innerHTML = html;
     $('[data-result]').hidden = false;
     $$('[data-route-select]').forEach(function (button) { button.disabled = true; button.textContent = 'Заявка уже оформлена'; });
+  }
+
+  function editRegistration() {
+    if (!state.registration || !state.submissionsEnabled) return;
+    state.editing = true;
+    state.selected = {};
+    state.registration.items.forEach(function (item) {
+      if (['confirmed', 'approved', 'pending_review'].indexOf(item.status) !== -1 && eventById(item.event.id)) {
+        state.selected[item.event.id] = item.lots.map(function (lot) { return lot.id; });
+      }
+    });
+    renderRegistration();
+    var form = $('[data-registration-form]');
+    Object.keys(state.registration.participant).forEach(function (key) {
+      var field = form.elements.namedItem(key);
+      if (field) { field.value = state.registration.participant[key] || ''; field.dispatchEvent(new Event('change')); }
+    });
+    form.elements.email.readOnly = true;
+    $('[data-result]').hidden = true;
+    $('[data-submit]').textContent = 'Подтвердить изменения по почте';
+    $('[data-cancel-edit]').hidden = false;
+    showError('[data-form-error]', 'Измените выбор. Действующая заявка сохранится до подтверждения нового кода из письма.');
+    if (window.ForumCaptcha.reset) window.ForumCaptcha.reset('smart-captcha');
+    form.scrollIntoView({behavior: 'smooth', block: 'start'});
   }
 
   function loadBackend() {
@@ -586,7 +613,6 @@
 
   function refreshContent() {
     var openIds = $$('.promtour-event-details[open]').map(function (el) { return el.closest('article').id; });
-    var search = $('[data-speaker-search]').value;
     return Promise.all([api('/forums/' + encodeURIComponent(slug) + '/program/'), loadContest()]).then(function (values) {
       var program = values[0];
       state.program = program; state.speakers = program.speakers || [];
@@ -606,7 +632,6 @@
       renderProgram(); renderRoutes(); renderSpeakers(); renderExchange(); renderRegistration();
       if (removed) showError('[data-api-error]', 'Организатор обновил программу. Снятое с публикации мероприятие убрано из вашего выбора; проверьте заявку.');
       openIds.forEach(function (id) { var el=document.getElementById(id);if(el&&$('details',el))$('details',el).open=true; });
-      if(search){$('[data-speaker-search]').value=search;$('[data-speaker-search]').dispatchEvent(new Event('input'));}
     });
   }
 
@@ -635,7 +660,7 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     window.hydrateIcons();
-    window.ForumCaptcha.init('smart-captcha', 'captcha-token');
+    if (!window.FORUM_EDITOR_PREVIEW) window.ForumCaptcha.init('smart-captcha', 'captcha-token');
     $('[data-menu-open]').addEventListener('click', function () {
       window.setTimeout(function () {
         if ($('#mobile-menu').classList.contains('is-open')) $('[data-menu-close]').focus();
@@ -652,18 +677,11 @@
     });
     $('[data-registration-form]').addEventListener('submit', submitRegistration);
     $('[data-verify-form]').addEventListener('submit', verifyEmail);
-    $('[data-speaker-search]').addEventListener('input', function (event) {
-      var query = event.target.value.trim().toLowerCase();
-      var visible = 0;
-      $$('[data-speaker-card]').forEach(function (card) {
-        var matches = !query || card.getAttribute('data-search').indexOf(query) !== -1;
-        card.hidden = !matches;
-        if (matches) visible += 1;
-      });
-      $('[data-speakers-empty]').hidden = visible > 0;
-    });
+
 
     document.addEventListener('click', function (event) {
+      if (event.target.closest('[data-edit-registration]')) editRegistration();
+      if (event.target.closest('[data-cancel-edit]') && state.registration) { renderResult(state.registration); $('[data-cancel-edit]').hidden = true; }
       var speakerButton = event.target.closest('[data-speaker-id]');
       if (speakerButton) openSpeaker(speakerButton.getAttribute('data-speaker-id'));
       var routeButton = event.target.closest('[data-route-select]');

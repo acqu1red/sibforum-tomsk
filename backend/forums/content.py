@@ -33,6 +33,7 @@ def page_payload(forum):
         'hero_image': page.hero_variants.get('960') or (page.hero_image.url if page.hero_image else public_asset(page.hero_static_image)),
         'registration_notice': page.registration_notice,
         'sections': sections,
+        'interface_texts': {item.key: item.value for item in forum.interface_texts.all()},
         'navigation': [{'id': str(n.pk), 'label': n.label, 'target': n.target} for n in forum.navigation.all() if n.is_published],
         'contacts': [{
             'id': str(c.pk),
@@ -43,7 +44,7 @@ def page_payload(forum):
         } for c in forum.contact_cards.all() if c.is_published and (not c.venue or c.venue.is_published)],
         'logos': [{'id': str(l.pk), 'group': l.group, 'name': l.name, 'background': l.image_background, 'website_url': l.website_url,
                    'image': l.variants.get('400') or (l.image.url if l.image else public_asset(l.static_image))}
-                  for l in forum.organization_logos.all() if l.is_published],
+                  for l in forum.organization_logos.all() if l.is_published and (l.group != 'enterprises' or (l.route_enterprise_id and l.route_enterprise.event.is_published and l.route_enterprise.event.kind == 'route'))],
     }
 
 

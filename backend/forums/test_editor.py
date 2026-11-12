@@ -116,5 +116,6 @@ class VisualEditorTests(TestCase):
         self.assertContains(result, 'src="https://public.example.org/promtour/content.js?v=123"')
         self.assertContains(result, 'href="https://public.example.org/css/style.css"')
         self.assertContains(result, 'submissions_enabled:0,voting_enabled:0')
+        self.assertContains(result, 'window.FORUM_EDITOR_PREVIEW=true')
         self.assertEqual(result.headers['X-Frame-Options'], 'SAMEORIGIN')
         self.assertEqual(result.headers['Content-Security-Policy'], "frame-ancestors 'self'")

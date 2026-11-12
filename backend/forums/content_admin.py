@@ -1,13 +1,28 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import ContactCard, ForumPage, NavigationItem, OrganizationLogo, PageSection, SpeakerPhoto
+from .models import ContactCard, ForumPage, InterfaceText, NavigationItem, OrganizationLogo, PageSection, SpeakerPhoto
 
 
 class WebsiteAdmin(admin.ModelAdmin):
     autocomplete_fields = ('forum',)
     list_filter = ('forum',)
     save_on_top = True
+
+    def get_changeform_initial_data(self, request):
+        initial = super().get_changeform_initial_data(request)
+        from .models import Forum
+        forum = Forum.objects.filter(slug='promtour').first()
+        if forum:
+            initial.setdefault('forum', forum.pk)
+        return initial
+
+
+@admin.register(InterfaceText)
+class InterfaceTextAdmin(WebsiteAdmin):
+    list_display = ('get_key_display', 'value', 'forum')
+    search_fields = ('value', 'key')
+    fields = ('forum', 'key', 'value')
 
 
 @admin.register(ForumPage)
@@ -68,7 +83,13 @@ class OrganizationLogoAdmin(WebsiteAdmin):
     list_filter = ('forum', 'group', 'is_published')
     search_fields = ('name',)
     readonly_fields = ('preview',)
-    fields = ('forum', 'group', 'name', 'image', 'static_image', 'image_background', 'preview', 'website_url', 'position', 'is_published')
+    fields = ('forum', 'group', 'route_enterprise', 'name', 'image', 'static_image', 'image_background', 'preview', 'website_url', 'position', 'is_published')
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'route_enterprise':
+            from .models import RouteEnterprise
+            kwargs['queryset'] = RouteEnterprise.objects.filter(event__day__forum__slug='promtour', event__kind='route')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     @admin.display(description='Логотип')
     def preview(self, obj):

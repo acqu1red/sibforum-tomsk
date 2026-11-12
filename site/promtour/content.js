@@ -101,7 +101,7 @@ window.PROMTOUR_CONTENT = {
         {
           id: 'seminar', time: '12:30–14:00', title: 'Семинар «Инструменты повышения туристической привлекательности региона»',
           annotation: 'Разбор маршрутов на промышленные предприятия, охраны труда и промышленной безопасности. Инструменты для анализа потенциала региона, формирования предложения и продвижения в цифровых каналах.',
-          speakerIds: ['kiselnikova', 'lukyanova', 'kalyuzhnaya', 'belenok', 'gefsimanskaya', 'epikhina', 'kovaleva', 'gorbulitskaya'], anchor: 'speakers', anchorLabel: 'Спикеры и темы', detailed: true
+          speakerIds: ['kiselnikova', 'lukyanova', 'kalyuzhnaya', 'belenok', 'gefsimanskaya', 'epikhina', 'kovaleva', 'gorbulitskaya'], detailed: true
         },
         {
           id: 'exchange', time: '12:30–14:00', title: 'Биржа субконтрактов',

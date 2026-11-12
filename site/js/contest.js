@@ -100,7 +100,7 @@
       (logo ? '<b>' + esc(c.name) + '</b>' : '') +
       '<span class="contest-candidate-selection">Выбрать</span></label><button type="button" class="contest-details-button" data-nominee-info="' +
       esc(c.id) +
-      '">О проекте<span class="visually-hidden">: ' +
+      '">' + esc(window.forumContent.text('contest_details', 'Описание')) + '<span class="visually-hidden">: ' +
       esc(c.name) +
       '</span></button></article>'
     );
@@ -245,14 +245,14 @@
         : '') +
       (c.description
         ? '<p class="contest-project-description">' + esc(c.description) + '</p>'
-        : '<p>Описание проекта готовит организатор.</p>') +
+        : '<p>' + esc(window.forumContent.text('contest_empty_description', 'Описание готовит организатор.')) + '</p>') +
       (state.gallery.length
         ? '<figure class="contest-gallery"><img data-gallery-image alt="" width="800" height="560"><figcaption data-gallery-caption></figcaption></figure><div class="contest-gallery-controls"><button type="button" data-gallery-step="-1" aria-label="Предыдущая фотография">Назад</button><span data-gallery-count aria-live="polite"></span><button type="button" data-gallery-step="1" aria-label="Следующая фотография">Далее</button></div>'
         : '') +
       (site
         ? '<p><a class="btn btn-secondary" href="' +
           esc(site) +
-          '" target="_blank" rel="noopener noreferrer">Сайт проекта<span class="visually-hidden"> (откроется в новой вкладке)</span></a></p>'
+          '" target="_blank" rel="noopener noreferrer">' + esc(window.forumContent.text('contest_website', 'Сайт организации')) + '<span class="visually-hidden"> (откроется в новой вкладке)</span></a></p>'
         : '');
     showDialog('[data-nominee-dialog]');
     renderGallery();
@@ -261,7 +261,7 @@
     if (!state.gallery.length) return;
     var photo = state.gallery[state.photoIndex];
     $('[data-gallery-image]').src = window.forumContent.safeLink(photo.url);
-    $('[data-gallery-image]').alt = photo.caption || 'Фотография проекта';
+    $('[data-gallery-image]').alt = photo.caption || 'Фотография участника конкурса';
     $('[data-gallery-caption]').textContent = photo.caption || '';
     $('[data-gallery-count]').textContent = state.photoIndex + 1 + ' из ' + state.gallery.length;
     $$('[data-gallery-step]').forEach(function (b) {

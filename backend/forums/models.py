@@ -135,6 +135,8 @@ class Event(TimeStampedModel):
     payment_note = models.CharField(max_length=300, blank=True, verbose_name='Условия оплаты')
     capacity_target = models.PositiveIntegerField(null=True, blank=True, validators=[MinValueValidator(1)], verbose_name='Количество мест')
     curator_email = models.EmailField(blank=True, verbose_name='Почта куратора')
+    contact_name = models.CharField('Контактное лицо на сайте', max_length=240, blank=True, help_text='Имя куратора, которое увидят посетители. Служебная почта куратора остаётся закрытой.')
+    contact_phone = models.CharField('Телефон контактного лица', max_length=60, blank=True, help_text='Публичный телефон, например +7 (999) 123-45-67.')
     min_lot_selections = models.PositiveSmallIntegerField(default=0, verbose_name='Минимум лотов')
     max_lot_selections = models.PositiveSmallIntegerField(null=True, blank=True, validators=[MinValueValidator(1)], verbose_name='Максимум лотов')
     position = models.PositiveIntegerField(default=0, verbose_name='Порядок отображения')
@@ -257,8 +259,8 @@ class Speaker(TimeStampedModel):
     forum = models.ForeignKey(Forum, on_delete=models.CASCADE, related_name='speakers', verbose_name='Форум')
     full_name = models.CharField(max_length=240, verbose_name='ФИО')
     short_name = models.CharField('Короткое имя на сайте', max_length=160, blank=True, help_text='Например Ирина Беленок. Если пусто, имя составляется из ФИО без отчества.')
-    short_position = models.CharField('Короткая должность', max_length=240, blank=True, help_text='Подпись под круглой фотографией; полные регалии остаются ниже.')
-    credentials = models.TextField('Должность и регалии', blank=True)
+    short_position = models.CharField('Должность под фотографией', max_length=600, blank=True, help_text='Показывается полностью, без троеточия. Вы сами определяете длину подписи.')
+    credentials = models.TextField('Должность, звание', blank=True)
     topic = models.TextField(blank=True, verbose_name='Тема выступления')
     photo = models.ImageField(upload_to='speakers/', blank=True, max_length=300, verbose_name='Фотография')
     photo_variants = models.JSONField(default=dict, editable=False)
@@ -361,5 +363,5 @@ class RouteEnterprise(models.Model):
 
 
 # Imported after the core catalog to keep the public models in small files.
-from .content_models import (ContactCard, ContentRevision, ForumPage, NavigationItem,
+from .content_models import (ContactCard, ContentRevision, ForumPage, InterfaceText, NavigationItem,
                              OrganizationLogo, PageSection, SpeakerPhoto)  # noqa: E402,F401

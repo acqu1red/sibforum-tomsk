@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="/fonts/fonts.css?v=2a94b395edf2">
   <link rel="stylesheet" href="/css/style.css?v=331e8efece9c">
   <link rel="stylesheet" href="/css/register.css?v=a108b268f3dd">
-  <link rel="stylesheet" href="/css/promtour.css?v=8d83ec54c17b">
+  <link rel="stylesheet" href="/css/promtour.css?v=8e4190e9876a">
 </head>
 <body class="promtour-page" data-forum-slug="promtour">
   <a class="skip-link" href="#main">Перейти к содержанию</a>
@@ -97,14 +97,6 @@
           <p class="section-lead" data-copy="speakers.body">Эксперты, участники и модераторы. Нажмите на фотографию, чтобы познакомиться.</p>
         </div>
         <div class="promtour-people" data-speaker-circles></div>
-        <details class="promtour-all-speakers"><summary>Темы выступлений и подробные карточки</summary>
-        <div class="promtour-speaker-tools">
-          <label class="field" for="speaker-search">Найти спикера</label>
-          <input class="input" id="speaker-search" type="search" placeholder="Фамилия, имя или тема" autocomplete="off" data-speaker-search>
-        </div>
-        <div class="promtour-speakers" data-speakers></div>
-        <p class="promtour-empty" data-speakers-empty hidden>По вашему запросу никого не найдено.</p>
-        </details>
       </div>
     </section>
 
@@ -180,8 +172,8 @@
 
         <form class="promtour-form" data-registration-form novalidate hidden>
           <fieldset class="promtour-registration-events">
-            <legend>Мероприятия в заявке</legend>
-            <p>Можно выбрать только один маршрут, одно событие до обеда и одно после. Новый выбор в группе заменяет предыдущий.</p>
+            <legend data-ui="registration_legend">Мероприятия в заявке</legend>
+            <p data-ui="registration_intro">Выберите мероприятия, затем заполните данные участника. Экскурсионный маршрут необязателен.</p>
             <div data-registration-events></div>
           </fieldset>
           <div class="promtour-selection" data-selection-summary aria-live="polite"></div>
@@ -208,6 +200,7 @@
           <div id="smart-captcha" class="smart-captcha" hidden></div>
           <input id="captcha-token" type="hidden" name="captcha_token">
           <p class="form-error" data-form-error role="alert" hidden></p>
+          <button class="btn btn-secondary" type="button" data-cancel-edit hidden>Вернуться к билету без изменений</button>
           <button class="btn btn-primary" type="submit" data-submit>Отправить заявку</button>
         </form>
 
@@ -231,6 +224,7 @@
         <div class="section-head left">
           <p class="eyebrow" data-copy="contacts.eyebrow">Контакты и площадки</p>
           <h2 class="section-title" id="contacts-title" data-copy="contacts.heading">Как найти форум</h2>
+          <p class="section-lead" data-copy="contacts.body" hidden></p>
         </div>
         <div class="promtour-contacts" data-site-contacts>
           <article class="promtour-contact-card"><span>24 ноября · деловая программа</span><h3>ОЭЗ ТВТ «Томск»</h3><p>Томск, пр. Развития, 3, 6 этаж.</p></article>
@@ -260,11 +254,11 @@
   <noscript><p class="promtour-noscript">Для просмотра программы и регистрации включите JavaScript.</p></noscript>
   <script src="/js/icons.js?v=2c4c0eb595b1"></script>
   <script src="/js/common.js?v=1d7a2511978a"></script>
-  <script src="/promtour/content.js?v=198dc1baa3c4"></script>
+  <script src="/promtour/content.js?v=b438f9b130bb"></script>
   <script src="/promtour/nominations.js?v=09e931831acc"></script>
-  <script src="/js/captcha.js?v=ac1fc080b107"></script>
+  <script src="/js/captcha.js?v=4a8ba0c35d8b"></script>
   <script src="/js/select.js?v=973ca541eade" defer></script>
-  <script src="/js/forum-content.js?v=0e2ad40d055d"></script>
-  <script src="/js/promtour.js?v=883b1277d098"></script>
+  <script src="/js/forum-content.js?v=956e7b8caac2"></script>
+  <script src="/js/promtour.js?v=da854c6a9b6a"></script>
 </body>
 </html>

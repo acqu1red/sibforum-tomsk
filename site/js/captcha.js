@@ -1,5 +1,6 @@
 window.ForumCaptcha = (function () {
   'use strict';
+  var widgets = {};
   function init(containerId, inputId) {
     var container = document.getElementById(containerId);
     var input = document.getElementById(inputId);
@@ -20,6 +21,7 @@ window.ForumCaptcha = (function () {
             hl: 'ru',
             callback: function (token) { input.value = token; }
           });
+          widgets[containerId] = {id: widget, input: input};
           window.smartCaptcha.subscribe(widget, 'token-expired', function () { input.value = ''; });
         };
         var script = document.createElement('script');
@@ -41,5 +43,6 @@ window.ForumCaptcha = (function () {
       observer.observe(form);
     } else load();
   }
-  return { init: init };
+  function reset(containerId) { var widget = widgets[containerId]; if (widget && window.smartCaptcha) { widget.input.value = ''; window.smartCaptcha.reset(widget.id); } }
+  return { init: init, reset: reset };
 })();

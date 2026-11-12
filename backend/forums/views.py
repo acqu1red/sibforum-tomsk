@@ -77,6 +77,8 @@ def event_payload(event):
         'external_url': event.external_url,
         'capacity_target': event.capacity_target,
         'is_paid': event.is_paid,
+        'contact_name': event.contact_name,
+        'contact_phone': event.contact_phone,
         'venue': venue_payload(event.venue) if event.venue and event.venue.is_published else None,
         'speakers': [
             {
@@ -143,7 +145,7 @@ def forum_list(request):
 def forum_program(request, slug):
     forum = Forum.objects.filter(slug=slug, status=Forum.Status.PUBLISHED).select_related('page__main_venue', 'contest').prefetch_related(
         'venues',
-        'page_sections', 'navigation', 'organization_logos',
+        'page_sections', 'interface_texts', 'navigation', 'organization_logos__route_enterprise__event__day',
         Prefetch('contact_cards', queryset=ContactCard.objects.select_related('venue')),
         Prefetch('days__events', queryset=Event.objects.select_related('venue').prefetch_related(
             'lots', 'enterprises',

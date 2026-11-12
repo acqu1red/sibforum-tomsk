@@ -79,9 +79,16 @@ class EventAdmin(admin.ModelAdmin):
     search_fields = ('title', 'annotation', 'description', 'day__forum__title')
     autocomplete_fields = ('day', 'venue')
     inlines = (RouteEnterpriseInline, EventSpeakerInline)
+
+    def get_list_display(self, request):
+        if request.GET.get('kind__exact') == Event.Kind.ROUTE:
+            return ('title', 'day', 'contact_name', 'contact_phone', 'is_published')
+        return super().get_list_display(request)
+
     fieldsets = (
         ('Событие', {'fields': ('day', 'venue', 'kind', 'title', 'slug', 'annotation', 'description', 'start_time', 'end_time', 'position', 'is_published')}),
         ('Регистрация', {'fields': ('registration_policy', 'external_url', 'curator_email')}),
+        ('Контакт для посетителей', {'fields': ('contact_name', 'contact_phone'), 'description': 'Показывается в карточке маршрута и при выборе мероприятия. Пустые поля не выводятся.'}),
         ('Представление', {'fields': ('detail_mode',)}),
         ('Стоимость и вместимость', {'fields': ('is_paid', 'price', 'payment_note', 'capacity_target')}),
         ('Биржа субконтрактов', {'fields': ('min_lot_selections', 'max_lot_selections')}),
@@ -107,6 +114,13 @@ class SpeakerAdmin(admin.ModelAdmin):
         ('Спикер', {'fields': ('forum', 'full_name', 'short_name', 'short_position', 'credentials', 'topic', 'is_published', 'position')}),
         ('Общая фотография и предпросмотр', {'fields': ('photo', 'static_photo', 'photo_preview'), 'description': 'Загрузите одну фотографию для всех мест. Если в каком-то месте кадр не подходит, задайте отдельный вариант ниже. Предпросмотр обновится сразу, ещё до сохранения.'}),
     )
+
+    def get_changeform_initial_data(self, request):
+        initial = super().get_changeform_initial_data(request)
+        forum = Forum.objects.filter(slug='promtour').first()
+        if forum:
+            initial.setdefault('forum', forum.pk)
+        return initial
 
     @admin.display(description='Текущая фотография')
     def photo_preview(self, obj):

@@ -3,6 +3,7 @@
   var groups = JSON.parse(document.getElementById('editor-catalog-data').textContent);
   var frame = document.getElementById('editor-frame'), panel = document.getElementById('editor-panel');
   var current = null, dirty = false, loading = false, page = 'forum', pendingScroll = null;
+  var initialSection = new URLSearchParams(location.search).get('section');
   var urls = new Map(), status = document.getElementById('editor-status');
   function send(data) { frame.contentWindow.postMessage(data, location.origin); }
   function all() { return groups.flatMap(function (g) { return g.items; }); }
@@ -24,7 +25,8 @@
         if (i.image) { var image = document.createElement('img');image.src=i.image;image.alt='';image.loading='lazy';b.append(image); }
         b.append(document.createTextNode(i.label));b.onclick=function(){ choose(i); };d.append(b);
       });
-      if(g.add_url){var a=document.createElement('a');a.href=g.add_url;a.target='_blank';a.rel='noopener';a.textContent='Добавить новую запись';d.append(a);}
+      if(g.create_url){var add=document.createElement('button');add.type='button';add.className='editor-add';add.textContent=g.kind==='logo'?'＋ Добавить организацию':'＋ Добавить контакт';add.onclick=function(){choose({kind:g.kind,id:'new',label:g.kind==='logo'?'Новая организация':'Новый контакт'});};d.append(add);}
+      else if(g.add_url){var a=document.createElement('a');a.href=g.add_url;a.target='_blank';a.rel='noopener';a.textContent='Добавить новую запись';d.append(a);}
       list.append(d);
     });
   }
@@ -70,13 +72,19 @@
     dirty=true;form.querySelector('[data-draft-status]').textContent='Есть несохранённые изменения';setStatus('Черновик — нажмите «Сохранить на сайте»');
     var values={};form.querySelectorAll('input[name],textarea[name],select[name]').forEach(function(el){if(el.type!=='file'&&el.name!=='csrfmiddlewaretoken')values[el.name]=el.type==='checkbox'?el.checked:el.value;});
     send({type:'patch',kind:current.kind,id:current.id,key:current.key,values:values});updateImages();
-    if(e.target.type==='file'&&current.kind!=='speaker'){var u=blob(e.target);if(u)send({type:'image',item:current,field:e.target.name,url:u});}
+    if(e.target.type==='file'&&current.kind!=='speaker'){var u=blob(e.target);if(u){var field=e.target.closest('[data-field]'),preview=field.querySelector('.editor-upload-preview');if(!preview){preview=document.createElement('img');preview.className='editor-upload-preview';preview.alt='Выбранное изображение до сохранения';field.append(preview);}preview.src=u;send({type:'image',item:current,field:e.target.name,url:u});}}
   }
   function reloadFrame(){try{pendingScroll=frame.contentWindow.scrollY;}catch(e){pendingScroll=0;}frame.src='/admin/site-editor/preview/'+page+'/?v='+Date.now();}
   panel.addEventListener('input',changed);panel.addEventListener('change',changed);
   panel.addEventListener('click',function(e){
     var add=e.target.closest('[data-add-row]');if(add){var group=add.closest('[data-formset]'),total=group.querySelector('[name$="-TOTAL_FORMS"]'),n=Number(total.value);if(n>=100){setStatus('Максимум 100 записей в этом блоке.');return;}var html=group.querySelector('template').innerHTML.replaceAll('__prefix__',String(n));group.querySelector('[data-formset-rows]').insertAdjacentHTML('beforeend',html);total.value=n+1;changed({target:total});}
     if(e.target.closest('[data-revert]')&&current){allowChange().then(function(ok){if(ok){dirty=false;reloadFrame();choose(current);}});}
+    if(e.target.closest('[data-remove]')&&current&&!loading){
+      var dialog=document.getElementById('editor-delete-dialog');dialog.querySelector('[data-delete-name]').textContent=current.label;dialog.returnValue='cancel';dialog.showModal();
+      dialog.addEventListener('close',async function(){if(dialog.returnValue!=='delete')return;var form=panel.querySelector('form'),data=new FormData();data.set('csrfmiddlewaretoken',value(form,'csrfmiddlewaretoken'));data.set('_version',value(form,'_version'));data.set('confirm','delete');loading=true;
+        try{var r=await fetch('/admin/site-editor/object/'+current.kind+'/'+current.id+'/delete/',{method:'POST',body:data});var result=await r.json();if(!r.ok)throw Error(result.message||'Не удалось удалить запись.');groups=result.catalog;dirty=false;current=null;releaseUrls();panel.innerHTML='<div class="editor-welcome"><h1>Запись удалена</h1><p>Выберите другой элемент на странице или добавьте новую организацию в списке слева.</p></div>';renderCatalog();reloadFrame();setStatus(result.message);}catch(error){setStatus(error.message);}finally{loading=false;}
+      },{once:true});
+    }
   });
   panel.addEventListener('submit',async function(e){
     if(e.target.id!=='editor-object-form')return;e.preventDefault();if(loading)return;
@@ -86,18 +94,23 @@
       if(r.status===403)throw Error('Нет прав на это действие. Обратитесь к руководителю.');
       if(![200,409,422].includes(r.status))throw Error('Не удалось сохранить. Проверьте подключение и повторите попытку.');
       var data=await r.json();if(data.html&&r.status!==422)panel.innerHTML=data.html;else if(data.html){var temp=document.createElement('template');temp.innerHTML=data.html;form.querySelectorAll('.has-error').forEach(function(el){el.classList.remove('has-error');});form.querySelectorAll('.errorlist,.editor-feedback').forEach(function(el){el.remove();});temp.content.querySelectorAll('.errorlist').forEach(function(error){var field=error.closest('[data-field]'),input=field&&field.querySelector('[name]'),target=input&&form.querySelector('[name=\"'+CSS.escape(input.name)+'\"]');if(target){target.closest('[data-field]').classList.add('has-error');target.closest('[data-field]').append(error.cloneNode(true));}else form.prepend(error.cloneNode(true));});var feedback=temp.content.querySelector('.editor-feedback');if(feedback)form.querySelector('.editor-form-head').after(feedback.cloneNode(true));}setStatus(data.message);
-      if(data.saved){dirty=false;releaseUrls();groups=data.catalog;renderCatalog();reloadFrame();}else{var error=panel.querySelector('.has-error input,.has-error textarea,.has-error select,.errorlist');if(error)error.scrollIntoView({block:'center'});}
+      if(data.saved){dirty=false;releaseUrls();groups=data.catalog;if(data.object_id){current=all().find(function(i){return i.kind===current.kind&&i.id===data.object_id;})||current;}renderCatalog();reloadFrame();}else{var error=panel.querySelector('.has-error input,.has-error textarea,.has-error select,.errorlist');if(error)error.scrollIntoView({block:'center'});}
     }catch(error){setStatus(error.message);}finally{loading=false;var b=panel.querySelector('[type=submit]');if(b){b.disabled=false;b.textContent='Сохранить на сайте';}}
   });
   window.addEventListener('message',function(e){
     if(e.origin!==location.origin||e.source!==frame.contentWindow)return;var d=e.data||{};
-    if(d.type==='ready'){send({type:'catalog',groups:groups});if(pendingScroll!==null){send({type:'scroll',top:pendingScroll});pendingScroll=null;}if(current)send({type:'select',item:current});}
+    if(d.type==='ready'){send({type:'catalog',groups:groups});if(pendingScroll!==null){send({type:'scroll',top:pendingScroll});pendingScroll=null;}if(current)send({type:'select',item:current});if(initialSection){var initial=all().find(function(i){return i.kind==='section'&&i.key===initialSection;});initialSection=null;if(initial)choose(initial);}}
     if(d.type==='edit'){var item=all().find(function(i){return i.kind===d.kind&&(d.id?i.id===d.id:i.key===d.key);});if(item)choose(item,d.field);else setStatus('Элемент можно изменить через «Все разделы и записи».');}
   });
   document.querySelectorAll('[data-page]').forEach(function(b){b.onclick=async function(){if(!(await allowChange()))return;dirty=false;page=b.dataset.page;document.querySelectorAll('[data-page]').forEach(function(x){x.setAttribute('aria-pressed',x===b);});pendingScroll=0;reloadFrame();};});
   document.querySelectorAll('[data-width]').forEach(function(b){b.onclick=function(){frame.style.width=b.dataset.width;document.querySelectorAll('[data-width]').forEach(function(x){x.setAttribute('aria-pressed',x===b);});};});
   document.querySelectorAll('[data-tab]').forEach(function(b){b.onclick=function(){tab(b.dataset.tab);};});
   document.getElementById('editor-search').addEventListener('input',renderCatalog);
+  document.querySelectorAll('[data-delete-choice]').forEach(function(b){b.onclick=function(){document.getElementById('editor-delete-dialog').close(b.dataset.deleteChoice);};});
+  function openCatalog(search){var c=document.getElementById('editor-catalog');c.hidden=false;document.getElementById('catalog-toggle').setAttribute('aria-expanded','true');document.getElementById('editor-search').value=search;renderCatalog();}
+  document.getElementById('editor-labels').onclick=function(){openCatalog('Подписи и пояснения');};
+  document.getElementById('editor-organizations').onclick=function(){openCatalog('Организаторы, партнёры и промтуризм');};
+  document.getElementById('editor-jump').onchange=function(){var i=all().find(function(i){return i.kind==='section'&&i.key===this.value;},this);if(i)choose(i);};
   document.getElementById('catalog-toggle').onclick=function(){var catalog=document.getElementById('editor-catalog');catalog.hidden=!catalog.hidden;this.setAttribute('aria-expanded',!catalog.hidden);};
   document.getElementById('editor-start').onclick=function(){choose(all().find(function(i){return i.kind==='section'&&i.key==='hero';}));};
   window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue='';}});

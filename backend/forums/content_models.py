@@ -5,6 +5,7 @@ from django.db import models
 
 from .media import image_variants, safe_public_link, validate_image_upload
 from .models import Forum, Speaker, TimeStampedModel, Venue
+from .interface import TEXT_CHOICES
 
 
 class ContentRevision(models.Model):
@@ -14,6 +15,20 @@ class ContentRevision(models.Model):
     class Meta:
         verbose_name = 'версия содержания'
         verbose_name_plural = 'Версии содержания'
+
+
+class InterfaceText(TimeStampedModel):
+    forum = models.ForeignKey(Forum, on_delete=models.CASCADE, related_name='interface_texts', verbose_name='Форум')
+    key = models.CharField('Место на сайте', max_length=60, choices=TEXT_CHOICES)
+    value = models.TextField('Текст', blank=True, help_text='Оставьте пустым, чтобы убрать пояснение. Ограничения выбора от этого не меняются.')
+
+    class Meta:
+        verbose_name = 'подпись или пояснение'
+        verbose_name_plural = 'Подписи и пояснения'
+        constraints = [models.UniqueConstraint(fields=('forum', 'key'), name='unique_interface_text')]
+
+    def __str__(self):
+        return self.get_key_display()
 
 
 class ForumPage(TimeStampedModel):
@@ -36,6 +51,7 @@ class ForumPage(TimeStampedModel):
     initialized = models.BooleanField(default=False, editable=False)
     meeting_revision = models.CharField(max_length=40, blank=True, editable=False)
     reference_logos_imported = models.BooleanField(default=False, editable=False)
+    meeting_12_organizations_applied = models.BooleanField(default=False, editable=False)
 
     class Meta:
         verbose_name = 'страница форума'
@@ -140,6 +156,7 @@ class ContactCard(TimeStampedModel):
 class OrganizationLogo(TimeStampedModel):
     GROUPS = (('organizers', 'Организаторы'), ('partners', 'Партнёры форума'), ('enterprises', 'Промтуризм в Томске'))
     forum = models.ForeignKey(Forum, on_delete=models.CASCADE, related_name='organization_logos', verbose_name='Форум')
+    route_enterprise = models.ForeignKey('RouteEnterprise', on_delete=models.SET_NULL, null=True, blank=True, related_name='logos', verbose_name='Предприятие маршрута', help_text='Для группы «Промтуризм в Томске» выберите предприятие из действующей программы.')
     group = models.CharField('Группа', choices=GROUPS, max_length=20)
     name = models.CharField('Организация', max_length=240)
     image = models.ImageField('Логотип', upload_to='logos/', blank=True, validators=[validate_image_upload])
@@ -158,6 +175,13 @@ class OrganizationLogo(TimeStampedModel):
 
     def __str__(self):
         return f'{self.name} · {self.get_group_display()}'
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        if self.route_enterprise_id and self.route_enterprise.event.day.forum_id != self.forum_id:
+            raise ValidationError({'route_enterprise': 'Выберите предприятие этого форума.'})
+        if self.group == 'enterprises' and not self.route_enterprise_id:
+            raise ValidationError({'route_enterprise': 'Выберите предприятие маршрута или другую группу организаций.'})
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

@@ -69,6 +69,40 @@
     document.addEventListener('input', update);
     document.addEventListener('formset:added', update);
     update();
+    // Keep the native file controls in place when Django returns validation
+    // errors. A normal document navigation clears their selected files.
+    var form = preview.closest('form');
+    if (form) form.addEventListener('submit', async function (event) {
+      if (![...form.querySelectorAll('input[type=file]')].some(function (input) { return input.files.length; })) return;
+      event.preventDefault();
+      if (form.dataset.sending === 'true') return;
+      var data = new FormData(form);
+      if (event.submitter && event.submitter.name) data.set(event.submitter.name, event.submitter.value);
+      var buttons = [...form.querySelectorAll('input[type=submit],button[type=submit]')];
+      form.dataset.sending = 'true'; buttons.forEach(function (button) { button.disabled = true; });
+      try {
+        var response = await fetch(form.action || location.href, {method:'POST', body:data});
+        if (!response.ok) throw Error('Не удалось сохранить фотографию. Проверьте подключение и повторите попытку. Выбранный файл сохранён в форме.');
+        var doc = new DOMParser().parseFromString(await response.text(), 'text/html');
+        var errors = [...doc.querySelectorAll('form .errorlist')];
+        if (!errors.length && response.redirected) { location.assign(response.url); return; }
+        if (!errors.length) throw Error('Проверьте сессию и обязательные поля. Фотография остаётся выбранной; можно повторить сохранение.');
+        form.querySelectorAll('.errorlist,.errornote').forEach(function (el) { el.remove(); });
+        form.querySelectorAll('.errors').forEach(function (el) { el.classList.remove('errors'); });
+        errors.forEach(function (error) {
+          var row = error.closest('.form-row'), input = row && row.querySelector('[name]');
+          var target = input && form.querySelector('[name="'+CSS.escape(input.name)+'"]');
+          var destination = target && target.closest('.form-row');
+          if (destination) { destination.classList.add('errors'); destination.append(error.cloneNode(true)); }
+          else form.prepend(error.cloneNode(true));
+        });
+        var note = document.createElement('p'); note.className = 'errornote'; note.tabIndex = -1;
+        note.textContent = 'Исправьте выделенные поля. Фотография остаётся выбранной — загружать её заново не нужно.';
+        form.prepend(note); note.focus();
+      } catch (error) {
+        var note = document.createElement('p'); note.className = 'errornote'; note.setAttribute('role','alert'); note.textContent = error.message; form.prepend(note);
+      } finally { form.dataset.sending = 'false'; buttons.forEach(function (button) { button.disabled = false; }); }
+    });
     window.addEventListener('pagehide', function () {
       urls.forEach(function (v) {
         URL.revokeObjectURL(v.url);

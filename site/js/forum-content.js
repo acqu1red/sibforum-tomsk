@@ -1,6 +1,10 @@
 (function () {
   'use strict';
   var esc = window.escapeHtml;
+  var interfaceTexts = {};
+  function text(key, fallback) {
+    return Object.prototype.hasOwnProperty.call(interfaceTexts, key) ? interfaceTexts[key] : fallback;
+  }
   function safeLink(value) {
     if (!value) return '';
     if (/^(\/[^/]|\/$|#)/.test(value) && !/[\\\u0000-\u001f]/.test(value)) return value;
@@ -65,6 +69,13 @@
   }
   function apply(page) {
     if (!page) return;
+    interfaceTexts = page.interface_texts || {};
+    document.querySelectorAll('[data-ui]').forEach(function (el) {
+      if (Object.prototype.hasOwnProperty.call(interfaceTexts, el.dataset.ui)) {
+        el.textContent = interfaceTexts[el.dataset.ui];
+        el.hidden = !interfaceTexts[el.dataset.ui];
+      }
+    });
     document.querySelectorAll('[data-page]').forEach(function (el) {
       var key = el.dataset.page;
       if (Object.prototype.hasOwnProperty.call(page, key)) {
@@ -231,5 +242,5 @@
     setInterval(check, 15000);
     document.addEventListener('visibilitychange', check);
   }
-  window.forumContent = { apply: apply, photo: photo, safeLink: safeLink, watch: watch };
+  window.forumContent = { apply: apply, photo: photo, safeLink: safeLink, watch: watch, text: text };
 })();

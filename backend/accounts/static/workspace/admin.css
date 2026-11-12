@@ -134,3 +134,7 @@ body.login { background:#f4f6fa; }
   body #branding { float:none; }
   body #user-tools { position:static; float:none; width:auto; max-width:100%; min-width:0; margin:14px 0 0; left:auto; right:auto; transform:none; justify-content:flex-start; flex-wrap:wrap; }
 }
+.workspace-edit-start{display:flex;align-items:center;flex-wrap:wrap;gap:22px;padding:26px 28px;margin:0 0 28px;background:#eef3ff;border:1px solid #cbd8ef;border-radius:14px}.workspace-edit-start>div{flex:1;min-width:240px}.workspace-edit-start p{margin:0 0 5px;color:#4d6292;font-size:13px}.workspace-edit-start h2{margin:0 0 8px;font-size:24px;color:#172f54}.workspace-edit-start span{color:#526785;font-size:14px}.workspace-edit-start nav{display:flex;flex-wrap:wrap;gap:10px 20px;width:100%;padding-top:15px;border-top:1px solid #d0dbed}.workspace-edit-start nav a{font-size:14px;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:600px){.workspace-edit-start{padding:20px}.workspace-edit-start h2{font-size:21px}.workspace-edit-start>.button{width:100%;text-align:center}}
+
+.workspace-content-tasks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px;margin:0 0 24px}.workspace-content-tasks .workspace-task{margin:0;padding:18px;border:1px solid #cbd7e6;border-radius:12px;background:#fff}
