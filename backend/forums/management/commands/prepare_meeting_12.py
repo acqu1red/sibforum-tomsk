@@ -22,7 +22,7 @@ def prepare_organizations(forum):
     if page.meeting_12_organizations_applied:
         return False
     organizers = [
-        ('Торгово-промышленная палата Российской Федерации', '/img/logos/organizers/00-tpp-rf.jpg', 'light', 'российскойфедерации'),
+        ('Торгово-промышленная палата Российской Федерации', '/img/logos/organizers/00-tpp-rf-white.svg', 'dark', 'российскойфедерации'),
         ('Союз «Торгово-промышленная палата Томской области»', '/img/logos/reference-forum/organizers-1.png', 'dark', 'палататомскойобласти'),
         ('Администрация Томской области', '/img/logos/reference-forum/organizers-2.png', 'dark', 'администрациятомскойобласти'),
         ('Томский политехнический университет', '/img/logos/organizers/06-tomskiy-politeh.png', 'dark', 'томскийполитехническийуниверситет'),
