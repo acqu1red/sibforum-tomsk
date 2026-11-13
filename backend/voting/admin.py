@@ -71,6 +71,7 @@ class NominationAdmin(admin.ModelAdmin):
 
 
 class NomineePhotoInline(admin.TabularInline):
+    verbose_name_plural = 'Фотографии в окне «Описание»'
     model = NomineePhoto
     extra = 1
     fields = ('image', 'caption', 'position')
@@ -83,7 +84,11 @@ class NomineeAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description')
     autocomplete_fields = ('nomination',)
     inlines = (NomineePhotoInline,)
-    fields = ('nomination', 'name', 'logo', 'static_logo', 'description', 'website_url', 'position', 'is_active')
+    fieldsets = (
+        ('Компания в номинации', {'fields': ('nomination', 'name', 'position', 'is_active')}),
+        ('Логотип в списке компаний', {'fields': ('logo', 'static_logo')}),
+        ('Окно «Описание»', {'fields': ('description', 'website_url'), 'description': 'Фотографии добавьте ниже, в блоке «Фотографии в окне Описание». Они относятся к этой компании в выбранной номинации.'}),
+    )
     save_on_top = True
 
 

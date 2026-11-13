@@ -119,6 +119,7 @@ class Event(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name='Идентификатор')
     day = models.ForeignKey(EventDay, on_delete=models.CASCADE, related_name='events', verbose_name='День программы')
     venue = models.ForeignKey(Venue, on_delete=models.PROTECT, related_name='events', null=True, blank=True, verbose_name='Площадка')
+    organizer = models.ForeignKey('OrganizationLogo', on_delete=models.SET_NULL, related_name='events', null=True, blank=True, verbose_name='Организатор мероприятия', help_text='Компания с логотипом внутри события. Она не добавляется в раздел «Люди форума».')
     kind = models.CharField(max_length=20, choices=Kind.choices, default=Kind.OTHER, verbose_name='Тип')
     title = models.CharField(max_length=300, verbose_name='Название')
     slug = models.SlugField(max_length=80, blank=True, verbose_name='Адрес страницы')
@@ -167,7 +168,7 @@ class Event(TimeStampedModel):
             return True
         if self.detail_mode == self.DetailMode.SHORT:
             return False
-        return bool(self.description.strip())
+        return bool(self.description.strip() or (self.organizer_id and self.organizer.is_published))
 
     def clean(self):
         errors = {}
@@ -175,6 +176,8 @@ class Event(TimeStampedModel):
             errors['end_time'] = 'Окончание события должно быть позже начала.'
         if self.venue_id and self.day_id and self.venue.forum_id != self.day.forum_id:
             errors['venue'] = 'Площадка должна принадлежать тому же форуму.'
+        if self.organizer_id and self.day_id and self.organizer.forum_id != self.day.forum_id:
+            errors['organizer'] = 'Выберите организацию этого форума.'
         if self.registration_policy == self.RegistrationPolicy.EXTERNAL:
             parsed = urlparse(self.external_url)
             if parsed.scheme != 'https' or not parsed.netloc:

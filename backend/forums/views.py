@@ -6,7 +6,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET
 
 from .models import ChoiceGroup, ChoiceGroupEvent, ContactCard, Event, EventSpeaker, Forum, Speaker
-from .content import page_payload, revision_token, speaker_photos
+from .content import page_payload, revision_token, speaker_photos, organization_payload
 
 
 def json_payload(data, status=200):
@@ -79,6 +79,7 @@ def event_payload(event):
         'is_paid': event.is_paid,
         'contact_name': event.contact_name,
         'contact_phone': event.contact_phone,
+        'organizer': organization_payload(event.organizer) if event.organizer_id and event.organizer.is_published else None,
         'venue': venue_payload(event.venue) if event.venue and event.venue.is_published else None,
         'speakers': [
             {
@@ -147,7 +148,7 @@ def forum_program(request, slug):
         'venues',
         'page_sections', 'interface_texts', 'navigation', 'organization_logos__route_enterprise__event__day',
         Prefetch('contact_cards', queryset=ContactCard.objects.select_related('venue')),
-        Prefetch('days__events', queryset=Event.objects.select_related('venue').prefetch_related(
+        Prefetch('days__events', queryset=Event.objects.select_related('venue', 'organizer').prefetch_related(
             'lots', 'enterprises',
             Prefetch('speaker_links', queryset=EventSpeaker.objects.select_related('speaker')),
         )),

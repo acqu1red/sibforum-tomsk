@@ -111,7 +111,7 @@
   document.getElementById('editor-labels').onclick=function(){openCatalog('Подписи и пояснения');};
   document.getElementById('editor-organizations').onclick=function(){openCatalog('Организаторы, партнёры и промтуризм');};
   document.getElementById('editor-jump').onchange=function(){var i=all().find(function(i){return i.kind==='section'&&i.key===this.value;},this);if(i)choose(i);};
-  document.getElementById('catalog-toggle').onclick=function(){var catalog=document.getElementById('editor-catalog');catalog.hidden=!catalog.hidden;this.setAttribute('aria-expanded',!catalog.hidden);};
+  document.getElementById('catalog-toggle').onclick=function(){var catalog=document.getElementById('editor-catalog');if(catalog.hidden||document.getElementById('editor-search').value){openCatalog('');}else{catalog.hidden=true;this.setAttribute('aria-expanded','false');}};
   document.getElementById('editor-start').onclick=function(){choose(all().find(function(i){return i.kind==='section'&&i.key==='hero';}));};
   window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue='';}});
   window.addEventListener('pagehide',releaseUrls);renderCatalog();tab('canvas');

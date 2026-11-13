@@ -277,3 +277,16 @@
 
 /* Keep the organizer’s complete caption visible under every portrait. */
 .promtour-person{align-self:start;overflow-wrap:anywhere}.promtour-person>span:not(.promtour-photo-placeholder){white-space:normal}.promtour-route-contact a{display:inline-block;font-weight:600;white-space:nowrap}.promtour-route-contact{line-height:1.6}
+
+/* Native page scrollbars; keep the organizer's requested standard scrolling. */
+html{overflow-y:scroll;scrollbar-gutter:stable;scrollbar-width:auto;scrollbar-color:#8792aa #eef1f7}
+html::-webkit-scrollbar{width:12px}html::-webkit-scrollbar-track{background:#eef1f7}html::-webkit-scrollbar-thumb{background:#8792aa;border:3px solid #eef1f7;border-radius:8px}
+.promtour-route .promtour-route-contact,[data-event-card] .promtour-route-contact{margin:5px 0;font-size:14px;line-height:1.45;font-weight:400}
+.promtour-route-contact a{font-weight:400;white-space:normal}.promtour-route-contact b{font-weight:700}
+.promtour-logo-caption[hidden]{display:none!important}
+.promtour-event-organizer{margin:18px 0 0;padding:16px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.promtour-event-organizer>span{display:block;font-size:13px;color:var(--muted);margin-bottom:10px}
+.promtour-event-organizer>div{display:flex;align-items:center;flex-wrap:wrap;gap:16px}.promtour-event-organizer img{width:160px;height:80px;object-fit:contain}.promtour-event-organizer .promtour-logo-caption{font-size:16px;max-width:100%}
+.promtour-event-organizer.promtour-logo-dark{background:#071466;color:#fff}.promtour-event-organizer.promtour-logo-dark>span{color:#dce2f8}
+
+.promtour-contact-card [hidden]{display:none!important}

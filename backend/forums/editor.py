@@ -32,11 +32,11 @@ SPECS = {
  'section': (PageSection, 'forum', 'Тексты разделов', ['heading', 'eyebrow', 'body', 'note', 'action_label', 'action_url', 'is_published']),
  'interface': (InterfaceText, 'forum', 'Подписи и пояснения', ['value']),
  'speaker': (Speaker, 'forum', 'Спикеры', ['full_name', 'short_name', 'short_position', 'credentials', 'topic', 'photo', 'position', 'is_published']),
- 'event': (Event, 'day__forum', 'Программа и маршруты', ['title', 'day', 'start_time', 'end_time', 'venue', 'annotation', 'description', 'contact_name', 'contact_phone', 'is_published', 'position', 'registration_policy', 'external_url', 'is_paid', 'price', 'payment_note', 'capacity_target', 'curator_email', 'min_lot_selections', 'max_lot_selections', 'detail_mode']),
+ 'event': (Event, 'day__forum', 'Программа и маршруты', ['title', 'day', 'start_time', 'end_time', 'venue', 'annotation', 'description', 'contact_name', 'contact_phone', 'organizer', 'is_published', 'position', 'registration_policy', 'external_url', 'is_paid', 'price', 'payment_note', 'capacity_target', 'curator_email', 'min_lot_selections', 'max_lot_selections', 'detail_mode']),
  'day': (EventDay, 'forum', 'Дни программы', ['title', 'date', 'position']),
  'venue': (Venue, 'forum', 'Площадки', ['name', 'address', 'map_url', 'position', 'is_published']),
- 'contact': (ContactCard, 'forum', 'Контакты', ['title', 'venue', 'subtitle', 'body', 'link_label', 'link_url', 'position', 'is_published']),
- 'logo': (OrganizationLogo, 'forum', 'Организаторы, партнёры и промтуризм', ['group', 'route_enterprise', 'name', 'image', 'image_background', 'website_url', 'position', 'is_published']),
+ 'contact': (ContactCard, 'forum', 'Контакты', ['title', 'venue', 'subtitle', 'body', 'person_name', 'phone', 'email', 'link_label', 'link_url', 'position', 'is_published']),
+ 'logo': (OrganizationLogo, 'forum', 'Организаторы, партнёры и промтуризм', ['group', 'route_enterprise', 'name', 'show_name', 'image', 'image_background', 'website_url', 'position', 'is_published']),
  'menu': (NavigationItem, 'forum', 'Верхнее меню', ['label', 'target', 'position', 'is_published']),
  'contest': (Contest, 'forum', 'Конкурс и голосование', ['title', 'description', 'rules_text', 'voting_mode', 'max_ballots_per_network', 'is_open', 'voting_opens_at', 'voting_closes_at', 'results_published', 'winners_text']),
  'nomination': (Nomination, 'contest__forum', 'Номинации', ['title', 'description', 'selection_hint', 'min_selections', 'max_selections', 'position', 'is_active']),
@@ -78,6 +78,7 @@ def catalog(user, forum):
             if isinstance(obj, Speaker):
                 item['image'] = public_asset(obj.photo_url, absolute=True)
             if isinstance(obj, OrganizationLogo):
+                item.update(name=obj.name, background=obj.image_background, show_name=obj.show_name)
                 item['image'] = obj.variants.get('160') or (obj.image.url if obj.image else public_asset(obj.static_image, absolute=True))
             items.append(item)
         groups.append({'kind': kind, 'title': title, 'items': items,
@@ -92,7 +93,7 @@ def scope_fields(form, forum):
             continue
         model = field.queryset.model
         lookups = {Venue: 'forum', EventDay: 'forum', Speaker: 'forum', Event: 'day__forum', RouteEnterprise: 'event__day__forum',
-                   Nomination: 'contest__forum', Contest: 'forum'}
+                   Nomination: 'contest__forum', Contest: 'forum', OrganizationLogo: 'forum'}
         if model in lookups:
             field.queryset = field.queryset.filter(**{lookups[model]: forum})
         if model is Event and 'event' in form.fields and form._meta.model is Lot:
@@ -118,7 +119,12 @@ def make_form(kind, obj, forum, data=None, files=None):
             widgets[name] = forms.Textarea(attrs={'rows': 3})
     factory = modelform_factory(type(obj), fields=fields, widgets=widgets)
     form = factory(data=data, files=files, instance=obj)
+    if 'contact_phone' in form.fields:
+        form.fields['contact_phone'].widget = forms.TextInput(attrs={'type': 'tel'})
     scope_fields(form, forum)
+    if kind == 'interface':
+        from .interface import text_location
+        form.fields['value'].help_text += ' Где появится: ' + text_location(obj.key)[0] + '. Сохранение сразу публикует текст.'
     if kind == 'speaker':
         form.fields['photo'].label = 'Общая фотография — для всех мест на сайте'
     return form
@@ -132,7 +138,7 @@ def related_forms(kind, obj, forum, user, data=None, files=None):
         if obj.kind == 'route':
             definitions.append((RouteEnterprise, ['name', 'description', 'position'], 'Предприятия маршрута', 'enterprises'))
     elif kind == 'nominee':
-        definitions = [(NomineePhoto, ['image', 'caption', 'position'], 'Фотографии проекта', 'gallery')]
+        definitions = [(NomineePhoto, ['image', 'caption', 'position'], 'Фотографии в окне «Описание»', 'gallery')]
     for model, fields, title, prefix in definitions:
         # Related models retain their own permission checks; editing a parent
         # never grants permission to create, change or delete children.
@@ -240,7 +246,7 @@ def edit_object(request, kind, object_id):
                 message = 'Проверьте выделенные поля. Изменения пока не сохранены.'
         model = type(obj)
         basic = {
-            'event': {'title', 'day', 'start_time', 'end_time', 'venue', 'annotation', 'description', 'contact_name', 'contact_phone', 'is_published'},
+            'event': {'title', 'day', 'start_time', 'end_time', 'venue', 'annotation', 'description', 'contact_name', 'contact_phone', 'organizer', 'is_published'},
             'speaker': {'full_name', 'short_name', 'short_position', 'credentials', 'topic', 'photo', 'is_published'},
             'contest': {'title', 'description', 'rules_text', 'is_open'},
         }.get(kind)

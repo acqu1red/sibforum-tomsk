@@ -129,6 +129,9 @@ class ContactCard(TimeStampedModel):
     title = models.CharField('Название', max_length=200, blank=True, help_text='Для площадки можно оставить пустым: возьмём её название.')
     subtitle = models.CharField('Короткая подпись', max_length=200, blank=True)
     body = models.TextField('Адрес и пояснения', blank=True)
+    person_name = models.CharField('Контактное лицо', max_length=240, blank=True, help_text='Только имя и фамилия. Подпись поля добавляется на сайте автоматически.')
+    phone = models.CharField('Телефон', max_length=60, blank=True, help_text='Публичный телефон. На сайте по нему можно позвонить.')
+    email = models.EmailField('Электронная почта', blank=True)
     link_label = models.CharField('Подпись ссылки', max_length=120, blank=True)
     link_url = models.CharField('Ссылка', max_length=500, blank=True, validators=[safe_public_link])
     position = models.PositiveIntegerField('Порядок', default=0)
@@ -154,11 +157,12 @@ class ContactCard(TimeStampedModel):
 
 
 class OrganizationLogo(TimeStampedModel):
-    GROUPS = (('organizers', 'Организаторы'), ('partners', 'Партнёры форума'), ('enterprises', 'Промтуризм в Томске'))
+    GROUPS = (('organizers', 'Организаторы'), ('partners', 'Партнёры форума'), ('enterprises', 'Промтуризм в Томске'), ('events', 'Организаторы мероприятий'))
     forum = models.ForeignKey(Forum, on_delete=models.CASCADE, related_name='organization_logos', verbose_name='Форум')
     route_enterprise = models.ForeignKey('RouteEnterprise', on_delete=models.SET_NULL, null=True, blank=True, related_name='logos', verbose_name='Предприятие маршрута', help_text='Для группы «Промтуризм в Томске» выберите предприятие из действующей программы.')
     group = models.CharField('Группа', choices=GROUPS, max_length=20)
     name = models.CharField('Организация', max_length=240)
+    show_name = models.BooleanField('Показывать название под логотипом', default=True, help_text='Снимите флажок, если полное название уже есть в изображении. Название останется в панели и описании изображения.')
     image = models.ImageField('Логотип', upload_to='logos/', blank=True, validators=[validate_image_upload])
     static_image = models.CharField('Готовое изображение на сайте', max_length=300, blank=True, validators=[safe_public_link])
     image_background = models.CharField('Фон под логотипом', max_length=10,

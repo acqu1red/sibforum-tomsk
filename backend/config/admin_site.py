@@ -103,9 +103,11 @@ class ForumAdminSite(AdminSite):
         })
         tasks = [
             ('Контакты маршрутов', 'Имя и телефон контактного лица каждого маршрута', 'forums', 'event', '?kind__exact=route'),
+            ('Контакты форума', 'ФИО, телефоны и почта в разделе «Как найти форум»', 'forums', 'contactcard', ''),
             ('Логотипы предприятий маршрутов', 'Загрузить, заменить логотип или изменить название', 'forums', 'organizationlogo', '?group__exact=enterprises'),
             ('Логотипы организаторов и партнёров', 'Добавить организацию, загрузить логотип, изменить порядок', 'forums', 'organizationlogo', ''),
             ('Логотипы компаний конкурса', 'Логотип и описание компании в каждой номинации', 'voting', 'nominee', ''),
+            ('Фотографии в окнах конкурса', 'Откройте компанию и добавьте фотографии для нужной номинации', 'voting', 'nominee', ''),
         ]
         context['workspace_content_tasks'] = [
             {'label': label, 'description': description, 'url': reverse(f'admin:{app}_{model}_changelist') + query}

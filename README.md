@@ -50,6 +50,9 @@ docker run --rm -e DEBUG=0 -e SECRET_KEY=test-only-not-a-production-key -e SQLIT
 
 Проверки создают отдельную тестовую БД. Сценарии тестируют управление аккаунтами, отключаемый TOTP, права ролей, закрытые API, фильтрацию скрытого контента, SQL-запросы и ошибки SmartCaptcha.
 
+- [Работа с сайтом через панель организатора](docs/content-editor-guide.md).
+- [Требования и ответы от 13 ноября](docs/requirements-and-answers-2026-11-13.md).
+- [Аудит выпуска 13 ноября](docs/release-audit-2026-11-13.md).
 - [Аудит производительности, методика и результаты](docs/performance-audit-2026-11-11.md).
 - [Порядок размещения, резервного копирования и восстановления](docs/production-runbook.md).
 - [Первичный анализ проекта](docs/deployment-audit-2026-11-11.md).

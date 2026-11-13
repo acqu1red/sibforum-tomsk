@@ -22,3 +22,27 @@ TEXTS = {
 }
 
 TEXT_CHOICES = [(key, label) for key, (label, default) in TEXTS.items()]
+
+
+def text_location(key):
+    locations = {
+        'registration_intro': ('Регистрация → вводный текст перед выбором мероприятий', '/#registration'),
+        'registration_legend': ('Регистрация → заголовок «Мероприятия в заявке»', '/#registration'),
+        'route_group': ('Регистрация → заголовок группы экскурсий', '/#registration'),
+        'route_note': ('Регистрация → пояснение над списком маршрутов', '/#registration'),
+        'route_rule': ('Карточки маршрутов → пояснение под реквизитами', '/#routes'),
+        'route_contact': ('Карточки маршрутов и регистрация → подпись контакта; видна, когда заполнены имя или телефон', '/#routes'),
+        'route_select': ('Карточки маршрутов → кнопка выбора маршрута', '/#routes'),
+        'common_group': ('Регистрация → заголовок общей части', '/#registration'),
+        'common_note': ('Регистрация → пояснение общей части', '/#registration'),
+        'morning_group': ('Регистрация → заголовок мероприятий до обеда', '/#registration'),
+        'morning_note': ('Регистрация → пояснение мероприятий до обеда', '/#registration'),
+        'afternoon_group': ('Регистрация → заголовок мероприятий после обеда', '/#registration'),
+        'afternoon_note': ('Регистрация → пояснение мероприятий после обеда', '/#registration'),
+        'speaker_credentials': ('Люди форума → окно человека → заголовок должности', '/#speakers'),
+        'speaker_participation': ('Окно человека → заголовок выступлений; виден при наличии связанных мероприятий', '/#speakers'),
+        'contest_details': ('Конкурс → кнопка «Описание» у компании', '/contest/'),
+        'contest_empty_description': ('Окно компании → текст только для участия с пустым описанием', '/contest/'),
+        'contest_website': ('Окно компании → подпись ссылки; видна, когда заполнен сайт организации', '/contest/'),
+    }
+    return locations.get(key, ('Регистрация → выбор мероприятий', '/#registration'))

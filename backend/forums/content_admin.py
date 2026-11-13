@@ -22,7 +22,21 @@ class WebsiteAdmin(admin.ModelAdmin):
 class InterfaceTextAdmin(WebsiteAdmin):
     list_display = ('get_key_display', 'value', 'forum')
     search_fields = ('value', 'key')
-    fields = ('forum', 'key', 'value')
+    fields = ('forum', 'key', 'public_location', 'value')
+    readonly_fields = ('public_location',)
+
+    def get_readonly_fields(self, request, obj=None):
+        return ('public_location', 'key') if obj else ('public_location',)
+
+    @admin.display(description='Где появится текст')
+    def public_location(self, obj):
+        from django.conf import settings
+        from .interface import text_location
+        if not obj or not obj.key:
+            return 'Выберите место на сайте. После сохранения текст публикуется автоматически.'
+        label, path = text_location(obj.key)
+        return format_html('<p>{}</p><a href="{}{}" target="_blank" rel="noopener">Открыть это место на сайте ↗</a><p>Нажмите «Сохранить», затем обновите страницу сайта. Отдельная публикация не требуется.</p>', label, settings.PUBLIC_SITE_URL.rstrip('/'), path)
+
 
 
 @admin.register(ForumPage)
@@ -70,6 +84,12 @@ class ContactCardAdmin(WebsiteAdmin):
     list_editable = ('position', 'is_published')
     search_fields = ('title', 'body')
     autocomplete_fields = ('forum', 'venue')
+    fieldsets = (
+        ('Карточка в разделе «Как найти форум»', {'fields': ('forum', 'title', 'venue', 'subtitle', 'body')}),
+        ('Связаться с человеком', {'fields': ('person_name', 'phone', 'email'), 'description': 'ФИО, телефон и почта выводятся отдельными строками. Пустые поля скрыты.'}),
+        ('Дополнительная ссылка', {'fields': ('link_label', 'link_url')}),
+        ('Публикация', {'fields': ('position', 'is_published')}),
+    )
 
     @admin.display(description='Контакт')
     def contact_name(self, obj):
@@ -83,7 +103,7 @@ class OrganizationLogoAdmin(WebsiteAdmin):
     list_filter = ('forum', 'group', 'is_published')
     search_fields = ('name',)
     readonly_fields = ('preview',)
-    fields = ('forum', 'group', 'route_enterprise', 'name', 'image', 'static_image', 'image_background', 'preview', 'website_url', 'position', 'is_published')
+    fields = ('forum', 'group', 'route_enterprise', 'name', 'show_name', 'image', 'static_image', 'image_background', 'preview', 'website_url', 'position', 'is_published')
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'route_enterprise':

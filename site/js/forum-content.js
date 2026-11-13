@@ -152,9 +152,12 @@
             (c.subtitle ? '<span>' + esc(c.subtitle) + '</span>' : '') +
             '<h3>' +
             esc(c.title) +
-            '</h3><p>' +
+            '</h3><p class="promtour-contact-body" data-address="' + esc(c.venue_address || '') + '">' +
             esc(c.body) +
             '</p>' +
+            '<p class="promtour-contact-person"' + (c.person_name ? '' : ' hidden') + '><b>Контактное лицо:</b> <span>' + esc(c.person_name || '') + '</span></p>' +
+            '<p class="promtour-contact-phone"' + (c.phone ? '' : ' hidden') + '><a href="tel:' + esc(String(c.phone || '').replace(/[^+0-9]/g, '')) + '">' + esc(c.phone || '') + '</a></p>' +
+            '<p class="promtour-contact-email"' + (c.email ? '' : ' hidden') + '><a href="mailto:' + esc(c.email || '') + '">' + esc(c.email || '') + '</a></p>' +
             (link
               ? '<a href="' + esc(link) + '">' + esc(c.link_label || c.link_url) + '</a>'
               : '') +
@@ -188,7 +191,7 @@
                     esc(l.name) +
                     '" loading="lazy" decoding="async" width="180" height="90">'
                   : '';
-                content += '<span class="promtour-logo-caption">' + esc(l.name) + '</span>';
+                content += '<span class="promtour-logo-caption"' + (l.show_name === false ? ' hidden' : '') + '>' + esc(l.name) + '</span>';
                 var background = l.background === 'dark' ? ' class="promtour-logo-dark"' : '';
                 return url
                   ? '<a' + background + ' data-edit="logo:' + esc(l.id) + '" href="' +

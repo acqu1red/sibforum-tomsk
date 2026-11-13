@@ -77,7 +77,7 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ('title', 'day', 'start_time', 'end_time', 'kind', 'registration_policy', 'is_paid', 'is_published')
     list_filter = ('day__forum', 'kind', 'registration_policy', 'is_paid', 'is_published')
     search_fields = ('title', 'annotation', 'description', 'day__forum__title')
-    autocomplete_fields = ('day', 'venue')
+    autocomplete_fields = ('day', 'venue', 'organizer')
     inlines = (RouteEnterpriseInline, EventSpeakerInline)
 
     def get_list_display(self, request):
@@ -89,7 +89,7 @@ class EventAdmin(admin.ModelAdmin):
         ('Событие', {'fields': ('day', 'venue', 'kind', 'title', 'slug', 'annotation', 'description', 'start_time', 'end_time', 'position', 'is_published')}),
         ('Регистрация', {'fields': ('registration_policy', 'external_url', 'curator_email')}),
         ('Контакт для посетителей', {'fields': ('contact_name', 'contact_phone'), 'description': 'Показывается в карточке маршрута и при выборе мероприятия. Пустые поля не выводятся.'}),
-        ('Представление', {'fields': ('detail_mode',)}),
+        ('Организатор и подробности', {'fields': ('organizer', 'detail_mode'), 'description': 'Подробный текст вводится в поле «Описание». Компания с логотипом показывается внутри события отдельно от спикеров.'}),
         ('Стоимость и вместимость', {'fields': ('is_paid', 'price', 'payment_note', 'capacity_target')}),
         ('Биржа субконтрактов', {'fields': ('min_lot_selections', 'max_lot_selections')}),
     )

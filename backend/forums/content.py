@@ -39,12 +39,13 @@ def page_payload(forum):
             'id': str(c.pk),
             'title': c.title or (c.venue.name if c.venue else ''),
             'subtitle': c.subtitle,
+            'venue_address': c.venue.address if c.venue else '',
+            'person_name': c.person_name, 'phone': c.phone, 'email': c.email,
             'body': ((c.venue.address + '\n') if c.venue else '') + c.body,
             'link_label': c.link_label, 'link_url': c.link_url,
         } for c in forum.contact_cards.all() if c.is_published and (not c.venue or c.venue.is_published)],
-        'logos': [{'id': str(l.pk), 'group': l.group, 'name': l.name, 'background': l.image_background, 'website_url': l.website_url,
-                   'image': l.variants.get('400') or (l.image.url if l.image else public_asset(l.static_image))}
-                  for l in forum.organization_logos.all() if l.is_published and (l.group != 'enterprises' or (l.route_enterprise_id and l.route_enterprise.event.is_published and l.route_enterprise.event.kind == 'route'))],
+        'logos': [organization_payload(l) for l in forum.organization_logos.all()
+                  if l.is_published and (l.group != 'enterprises' or (l.route_enterprise_id and l.route_enterprise.event.is_published and l.route_enterprise.event.kind == 'route'))],
     }
 
 
@@ -68,3 +69,9 @@ def speaker_photos(speaker):
             'y': placement.focal_y if placement else 25,
         }
     return result
+
+
+def organization_payload(logo):
+    return {'id': str(logo.pk), 'group': logo.group, 'name': logo.name, 'show_name': logo.show_name,
+            'background': logo.image_background, 'website_url': logo.website_url,
+            'image': logo.variants.get('400') or (logo.image.url if logo.image else public_asset(logo.static_image))}
