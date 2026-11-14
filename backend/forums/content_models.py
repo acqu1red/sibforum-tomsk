@@ -124,6 +124,7 @@ class NavigationItem(TimeStampedModel):
 
 
 class ContactCard(TimeStampedModel):
+    placement = models.CharField('Место на сайте', max_length=20, default='contacts', choices=(('contacts', 'Как найти форум'), ('organizers', 'Под организаторами форума')), help_text='Под организаторами можно добавить строку «По вопросам Форума обращаться» с ФИО и телефоном.')
     forum = models.ForeignKey(Forum, on_delete=models.CASCADE, related_name='contact_cards', verbose_name='Форум')
     venue = models.ForeignKey(Venue, on_delete=models.SET_NULL, related_name='contact_cards', null=True, blank=True, verbose_name='Площадка', help_text='Название и адрес площадки подставятся автоматически. Для обычного контакта оставьте пустым.')
     title = models.CharField('Название', max_length=200, blank=True, help_text='Для площадки можно оставить пустым: возьмём её название.')

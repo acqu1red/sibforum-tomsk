@@ -1,5 +1,6 @@
 import re
 import uuid
+from datetime import date
 
 from django.conf import settings
 from django.core.mail import EmailMessage
@@ -77,15 +78,32 @@ def message_content(notification):
         lines.append(f"ID элемента заявки: {payload.get('item_id', '')}")
         body = '\n'.join(lines)
     elif kind == 'moderation_decision':
-        subject = f"Статус заявки изменился — {payload.get('event', '')}"
-        lines = [
-            f"Событие: {payload.get('event', '')}",
-            f"Новый статус: {STATUS_LABELS.get(payload.get('status'), payload.get('status', ''))}",
-        ]
+        status = payload.get('status')
+        accepted = status in ('approved', 'confirmed')
+        declined = status in ('rejected', 'cancelled_by_admin')
+        cancelled = status == 'cancelled_by_admin'
+        decision_title = 'Ваша заявка подтверждена' if accepted else 'Ваша запись отменена' if cancelled else 'Ваша заявка не подтверждена' if declined else 'Статус заявки изменился'
+        subject = decision_title + ' — ' + payload.get('event', '')
+        decision_text = 'Ваша заявка подтверждена.' if accepted else 'Ваша запись на мероприятие отменена.' if cancelled else 'К сожалению, заявка на это мероприятие не подтверждена.' if declined else 'Статус вашей заявки изменился.'
+        lines = ['Здравствуйте!', '', decision_text, '', f"Событие: {payload.get('event', '')}"]
+        if payload.get('day'):
+            lines.append(f"Дата: {date.fromisoformat(payload['day']).strftime('%d.%m.%Y')}, начало: {payload.get('time', '')}")
+        if payload.get('venue'):
+            lines.append(f"Площадка: {payload['venue']}")
+        note = payload.get('note', '')
+        generic_note = note in ('', 'Отклонено администратором', 'Отменено администратором')
+        if declined and payload.get('kind') == 'route' and generic_note:
+            lines.extend(['', 'На выбранном маршруте нет свободных мест. Пожалуйста, выберите и забронируйте другой маршрут.'])
+        elif declined:
+            lines.extend(['', 'Вы можете выбрать другое мероприятие или маршрут.'])
         if payload.get('previous_event') and payload.get('previous_event') != payload.get('event'):
             lines.append(f"Прежний маршрут: {payload['previous_event']}")
         if payload.get('note'):
             lines.append(f"Комментарий: {payload['note']}")
+        personal_url = payload.get('personal_url') or settings.PUBLIC_SITE_URL.rstrip('/') + '/#registration'
+        lines.extend(['', 'Открыть вашу заявку и актуальные статусы:', personal_url])
+        if declined:
+            lines.extend(['', 'На странице заявки нажмите «Изменить мероприятия», выберите другой маршрут и подтвердите новый выбор кодом из письма.'])
         body = '\n'.join(lines)
     elif kind == 'voting_verification':
         subject = f"Код для голосования — {payload.get('contest', 'Индустриальный код')}"

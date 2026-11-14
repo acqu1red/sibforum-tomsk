@@ -2,9 +2,12 @@ import hashlib
 import secrets
 
 from django.conf import settings
+from django.core import signing
+from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import check_password
 from django.db import transaction
 from django.utils import timezone
+from django.utils.crypto import constant_time_compare, salted_hmac
 
 from forums.models import Event
 from .models import (
@@ -23,6 +26,18 @@ from .tickets import ensure_ticket, ticket_payload
 
 def token_hash(token):
     return hashlib.sha256(token.encode('ascii')).hexdigest()
+
+
+def decision_token_version(registration):
+    return salted_hmac('moderation-access-version', registration.access_token_hash).hexdigest()[:20]
+
+
+def decision_personal_url(registration):
+    if not registration.email_verified or not registration.access_token_hash:
+        return settings.PUBLIC_SITE_URL.rstrip('/') + '/#registration'
+    token = signing.dumps({'r': str(registration.pk), 'v': decision_token_version(registration)},
+                          salt='moderation-access', compress=True)
+    return settings.PUBLIC_SITE_URL.rstrip('/') + '/promtour/?t=' + token + '#registration'
 
 
 def queue_notification(registration, kind, recipient, payload, dedup_key):
@@ -207,10 +222,24 @@ def complete_email_verification(registration_id, challenge_id, code):
 def registration_by_token(token):
     if not token or not token.isascii() or len(token) > 200:
         return None
-    return Registration.objects.select_related('participant__forum').filter(
+    registration = Registration.objects.select_related('participant__forum').filter(
         access_token_hash=token_hash(token),
         email_verified_at__isnull=False,
     ).first()
+    if registration:
+        return registration
+    try:
+        payload = signing.loads(token, salt='moderation-access', max_age=timezone.timedelta(days=30))
+        if not isinstance(payload, dict):
+            return None
+        registration = Registration.objects.select_related('participant__forum').filter(
+            pk=payload.get('r'), email_verified_at__isnull=False).first()
+        if registration and registration.access_token_hash and constant_time_compare(
+                str(payload.get('v', '')), decision_token_version(registration)):
+            return registration
+    except (signing.BadSignature, ValueError, TypeError, ValidationError):
+        pass
+    return None
 
 
 @transaction.atomic
@@ -293,6 +322,11 @@ def decide_item(item_id, action, admin_user, note='', target_event_id=None, lot_
             'event': item.event.title,
             'note': item.decision_note,
             'status': item.status,
+            'kind': item.event.kind,
+            'day': item.event.day.date.isoformat(),
+            'time': item.event.start_time.strftime('%H:%M'),
+            'venue': item.event.venue.name if item.event.venue else '',
+            'personal_url': decision_personal_url(registration),
         },
         f'moderation-decision:{history.id}',
     )

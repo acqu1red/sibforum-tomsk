@@ -85,7 +85,7 @@ class ContactCardAdmin(WebsiteAdmin):
     search_fields = ('title', 'body')
     autocomplete_fields = ('forum', 'venue')
     fieldsets = (
-        ('Карточка в разделе «Как найти форум»', {'fields': ('forum', 'title', 'venue', 'subtitle', 'body')}),
+        ('Карточка контакта', {'fields': ('forum', 'placement', 'title', 'venue', 'subtitle', 'body')}),
         ('Связаться с человеком', {'fields': ('person_name', 'phone', 'email'), 'description': 'ФИО, телефон и почта выводятся отдельными строками. Пустые поля скрыты.'}),
         ('Дополнительная ссылка', {'fields': ('link_label', 'link_url')}),
         ('Публикация', {'fields': ('position', 'is_published')}),

@@ -1,6 +1,10 @@
 {% extends "admin/change_form.html" %}
+{% block after_field_sets %}
+{{ block.super }}
+{% if change and has_change_permission %}<p class="help">Решение относится к выбранному мероприятию. Кнопки одобрения, отклонения и отмены находятся внизу. После решения участник получит письмо со ссылкой на свою заявку.</p>{% endif %}
+{% endblock %}
 {% block submit_buttons_bottom %}
-{% if change and has_change_permission %}<div class="submit-row workspace-decisions" aria-label="Решение по заявке">
+{% if change and has_change_permission %}<div id="moderation-decision" class="submit-row workspace-decisions" aria-label="Решение по заявке">
 {% if original.status == 'pending_review' %}<button type="submit" name="_moderation_action" value="approve">Одобрить заявку</button><button type="submit" class="secondary" name="_moderation_action" value="reject">Отклонить заявку</button>{% endif %}
 {% if original.status == 'confirmed' or original.status == 'pending_review' or original.status == 'approved' %}<button type="submit" class="secondary" name="_moderation_action" value="cancel">Отменить запись</button>{% endif %}
 </div>{% endif %}

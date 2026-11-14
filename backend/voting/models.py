@@ -59,6 +59,7 @@ class Nominee(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name='Идентификатор')
     nomination = models.ForeignKey(Nomination, on_delete=models.CASCADE, related_name='nominees', verbose_name='Номинация')
     name = models.CharField(max_length=500, verbose_name='Название')
+    detail_title = models.CharField('Заголовок окна «Описание»', max_length=500, blank=True, help_text='Необязательно. Если пусто, используем название участника. Показывается отдельно от фотографий.')
     description = models.TextField(blank=True, verbose_name='Описание')
     website_url = models.URLField(blank=True, verbose_name='Сайт проекта')
     logo = models.ImageField('Логотип', upload_to='nominees/logos/', blank=True, validators=[validate_image_upload])
@@ -89,7 +90,7 @@ class Nominee(TimeStampedModel):
 class NomineePhoto(TimeStampedModel):
     nominee = models.ForeignKey(Nominee, on_delete=models.CASCADE, related_name='photos', verbose_name='Участник номинации')
     image = models.ImageField('Фотография', upload_to='nominees/photos/', validators=[validate_image_upload])
-    caption = models.CharField('Подпись', max_length=300, blank=True)
+    caption = models.TextField('Описание фотографии', max_length=3000, blank=True, help_text='Текст только для этого снимка. Общий текст проекта заполняется выше, в поле «Описание».')
     position = models.PositiveIntegerField('Порядок', default=0)
     variants = models.JSONField(default=dict, editable=False)
 

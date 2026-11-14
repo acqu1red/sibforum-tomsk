@@ -142,20 +142,17 @@
           })
           .join('') + '<a href="/#registration">Регистрация</a>';
     });
-    var contacts = document.querySelector('[data-site-contacts]');
-    if (contacts)
-      contacts.innerHTML = page.contacts
-        .map(function (c) {
+    function contactMarkup(c, inline) {
           var link = safeLink(c.link_url);
           return (
-            '<article class="promtour-contact-card" data-edit="contact:' + esc(c.id) + '">' +
+            '<article class="' + (inline ? 'promtour-organizer-contact' : 'promtour-contact-card') + '" data-edit="contact:' + esc(c.id) + '">' +
             (c.subtitle ? '<span>' + esc(c.subtitle) + '</span>' : '') +
             '<h3>' +
             esc(c.title) +
             '</h3><p class="promtour-contact-body" data-address="' + esc(c.venue_address || '') + '">' +
             esc(c.body) +
             '</p>' +
-            '<p class="promtour-contact-person"' + (c.person_name ? '' : ' hidden') + '><b>Контактное лицо:</b> <span>' + esc(c.person_name || '') + '</span></p>' +
+            '<p class="promtour-contact-person"' + (c.person_name ? '' : ' hidden') + '>' + (inline ? '' : '<b>Контактное лицо:</b> ') + '<span>' + esc(c.person_name || '') + '</span></p>' +
             '<p class="promtour-contact-phone"' + (c.phone ? '' : ' hidden') + '><a href="tel:' + esc(String(c.phone || '').replace(/[^+0-9]/g, '')) + '">' + esc(c.phone || '') + '</a></p>' +
             '<p class="promtour-contact-email"' + (c.email ? '' : ' hidden') + '><a href="mailto:' + esc(c.email || '') + '">' + esc(c.email || '') + '</a></p>' +
             (link
@@ -163,8 +160,9 @@
               : '') +
             '</article>'
           );
-        })
-        .join('');
+    }
+    var contacts = document.querySelector('[data-site-contacts]');
+    if (contacts) contacts.innerHTML = page.contacts.filter(function(c){return c.placement !== 'organizers';}).map(function(c){return contactMarkup(c, false);}).join('');
     var organizations = document.querySelector('[data-site-organizations]');
     if (organizations)
       organizations.innerHTML = ['organizers', 'partners', 'enterprises']
@@ -202,7 +200,7 @@
                   : '<div' + background + ' data-edit="logo:' + esc(l.id) + '">' + content + '</div>';
               })
               .join('') +
-            '</div></section>'
+            '</div>' + (group === 'organizers' ? '<div class="promtour-organizer-contacts" data-organizer-contacts>' + page.contacts.filter(function(c){return c.placement === 'organizers';}).map(function(c){return contactMarkup(c, true);}).join('') + '</div>' : '') + '</section>'
           );
         })
         .join('');

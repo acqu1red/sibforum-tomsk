@@ -5,6 +5,7 @@ from django.template.response import TemplateResponse
 from django.utils.html import format_html, format_html_join
 
 from .models import Ballot, Contest, Nomination, Nominee, NomineePhoto, VoteResetLog
+from .forms import NomineePhotoFormSet
 from .simple import reset_ballots
 from .workflow import stats_payload
 
@@ -73,6 +74,8 @@ class NominationAdmin(admin.ModelAdmin):
 class NomineePhotoInline(admin.TabularInline):
     verbose_name_plural = 'Фотографии в окне «Описание»'
     model = NomineePhoto
+    formset = NomineePhotoFormSet
+    max_num = 10
     extra = 1
     fields = ('image', 'caption', 'position')
 
@@ -87,7 +90,7 @@ class NomineeAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Компания в номинации', {'fields': ('nomination', 'name', 'position', 'is_active')}),
         ('Логотип в списке компаний', {'fields': ('logo', 'static_logo')}),
-        ('Окно «Описание»', {'fields': ('description', 'website_url'), 'description': 'Фотографии добавьте ниже, в блоке «Фотографии в окне Описание». Они относятся к этой компании в выбранной номинации.'}),
+        ('Окно «Описание»', {'fields': ('detail_title', 'description', 'website_url'), 'description': 'Заголовок и общий текст показываются отдельно от снимков. Ниже добавьте до 10 фотографий и описание каждой.'}),
     )
     save_on_top = True
 

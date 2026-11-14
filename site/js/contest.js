@@ -236,7 +236,7 @@
       '<p class="contest-dialog-nomination">' +
       esc(n.title) +
       '</p><h2 id="nominee-dialog-title">' +
-      esc(c.name) +
+      esc(c.detail_title || c.name) +
       '</h2>' +
       (logo
         ? '<img class="contest-dialog-logo" src="' +
@@ -245,7 +245,7 @@
         : '') +
       (c.description
         ? '<p class="contest-project-description">' + esc(c.description) + '</p>'
-        : '<p>' + esc(window.forumContent.text('contest_empty_description', 'Описание готовит организатор.')) + '</p>') +
+        : state.gallery.length ? '' : '<p>' + esc(window.forumContent.text('contest_empty_description', 'Описание готовит организатор.')) + '</p>') +
       (state.gallery.length
         ? '<figure class="contest-gallery"><img data-gallery-image alt="" width="800" height="560"><figcaption data-gallery-caption></figcaption></figure><div class="contest-gallery-controls"><button type="button" data-gallery-step="-1" aria-label="Предыдущая фотография">Назад</button><span data-gallery-count aria-live="polite"></span><button type="button" data-gallery-step="1" aria-label="Следующая фотография">Далее</button></div>'
         : '') +
@@ -261,8 +261,9 @@
     if (!state.gallery.length) return;
     var photo = state.gallery[state.photoIndex];
     $('[data-gallery-image]').src = window.forumContent.safeLink(photo.url);
-    $('[data-gallery-image]').alt = photo.caption || 'Фотография участника конкурса';
+    $('[data-gallery-image]').alt = 'Фотография участника конкурса ' + (state.photoIndex + 1) + ' из ' + state.gallery.length;
     $('[data-gallery-caption]').textContent = photo.caption || '';
+    $('[data-gallery-caption]').hidden = !photo.caption;
     $('[data-gallery-count]').textContent = state.photoIndex + 1 + ' из ' + state.gallery.length;
     $$('[data-gallery-step]').forEach(function (b) {
       b.disabled = state.gallery.length < 2;

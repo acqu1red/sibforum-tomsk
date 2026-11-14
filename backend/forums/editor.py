@@ -20,6 +20,7 @@ from django.views.decorators.http import require_GET, require_http_methods
 
 from registrations.models import Lot
 from voting.models import Contest, Nomination, Nominee, NomineePhoto
+from voting.forms import NomineePhotoFormSet
 from .content import speaker_photos
 from .media import public_asset
 from .models import (ContactCard, Event, EventDay, EventSpeaker, Forum, ForumPage,
@@ -35,12 +36,12 @@ SPECS = {
  'event': (Event, 'day__forum', 'Программа и маршруты', ['title', 'day', 'start_time', 'end_time', 'venue', 'annotation', 'description', 'contact_name', 'contact_phone', 'organizer', 'is_published', 'position', 'registration_policy', 'external_url', 'is_paid', 'price', 'payment_note', 'capacity_target', 'curator_email', 'min_lot_selections', 'max_lot_selections', 'detail_mode']),
  'day': (EventDay, 'forum', 'Дни программы', ['title', 'date', 'position']),
  'venue': (Venue, 'forum', 'Площадки', ['name', 'address', 'map_url', 'position', 'is_published']),
- 'contact': (ContactCard, 'forum', 'Контакты', ['title', 'venue', 'subtitle', 'body', 'person_name', 'phone', 'email', 'link_label', 'link_url', 'position', 'is_published']),
+ 'contact': (ContactCard, 'forum', 'Контакты', ['placement', 'title', 'venue', 'subtitle', 'body', 'person_name', 'phone', 'email', 'link_label', 'link_url', 'position', 'is_published']),
  'logo': (OrganizationLogo, 'forum', 'Организаторы, партнёры и промтуризм', ['group', 'route_enterprise', 'name', 'show_name', 'image', 'image_background', 'website_url', 'position', 'is_published']),
  'menu': (NavigationItem, 'forum', 'Верхнее меню', ['label', 'target', 'position', 'is_published']),
  'contest': (Contest, 'forum', 'Конкурс и голосование', ['title', 'description', 'rules_text', 'voting_mode', 'max_ballots_per_network', 'is_open', 'voting_opens_at', 'voting_closes_at', 'results_published', 'winners_text']),
  'nomination': (Nomination, 'contest__forum', 'Номинации', ['title', 'description', 'selection_hint', 'min_selections', 'max_selections', 'position', 'is_active']),
- 'nominee': (Nominee, 'nomination__contest__forum', 'Компании в конкурсе', ['nomination', 'name', 'description', 'logo', 'website_url', 'position', 'is_active']),
+ 'nominee': (Nominee, 'nomination__contest__forum', 'Компании в конкурсе', ['nomination', 'name', 'detail_title', 'description', 'logo', 'website_url', 'position', 'is_active']),
  'lot': (Lot, 'event__day__forum', 'Лоты биржи', ['event', 'number', 'title', 'customer_name', 'customer_visible', 'technical_url', 'is_published', 'position']),
 }
 
@@ -145,7 +146,8 @@ def related_forms(kind, obj, forum, user, data=None, files=None):
         permission = f'{model._meta.app_label}.change_{model._meta.model_name}'
         can_delete = user.has_perm(f'{model._meta.app_label}.delete_{model._meta.model_name}')
         factory = inlineformset_factory(type(obj), model, fields=fields, extra=0, can_delete=can_delete,
-                                       max_num=100, validate_max=True, absolute_max=120)
+                                       **({'formset': NomineePhotoFormSet, 'max_num': 10, 'validate_max': True, 'absolute_max': 30} if model is NomineePhoto
+                                          else {'max_num': 100, 'validate_max': True, 'absolute_max': 120}))
         formset = factory(data=data, files=files, instance=obj, prefix=prefix)
         for child in formset:
             scope_fields(child, forum)

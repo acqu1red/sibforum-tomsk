@@ -130,14 +130,15 @@
 
   function speakerButtons(links) {
     if (!links || !links.length) return '';
-    return '<div class="promtour-event-speakers"><div>' + links.map(function (link) {
+    var compact = links.every(function(link){return typeof link === 'string' || !String(link.topic || '').trim();});
+    return '<div class="promtour-event-speakers' + (compact ? ' is-people-list' : '') + '"><div>' + links.map(function (link) {
       var id = typeof link === 'string' ? link : link.id;
       var speaker = speakerById(id);
       if (!speaker) return '';
       var role = typeof link === 'object' && link.role ? link.role : '';
       var topic = typeof link === 'object' && link.topic ? link.topic : '';
       return '<article class="promtour-talk">' + (topic ? '<p class="promtour-talk-topic">' + esc(topic) + '</p>' : '') +
-        '<button type="button" data-speaker-id="' + esc(id) + '">' + window.forumContent.photo(speaker, 'program', 'promtour-program-photo') + '<span><b>' + esc(speaker.short_name || speaker.name) + '</b>' + (role ? '<small>' + esc(role) + '</small>' : '') + '</span></button></article>';
+        '<button type="button" data-speaker-id="' + esc(id) + '">' + window.forumContent.photo(speaker, 'program', 'promtour-program-photo') + '<span><b>' + esc(speaker.short_name || speaker.name) + '</b>' + (role && (!compact || role !== 'Спикер') ? '<small>' + esc(role) + '</small>' : '') + '</span></button></article>';
     }).join('') + '</div></div>';
   }
 

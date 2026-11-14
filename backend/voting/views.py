@@ -98,6 +98,7 @@ def contest_payload(contest):
                 {
                     'id': str(nominee.id),
                     'name': nominee.name,
+                    'detail_title': nominee.detail_title,
                     'description': nominee.description,
                     'website_url': nominee.website_url,
                     'logo': nominee.logo_variants.get('400') or (nominee.logo.url if nominee.logo else public_asset(nominee.static_logo)),

@@ -45,7 +45,7 @@ docker compose -f docker-compose.backend.yml exec backend python manage.py creat
 docker build -t siberianforum-backend:deploycheck backend
 docker run --rm -e DEBUG=0 -e SECRET_KEY=test-only-not-a-production-key -e SQLITE_PATH=/tmp/test.sqlite3 \
   -v "$PWD/backend:/app:ro" siberianforum-backend:deploycheck \
-  python manage.py test accounts forums voting
+  python manage.py test accounts forums voting registrations
 ```
 
 Проверки создают отдельную тестовую БД. Сценарии тестируют управление аккаунтами, отключаемый TOTP, права ролей, закрытые API, фильтрацию скрытого контента, SQL-запросы и ошибки SmartCaptcha.
@@ -53,6 +53,7 @@ docker run --rm -e DEBUG=0 -e SECRET_KEY=test-only-not-a-production-key -e SQLIT
 - [Работа с сайтом через панель организатора](docs/content-editor-guide.md).
 - [Требования и ответы от 13 ноября](docs/requirements-and-answers-2026-11-13.md).
 - [Аудит выпуска 13 ноября](docs/release-audit-2026-11-13.md).
+- [Письма после модерации и галереи: выпуск 14 ноября](docs/release-audit-2026-11-14.md).
 - [Аудит производительности, методика и результаты](docs/performance-audit-2026-11-11.md).
 - [Порядок размещения, резервного копирования и восстановления](docs/production-runbook.md).
 - [Первичный анализ проекта](docs/deployment-audit-2026-11-11.md).

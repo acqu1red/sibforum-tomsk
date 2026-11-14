@@ -2,6 +2,8 @@ from django.contrib import admin, messages
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.core.exceptions import PermissionDenied
+from django.urls import reverse
+from django.utils.html import format_html
 
 from forums.models import Event
 from .models import (
@@ -42,12 +44,20 @@ class ConsentInline(admin.TabularInline):
 class RegistrationItemInline(admin.TabularInline):
     model = RegistrationItem
     extra = 0
-    fields = ('event', 'status', 'decided_at', 'decided_by')
-    readonly_fields = ('event', 'status', 'decided_at', 'decided_by')
+    fields = ('event', 'status', 'review_link', 'decided_at', 'decided_by')
+    readonly_fields = ('event', 'status', 'review_link', 'decided_at', 'decided_by')
     show_change_link = True
 
     def has_add_permission(self, request, obj=None):
         return False
+
+    @admin.display(description='Решение по записи')
+    def review_link(self, obj):
+        if not obj.pk:
+            return ''
+        label = 'Одобрить или отклонить маршрут' if obj.status == RegistrationItem.Status.PENDING_REVIEW else 'Открыть запись и решение'
+        return format_html('<a class="button" href="{}#moderation-decision">{}</a>',
+                           reverse('admin:registrations_registrationitem_change', args=[obj.pk]), label)
 
 
 @admin.register(Registration)

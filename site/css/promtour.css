@@ -290,3 +290,17 @@ html::-webkit-scrollbar{width:12px}html::-webkit-scrollbar-track{background:#eef
 .promtour-event-organizer.promtour-logo-dark{background:#071466;color:#fff}.promtour-event-organizer.promtour-logo-dark>span{color:#dce2f8}
 
 .promtour-contact-card [hidden]{display:none!important}
+
+/* Preserve editor paragraphs and arrange participants without talks as a list. */
+.promtour-event-details>div>p{white-space:pre-line}
+.promtour-event-speakers.is-people-list>div{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 24px}
+.promtour-event-speakers.is-people-list .promtour-talk{border-bottom:0}
+.promtour-event-speakers.is-people-list button>span{min-width:0;overflow-wrap:anywhere}
+.promtour-organizer-contacts{margin-top:24px;display:grid;gap:12px}
+.promtour-organizer-contact{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;color:#344363}
+.promtour-organizer-contact h3,.promtour-organizer-contact p{margin:0;font-size:16px;line-height:1.6;white-space:pre-line}
+.promtour-organizer-contact h3{font-weight:600}.promtour-organizer-contact a{font-weight:400}
+.promtour-organizer-contact [hidden]{display:none!important}
+@media(max-width:540px){.promtour-event-speakers.is-people-list>div{grid-template-columns:1fr}}
+
+.promtour-organizer-contact .promtour-contact-body:empty{display:none}

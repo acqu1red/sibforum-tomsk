@@ -37,6 +37,7 @@ def page_payload(forum):
         'navigation': [{'id': str(n.pk), 'label': n.label, 'target': n.target} for n in forum.navigation.all() if n.is_published],
         'contacts': [{
             'id': str(c.pk),
+            'placement': c.placement,
             'title': c.title or (c.venue.name if c.venue else ''),
             'subtitle': c.subtitle,
             'venue_address': c.venue.address if c.venue else '',
