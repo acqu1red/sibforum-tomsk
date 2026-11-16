@@ -304,3 +304,6 @@ html::-webkit-scrollbar{width:12px}html::-webkit-scrollbar-track{background:#eef
 @media(max-width:540px){.promtour-event-speakers.is-people-list>div{grid-template-columns:1fr}}
 
 .promtour-organizer-contact .promtour-contact-body:empty{display:none}
+/* Keep the first screen clear of the larger chamber identity in the header. */
+.promtour-page .promtour-hero{padding-top:calc(var(--header-h) + 48px)}
+@media(max-width:639px){.promtour-page .promtour-hero{padding-top:calc(var(--header-h) + 32px)}}

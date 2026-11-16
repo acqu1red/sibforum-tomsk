@@ -138,3 +138,6 @@ body.login { background:#f4f6fa; }
 @media(max-width:600px){.workspace-edit-start{padding:20px}.workspace-edit-start h2{font-size:21px}.workspace-edit-start>.button{width:100%;text-align:center}}
 
 .workspace-content-tasks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px;margin:0 0 24px}.workspace-content-tasks .workspace-task{margin:0;padding:18px;border:1px solid #cbd7e6;border-radius:12px;background:#fff}
+
+/* Django fixes selects at 30px; the larger workspace type needs more room. */
+select:not([multiple]):not(.admin-autocomplete){height:42px;box-sizing:border-box;padding:8px 12px;line-height:1.45}

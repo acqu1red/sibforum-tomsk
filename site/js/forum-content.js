@@ -113,7 +113,7 @@
     }
     document.querySelectorAll('.brand-logo').forEach(function (img) {
       var logo = safeLink(page.brand_logo);
-      if (logo) { img.src = logo; img.alt = page.brand_name; }
+      if (logo) { img.src = logo; img.alt = img.closest('.brand-chamber') ? '' : page.brand_name; }
       img.hidden = !logo;
     });
     if (!document.body.classList.contains('contest-page') && page.sections.hero && page.sections.hero.is_published) {

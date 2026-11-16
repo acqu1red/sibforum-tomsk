@@ -59,3 +59,5 @@ docker run --rm -e DEBUG=0 -e SECRET_KEY=test-only-not-a-production-key -e SQLIT
 - [Первичный анализ проекта](docs/deployment-audit-2026-11-11.md).
 
 Лицензии локальных шрифтов Onest и Montserrat находятся в `site/fonts/`.
+
+Инструкция для организатора: [добавление организаций и логотипов, PDF](output/pdf/organization-logos-guide.pdf). [Проверка выпуска от 16 ноября](docs/release-audit-2026-11-16.md).

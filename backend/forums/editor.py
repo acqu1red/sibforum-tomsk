@@ -254,7 +254,7 @@ def edit_object(request, kind, object_id):
         }.get(kind)
         context = {'form': form, 'groups': groups, 'photos': photos, 'kind': kind, 'obj': obj,
                    'record_title': SPECS[kind][2],
-                   'object_id': str(obj.pk), 'label': label(obj), 'message': message,
+                   'object_id': str(obj.pk), 'label': ('Новая организация' if kind == 'logo' else 'Новый контакт') if not obj.pk else label(obj), 'message': message,
                    'version': obj.updated_at.isoformat() if obj.updated_at else '', 'saved': request.method == 'POST' and status == 200,
                    'can_delete': kind in ('logo', 'contact') and bool(obj.pk) and can(request.user, kind, 'delete'),
                    'static_base': public_asset(obj.static_photo, absolute=True) if kind == 'speaker' else '',

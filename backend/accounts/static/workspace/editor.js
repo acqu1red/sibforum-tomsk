@@ -20,13 +20,13 @@
       if (search && !items.length) return;
       var d = document.createElement('details'), summary = document.createElement('summary');
       summary.textContent = g.title+' ('+items.length+')';d.append(summary);d.open = !!search || g.kind === 'section';
+      if(g.create_url){var add=document.createElement('button');add.type='button';add.className='editor-add';add.textContent=g.kind==='logo'?'＋ Добавить организацию':'＋ Добавить контакт';add.onclick=function(){choose({kind:g.kind,id:'new',label:g.kind==='logo'?'Новая организация':'Новый контакт'});};d.append(add);}
+      else if(g.add_url){var a=document.createElement('a');a.href=g.add_url;a.target='_blank';a.rel='noopener';a.textContent='Добавить новую запись';d.append(a);}
       items.forEach(function (i) {
         var b = document.createElement('button');b.type = 'button';b.dataset.record = i.kind+':'+i.id;
         if (i.image) { var image = document.createElement('img');image.src=i.image;image.alt='';image.loading='lazy';b.append(image); }
         b.append(document.createTextNode(i.label));b.onclick=function(){ choose(i); };d.append(b);
       });
-      if(g.create_url){var add=document.createElement('button');add.type='button';add.className='editor-add';add.textContent=g.kind==='logo'?'＋ Добавить организацию':'＋ Добавить контакт';add.onclick=function(){choose({kind:g.kind,id:'new',label:g.kind==='logo'?'Новая организация':'Новый контакт'});};d.append(add);}
-      else if(g.add_url){var a=document.createElement('a');a.href=g.add_url;a.target='_blank';a.rel='noopener';a.textContent='Добавить новую запись';d.append(a);}
       list.append(d);
     });
   }

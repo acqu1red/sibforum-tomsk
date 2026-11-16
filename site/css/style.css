@@ -832,3 +832,52 @@ a.forum-cell.is-current:hover { color: var(--white); border-color: var(--esg); }
 @media (min-width: 1600px) {
   .showcase, .hero { background-image: url("../img/hero/tomsk-night-1920.webp"); }
 }
+
+/* A separate emblem keeps the chamber's name readable at every screen size. */
+.header-chamber .header-inner{max-width:1504px;gap:20px}
+.header-chamber .brand{gap:20px}
+.brand-chamber{display:flex;align-items:center;gap:12px;flex:none}
+.header-chamber .brand-logo-tpp{display:block;width:46px;height:64px;object-fit:contain;flex:none}
+.brand-chamber-name{font-size:16px;line-height:1.25;font-weight:500;white-space:nowrap}
+.header-chamber .brand-sep{height:54px;flex:none}
+.header-chamber .brand-text{font-size:20px;line-height:1.2;overflow:visible;white-space:normal}
+.header-chamber .brand-text small{font-size:16px;margin-top:4px}
+html:has(.header-chamber),.promtour-page,.contest-page{--header-h:104px}
+.header-chamber .header-actions{flex:none}
+@media(min-width:1280px) and (max-width:1599px){
+  html:has(.header-chamber),.promtour-page,.contest-page{--header-h:144px}
+  .header-chamber .header-inner{display:grid;grid-template-columns:1fr auto;grid-template-rows:94px 50px;gap:0 24px}
+  .header-chamber .brand{grid-column:1;grid-row:1}
+  .header-chamber .header-actions{grid-column:2;grid-row:1;margin:0}
+  .header-chamber .nav{display:block;grid-column:1/-1;grid-row:2;margin:0;border-top:1px solid rgb(255 255 255 / 18%);height:50px}
+  .header-chamber .nav ul{gap:20px}
+  .header-chamber .nav a{padding:12px 0;font-size:16px}
+  .header-chamber .burger{display:none}
+}
+@media(min-width:1600px){
+  .header-chamber .nav a{font-size:14px;padding:10px 8px}
+  .header-chamber .nav{margin-left:auto}
+  .header-chamber .header-actions{margin-left:0}
+  .header-chamber .header-actions .btn{padding:10px 14px}
+  .header-chamber .brand{gap:16px}
+  .header-chamber .brand-chamber-name{font-size:15px}
+  .header-chamber .brand-text{font-size:18px;max-width:230px}
+}
+@media(min-width:640px) and (max-width:1279px){
+  .header-chamber .brand-chamber-name{font-size:14px}
+  .header-chamber .brand-text{font-size:18px;max-width:210px}
+  .header-chamber .brand{gap:16px}
+  .header-chamber .brand-chamber{gap:10px}
+}
+@media(max-width:767px){.header-chamber .header-actions .hide-sm{display:none}}
+@media(max-width:639px){
+  .header-chamber .header-inner{gap:12px}
+  .header-chamber .brand{flex-direction:column;align-items:flex-start;gap:5px;flex:1;min-width:0}
+  .header-chamber .brand-chamber{gap:9px}
+  .header-chamber .brand-logo-tpp{width:32px;height:44px}
+  .header-chamber .brand-chamber-name{font-size:12px;line-height:1.25}
+  .header-chamber .brand-sep{display:none}
+  .header-chamber .brand-text{font-size:15px;line-height:1.2}
+  .header-chamber .brand-text small{display:none}
+  .header-chamber .header-actions{margin-left:0}
+}

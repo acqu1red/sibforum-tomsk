@@ -25,7 +25,7 @@ def page_payload(forum):
         sections['contest']['body'] = contest.description
     return {
         'brand_name': page.brand_name, 'brand_subtitle': page.brand_subtitle,
-        'brand_logo': page.brand_variants.get('400') or (page.brand_logo.url if page.brand_logo else public_asset(page.brand_static_logo)),
+        'brand_logo': page.brand_variants.get('400') or (page.brand_logo.url if page.brand_logo else public_asset('/img/brand/tpp-emblem-white.svg' if page.brand_static_logo == '/img/brand/tpp-tomsk-logo-white.png' else page.brand_static_logo)),
         'date_label': page.date_label or date_label,
         'venue_label': page.venue_label, 'venue_note': page.venue_note,
         'venue': {'name': venue.name, 'address': venue.address} if venue else None,

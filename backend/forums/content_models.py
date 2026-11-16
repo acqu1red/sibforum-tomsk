@@ -181,12 +181,19 @@ class OrganizationLogo(TimeStampedModel):
     def __str__(self):
         return f'{self.name} · {self.get_group_display()}'
 
-    def clean(self):
+    def clean_fields(self, exclude=None):
+        super().clean_fields(exclude=exclude)
+        # The list editor only exposes order/publication. Old unlinked entries
+        # must not break that form or block changes to unrelated organizations.
+        if 'route_enterprise' in (exclude or ()):
+            return
         from django.core.exceptions import ValidationError
         if self.route_enterprise_id and self.route_enterprise.event.day.forum_id != self.forum_id:
             raise ValidationError({'route_enterprise': 'Выберите предприятие этого форума.'})
         if self.group == 'enterprises' and not self.route_enterprise_id:
             raise ValidationError({'route_enterprise': 'Выберите предприятие маршрута или другую группу организаций.'})
+        if self.group == 'enterprises' and self.route_enterprise_id and self.route_enterprise.event.kind != 'route':
+            raise ValidationError({'route_enterprise': 'Выберите предприятие экскурсионного маршрута.'})
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
