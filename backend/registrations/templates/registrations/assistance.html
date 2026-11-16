@@ -1,0 +1,26 @@
+{% extends 'admin/base_site.html' %}
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="{% url 'admin:index' %}">Начало</a> › <a href="{{ back_url }}">Заявки</a> › Письмо и билет</div>{% endblock %}
+{% block content %}
+<div class="participant-assistance">
+  <section class="participant-assistance-card">
+    <h2>{{ participant.full_name }}</h2><p>{{ participant.email }}</p><p>{{ participant.organization }}</p>
+    <p>{% if registration.email_verified %}Почта подтверждена{% else %}<strong>Почта ещё не подтверждена</strong>{% endif %}</p>
+    <h3>Повторное письмо</h3>
+    <p>{% if registration.email_verified %}Отправим актуальную заявку и статусы мероприятий. Если есть действующий билет, приложим PDF и QR-код. Прежняя личная ссылка продолжит работать.{% else %}Отправим новый код на указанный email. Участник введёт его на странице регистрации. Ранее присланный код перестанет действовать.{% endif %}</p>
+    {% if can_send %}<form method="post" action="{% url 'registration-resend' registration.pk %}" class="participant-tools">{% csrf_token %}<input type="hidden" name="request_key" value="{{ request_key }}"><button type="submit">Отправить письмо ещё раз</button></form>{% endif %}
+    <h3>События в заявке</h3><ul>{% for item in items %}<li>{{ item.event.day.date|date:'d.m.Y' }} {{ item.event.start_time|time:'H:i' }} · {{ item.event.title }} — {{ item.get_status_display }}</li>{% empty %}<li>Выбор ещё не подтверждён кодом из письма.</li>{% endfor %}</ul>
+  </section>
+  <section class="participant-assistance-card">
+    <h2>QR-код и электронный билет</h2>
+    {% if ticket %}
+    <img class="participant-ticket-qr" src="{% url 'registration-staff-qr' registration.pk %}" alt="QR-код билета {{ participant.full_name }}" width="280" height="280">
+    <p>Действующий билет · {{ ticket.public_id|truncatechars:13 }}</p>
+    <div class="participant-tools"><button type="button" data-share-ticket="{% url 'registration-staff-qr' registration.pk %}" data-ticket-file="ticket-{{ ticket.public_id }}-qr.png">Поделиться QR-кодом</button><a class="button" href="{% url 'registration-staff-qr' registration.pk %}?download=1">Скачать QR (PNG)</a><a class="button" href="{% url 'registration-staff-pdf' registration.pk %}">Скачать билет (PDF)</a></div>
+    <p data-share-status role="status"></p><p>Передайте файл самому участнику через мессенджер. Если меню «Поделиться» недоступно, скачайте QR-код и прикрепите его к сообщению. QR предназначен для прохода на мероприятие.</p>
+    {% elif not can_download %}<p>Для просмотра и скачивания нужно право просмотра билетов.</p>
+    {% elif not registration.email_verified %}<p>Билет появится после подтверждения почты и подтверждения хотя бы одного мероприятия.</p>
+    {% else %}<p>Действующего билета нет. Проверьте статусы мероприятий: билет выдаётся после подтверждения хотя бы одного события. Отозванный билет скачивать нельзя.</p>{% endif %}
+  </section>
+  <section class="participant-assistance-card participant-assistance-history"><h2>Последние письма участнику</h2><table><thead><tr><th>Дата</th><th>Письмо</th><th>Статус</th></tr></thead><tbody>{% for mail in recent_mail %}<tr><td>{{ mail.created_at|date:'d.m.Y H:i' }}</td><td>{{ mail.get_kind_display }}</td><td>{{ mail.get_status_display }}</td></tr>{% empty %}<tr><td colspan="3">Писем пока нет.</td></tr>{% endfor %}</tbody></table><p>«Отправлено» означает приём письма почтовым сервисом. Если участник не видит его, проверьте вместе папку «Спам» или передайте билет файлом.</p></section>
+</div>
+{% endblock %}

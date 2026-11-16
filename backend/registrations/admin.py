@@ -21,6 +21,7 @@ from .models import (
 )
 from .selection import RegistrationError
 from .workflow import decide_item
+from .assistance import ParticipantAssistanceMixin
 
 
 @admin.register(Lot)
@@ -61,7 +62,7 @@ class RegistrationItemInline(admin.TabularInline):
 
 
 @admin.register(Registration)
-class RegistrationAdmin(admin.ModelAdmin):
+class RegistrationAdmin(ParticipantAssistanceMixin, admin.ModelAdmin):
     list_display = ('participant', 'forum', 'email_verified_at', 'version', 'created_at')
     list_filter = ('participant__forum', 'email_verified_at')
     search_fields = ('participant__last_name', 'participant__first_name', 'participant__email', 'participant__organization')
@@ -78,7 +79,7 @@ class RegistrationAdmin(admin.ModelAdmin):
 
 
 @admin.register(Participant)
-class ParticipantAdmin(admin.ModelAdmin):
+class ParticipantAdmin(ParticipantAssistanceMixin, admin.ModelAdmin):
     list_display = ('participant_full_name', 'forum', 'email', 'organization', 'position')
     list_filter = ('forum', 'category')
     search_fields = ('last_name', 'first_name', 'middle_name', 'email', 'organization')
