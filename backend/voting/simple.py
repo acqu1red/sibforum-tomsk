@@ -37,7 +37,7 @@ def set_browser_cookie(response, value):
 def voter_status(contest, browser, ip):
     network = network_identity(ip)
     existing = contest.ballots.filter(status=Ballot.Status.SUBMITTED)
-    return existing.filter(browser_hash=identity_hash('browser:' + browser)).exists() or existing.filter(network_hash=network).count() >= contest.max_ballots_per_network
+    return existing.filter(browser_hash=identity_hash('browser:' + browser)).exists() or bool(contest.max_ballots_per_network and existing.filter(network_hash=network).count() >= contest.max_ballots_per_network)
 
 
 def submit_simple(contest, browser, ip, selections):
@@ -56,7 +56,8 @@ def submit_simple(contest, browser, ip, selections):
             if existing.filter(browser_hash=browser_hash).exists():
                 raise VotingError('already_voted', 'С этого браузера уже принят бюллетень. Спасибо за участие.', status=409)
             slots = set(existing.filter(network_hash=network).values_list('network_slot', flat=True))
-            slot = next((i for i in range(contest.max_ballots_per_network) if i not in slots), None)
+            slot_count = contest.max_ballots_per_network or len(slots) + 1
+            slot = next((i for i in range(slot_count) if i not in slots), None)
             if slot is None:
                 raise VotingError('already_voted', 'С этой сети уже принято допустимое количество бюллетеней. Повторное голосование ограничено.', status=409)
             normalized = normalize_selection(contest, selections)

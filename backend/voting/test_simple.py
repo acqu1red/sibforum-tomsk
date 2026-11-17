@@ -79,3 +79,24 @@ class SimpleVotingTests(TestCase):
         Nominee.objects.create(nomination=self.nomination, name='Гамма')
         self.assertEqual(stats_payload(self.contest)['total_ballots'], 1)
         self.assertEqual(self.vote().status_code, 409)
+
+    def test_shared_network_allows_distinct_browsers_but_never_the_same_browser_twice(self):
+        self.contest.max_ballots_per_network=0;self.contest.save()
+        self.session()
+        self.assertEqual(self.vote().status_code,200)
+        other=Client()
+        session=other.get('/api/v1/contests/simple/voter-session/',REMOTE_ADDR='192.0.2.1').json()
+        self.assertFalse(session['already_voted'])
+        self.assertEqual(self.vote(other).status_code,200)
+        self.assertEqual(self.vote(ip='192.0.2.2').status_code,409)
+        self.assertTrue(self.client.get('/api/v1/contests/simple/voter-session/',REMOTE_ADDR='192.0.2.2').json()['already_voted'])
+        self.assertEqual(Ballot.objects.filter(status='submitted').count(),2)
+        self.assertEqual(set(Ballot.objects.values_list('network_slot',flat=True)),{0,1})
+
+    def test_shared_network_continues_after_preexisting_network_ballot(self):
+        self.session();self.assertEqual(self.vote().status_code,200)
+        previous=list(Ballot.objects.values('pk','identity_hash','network_hash','network_slot','status'))
+        self.contest.max_ballots_per_network=0;self.contest.save()
+        other=Client();self.session(other)
+        self.assertEqual(self.vote(other).status_code,200)
+        self.assertEqual(list(Ballot.objects.filter(pk=previous[0]['pk']).values('pk','identity_hash','network_hash','network_slot','status')),previous)
