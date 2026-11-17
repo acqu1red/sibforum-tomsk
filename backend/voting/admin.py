@@ -25,10 +25,10 @@ class ContestAdmin(admin.ModelAdmin):
     inlines = (NominationInline,)
     actions = ('close_voting', 'publish_results')
     autocomplete_fields = ('forum',)
-    readonly_fields = ('results_preview',)
+    readonly_fields = ('results_preview', 'voting_round')
     fieldsets = (
         ('О конкурсе', {'fields': ('forum', 'title', 'description', 'rules_text')}),
-        ('Голосование', {'fields': ('is_open', 'voting_mode', 'max_ballots_per_network', 'voting_opens_at', 'voting_closes_at'), 'description': 'Время задаётся по Томску. Без почты посетитель голосует сразу; с почтой нужен настроенный SMTP. Ограничение сети учитывает общий IP офиса и Wi-Fi.'}),
+        ('Голосование', {'fields': ('is_open', 'voting_mode', 'voting_round', 'max_ballots_per_network', 'voting_opens_at', 'voting_closes_at'), 'description': 'Время задаётся по Томску. Без почты посетитель голосует сразу; с почтой нужен настроенный SMTP. Ограничение сети учитывает общий IP офиса и Wi-Fi.'}),
         ('Итоги', {'fields': ('results_published', 'winners_text', 'results_preview')}),
     )
 

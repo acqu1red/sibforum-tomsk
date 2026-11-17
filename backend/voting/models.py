@@ -16,6 +16,7 @@ class Contest(TimeStampedModel):
     rules_text = models.TextField(blank=True, verbose_name='Правила конкурса')
     voting_mode = models.CharField('Способ голосования', max_length=20, choices=(('simple', 'Без почты — один бюллетень с браузера'), ('email', 'С подтверждением почты')), default='email')
     max_ballots_per_network = models.PositiveSmallIntegerField('Бюллетеней с одной сети', default=1, validators=[MinValueValidator(0), MaxValueValidator(100)], help_text='0 — без общего лимита по IP: разные люди в офисе или Wi-Fi могут голосовать. Повтор с того же браузера всегда запрещён. Значение 1 блокирует всех в сети после первого голоса.')
+    voting_round = models.PositiveIntegerField('Текущий раунд голосования', default=1, editable=False)
     is_open = models.BooleanField(default=False, verbose_name='Голосование разрешено')
     voting_opens_at = models.DateTimeField(null=True, blank=True, verbose_name='Начало голосования')
     voting_closes_at = models.DateTimeField(null=True, blank=True, verbose_name='Окончание голосования')

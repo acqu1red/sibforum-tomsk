@@ -14,13 +14,19 @@ COOKIE_NAME = 'forum_voter'
 COOKIE_SALT = 'sibforum-voter-v1'
 
 
-def network_identity(ip):
+def voting_identity(kind, value, voting_round=1):
+    # Keep round 1 compatible with existing ballots; never rewrite old hashes.
+    prefix = kind + ':' if voting_round == 1 else f'{kind}:round:{voting_round}:'
+    return identity_hash(prefix + value)
+
+
+def network_identity(ip, voting_round=1):
     try:
         address = ipaddress.ip_address(ip)
     except ValueError:
         raise VotingError('network_unavailable', 'Не удалось проверить сеть. Обновите страницу.', status=400)
     network = str(ipaddress.ip_network(f'{address}/64', strict=False)) if address.version == 6 else str(address)
-    return identity_hash('network:' + network)
+    return voting_identity('network', network, voting_round)
 
 
 def browser_identity(request):
@@ -35,9 +41,9 @@ def set_browser_cookie(response, value):
 
 
 def voter_status(contest, browser, ip):
-    network = network_identity(ip)
+    network = network_identity(ip, contest.voting_round)
     existing = contest.ballots.filter(status=Ballot.Status.SUBMITTED)
-    return existing.filter(browser_hash=identity_hash('browser:' + browser)).exists() or bool(contest.max_ballots_per_network and existing.filter(network_hash=network).count() >= contest.max_ballots_per_network)
+    return existing.filter(browser_hash=voting_identity('browser', browser, contest.voting_round)).exists() or bool(contest.max_ballots_per_network and existing.filter(network_hash=network).count() >= contest.max_ballots_per_network)
 
 
 def submit_simple(contest, browser, ip, selections):
@@ -50,8 +56,8 @@ def submit_simple(contest, browser, ip, selections):
             ensure_voting_open(contest)
             if contest.voting_mode != 'simple':
                 raise VotingError('mode_changed', 'Способ голосования изменился. Обновите страницу.', status=409)
-            network = network_identity(ip)
-            browser_hash = identity_hash('browser:' + browser)
+            network = network_identity(ip, contest.voting_round)
+            browser_hash = voting_identity('browser', browser, contest.voting_round)
             existing = contest.ballots.filter(status=Ballot.Status.SUBMITTED)
             if existing.filter(browser_hash=browser_hash).exists():
                 raise VotingError('already_voted', 'С этого браузера уже принят бюллетень. Спасибо за участие.', status=409)

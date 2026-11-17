@@ -100,3 +100,37 @@ class SimpleVotingTests(TestCase):
         other=Client();self.session(other)
         self.assertEqual(self.vote(other).status_code,200)
         self.assertEqual(list(Ballot.objects.filter(pk=previous[0]['pk']).values('pk','identity_hash','network_hash','network_slot','status')),previous)
+
+    def test_new_round_allows_exactly_one_more_vote_and_preserves_previous_results(self):
+        self.contest.max_ballots_per_network=0;self.contest.save()
+        self.session();self.assertEqual(self.vote().status_code,200)
+        first=Ballot.objects.get()
+        old_fields={f.name:getattr(first,f.attname) for f in first._meta.concrete_fields}
+        old_selection=list(first.selections.values())
+        cookie=self.client.cookies['forum_voter'].value
+        self.assertEqual(self.vote().status_code,409)
+        self.contest.voting_round=2;self.contest.save()
+        session=self.client.get('/api/v1/contests/simple/voter-session/',REMOTE_ADDR='192.0.2.1').json()
+        self.assertFalse(session['already_voted'])
+        self.assertEqual(self.client.cookies['forum_voter'].value.split(':')[0],cookie.split(':')[0])
+        self.assertEqual(self.vote().status_code,200)
+        self.assertEqual(self.vote(ip='192.0.2.2').status_code,409)
+        self.assertEqual(Ballot.objects.filter(status='submitted').count(),2)
+        first.refresh_from_db()
+        self.assertEqual({f.name:getattr(first,f.attname) for f in first._meta.concrete_fields},old_fields)
+        self.assertEqual(list(first.selections.values()),old_selection)
+        stats=stats_payload(self.contest)
+        self.assertEqual(stats['total_ballots'],2)
+        votes={entry['id']:entry['votes'] for entry in stats['nominations'][0]['nominees']}
+        self.assertEqual(votes[str(self.a.pk)],2)
+
+    def test_network_limits_are_scoped_to_round_without_changing_legacy_hashes(self):
+        self.session();self.assertEqual(self.vote().status_code,200)
+        first=Ballot.objects.get()
+        self.contest.voting_round=2;self.contest.save()
+        self.assertEqual(self.vote().status_code,200)
+        self.assertEqual(self.vote().status_code,409)
+        self.assertEqual(Ballot.objects.count(),2)
+        new=Ballot.objects.exclude(pk=first.pk).get()
+        self.assertNotEqual(first.network_hash,new.network_hash)
+        self.assertNotEqual(first.browser_hash,new.browser_hash)

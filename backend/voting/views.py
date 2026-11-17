@@ -78,6 +78,7 @@ def contest_payload(contest):
         'description': contest.description,
         'rules_text': contest.rules_text,
         'voting_mode': contest.voting_mode,
+        'voting_round': contest.voting_round,
         'is_open': contest.is_open,
         'voting_opens_at': contest.voting_opens_at.isoformat() if contest.voting_opens_at else None,
         'voting_closes_at': contest.voting_closes_at.isoformat() if contest.voting_closes_at else None,

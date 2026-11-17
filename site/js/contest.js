@@ -118,9 +118,9 @@
     $('[data-contest-rules]').textContent = c.rules_text || '';
     $('[data-contest-rules]').hidden = !c.rules_text;
     $('[data-contest-state]').textContent = state.already
-      ? 'С этого браузера уже принят бюллетень. Повторный голос недоступен.'
+      ? 'В текущем этапе с этого браузера уже принят бюллетень. Повторный голос недоступен.'
       : state.open
-        ? 'Голосование открыто. Выберите проекты и отправьте бюллетень.'
+        ? (c.voting_round > 1 ? 'Открыт новый этап голосования. В этом этапе можно отправить один бюллетень с браузера. Прежние результаты сохранены.' : 'Голосование открыто. Выберите проекты и отправьте бюллетень.')
         : 'Голосование закрыто или ещё не началось. Номинации и проекты доступны для просмотра.';
     $('[data-nominations]').innerHTML = c.nominations
       .map(function (n, i) {
@@ -180,7 +180,7 @@
     $('#vote-email').required = emailMode;
     $('[data-ballot-intro]').textContent = emailMode
       ? 'Проверьте выбор и укажите email. Мы отправим код для подтверждения.'
-      : 'Проверьте выбранные проекты. После отправки бюллетень будет принят сразу. С одного браузера можно проголосовать один раз; разные люди в одной сети могут голосовать.';
+      : 'Проверьте выбранные проекты. После отправки бюллетень будет принят сразу. В текущем этапе с одного браузера можно проголосовать один раз; разные люди в одной сети могут голосовать.';
     $('[data-submit-ballot]').textContent = emailMode
       ? 'Получить код подтверждения'
       : 'Отправить голос';
@@ -389,6 +389,12 @@
         return r.json();
       })
     ]).then(function (values) {
+      if (state.contest && (state.contest.voting_round || 1) !== (values[0].voting_round || 1)) {
+        state.complete = false;
+        $$('[data-nominee]').forEach(function (input) { input.checked = false; });
+        $('[data-complete]').hidden = true;
+        $('[data-verify]').hidden = true;
+      }
       state.contest = values[0];
       state.revision = values[3].revision;
       state.csrf = values[1].csrf_token;

@@ -36,3 +36,25 @@ class PostgreSQLBallotConcurrencyTests(TransactionTestCase):
         self.assertEqual(results.count('accepted'), 1)
         self.assertEqual(results.count('already_voted'), 7)
         self.assertEqual(Ballot.objects.filter(status='submitted').count(), 1)
+
+    def test_parallel_revote_accepts_one_new_ballot_and_keeps_old_ballot(self):
+        browser='a'*64
+        submit_simple(self.contest,browser,'192.0.2.45',self.selection)
+        original=Ballot.objects.get()
+        self.contest.voting_round=2;self.contest.max_ballots_per_network=0;self.contest.save()
+        def vote(index):
+            close_old_connections()
+            try:
+                submit_simple(self.contest,browser,'192.0.2.45',self.selection)
+                return 'accepted'
+            except VotingError as error:
+                return error.code
+            finally:
+                connections.close_all()
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            results=list(pool.map(vote,range(8)))
+        self.assertEqual(results.count('accepted'),1)
+        self.assertEqual(results.count('already_voted'),7)
+        self.assertEqual(Ballot.objects.filter(status='submitted').count(),2)
+        original.refresh_from_db();self.assertEqual(original.status,'submitted')
+        self.assertEqual(original.selections.count(),1)
