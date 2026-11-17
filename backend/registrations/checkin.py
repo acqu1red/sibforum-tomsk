@@ -11,6 +11,8 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_http_methods
 
 from .models import CheckIn, Ticket
+from .attendance import scope
+from .admission import eligible_items
 
 
 def ticket_code(value):
@@ -28,6 +30,7 @@ def ticket_code(value):
 @never_cache
 @require_http_methods(['GET', 'POST'])
 def scanner(request):
+    context = scope(request)
     matches, query = [], ''
     if request.method == 'POST' and 'search' in request.POST:
         query = str(request.POST.get('search', '')).strip()[:120]
@@ -45,8 +48,10 @@ def scanner(request):
                 filters |= Q(registration__participant__phone__icontains=digits)
             if all(c in '0123456789abcdefABCDEF-' for c in query):
                 filters |= Q(public_id__istartswith=query)
-            matches = list(Ticket.objects.filter(filters, status=Ticket.Status.ACTIVE)
+            matches = list(Ticket.objects.filter(filters, status=Ticket.Status.ACTIVE, registration__participant__forum=context['forum'])
                            .select_related('registration__participant').prefetch_related('checkins')[:16])
+            for match in matches:
+                match.scope_checked_in = match.checkins.filter(event=context['selected_event']).exists()
             if not matches:
                 messages.warning(request, 'Активный билет не найден. Проверьте данные или статус заявки в панели.')
     elif request.method == 'POST':
@@ -55,8 +60,8 @@ def scanner(request):
         except ValueError as error:
             messages.error(request, str(error))
         else:
-            return redirect('check-in-ticket', public_id=public_id)
-    return render(request, 'registrations/checkin.html', {'scanner': True, 'title': 'Встреча участников', 'matches': matches, 'query': query})
+            return redirect('/admin/check-in/' + str(public_id) + '/?' + context['scope_query'])
+    return render(request, 'registrations/checkin.html', {**context, 'scanner': True, 'title': 'Встреча участников', 'matches': matches, 'query': query})
 
 
 @staff_member_required
@@ -65,6 +70,7 @@ def scanner(request):
 @require_http_methods(['GET', 'POST'])
 @transaction.atomic
 def ticket_detail(request, public_id):
+    context = scope(request)
     qs = Ticket.objects.select_related('registration__participant__forum')
     if request.method == 'POST':
         qs = qs.select_for_update(of=('self',))
@@ -73,24 +79,33 @@ def ticket_detail(request, public_id):
         return render(request, 'registrations/checkin.html', {'scanner': False,
             'invalid_ticket': True, 'title': 'Билет отменён' if ticket else 'Билет не найден',
             'invalid_message': 'Этот билет больше не действует. Попросите участника открыть актуальный билет по личной ссылке.' if ticket else 'Проверьте QR-код или найдите участника по имени в сканере.'}, status=410 if ticket else 404)
+    event = context['selected_event']
+    eligible = eligible_items(ticket.registration.items)
+    valid = ticket.registration.participant.forum_id == context['forum'].id and (eligible.filter(event=event).exists() if event else eligible.exists())
+    if request.method == 'POST' and request.POST.get('action') == 'confirm' and not valid:
+        messages.error(request, 'Допуск не подтверждён: проверьте мероприятие, решение модератора и оплату.')
+        return redirect('/admin/check-in/' + str(public_id) + '/?' + context['scope_query'])
     if request.method == 'POST' and request.POST.get('action') == 'confirm':
-        if ticket.checkins.exists():
+        if ticket.checkins.filter(event=event).exists():
             messages.warning(request, 'Прибытие уже отмечено ранее.')
         else:
             try:
                 with transaction.atomic():
-                    CheckIn.objects.create(ticket=ticket, admin_user=request.user)
+                    CheckIn.objects.create(ticket=ticket, event=event, admin_user=request.user)
                 messages.success(request, 'Прибытие участника подтверждено.')
             except IntegrityError:
                 messages.warning(request, 'Прибытие уже отмечено другим сотрудником.')
-        return redirect('check-in-ticket', public_id=public_id)
+        return redirect('/admin/check-in/' + str(public_id) + '/?' + context['scope_query'])
     registration = ticket.registration
     return render(request, 'registrations/checkin.html', {
+        **context,
+        'can_admit': valid,
+        'can_download_ticket': request.user.has_perm('registrations.view_ticket'),
         'scanner': False,
         'ticket': ticket,
         'registration': registration,
         'participant': registration.participant,
         'items': registration.items.select_related('event__day').prefetch_related('lot_links__lot'),
-        'checkin': ticket.checkins.select_related('admin_user').first(),
+        'checkin': ticket.checkins.filter(event=event).select_related('admin_user').first(),
         'title': 'Билет участника',
     })

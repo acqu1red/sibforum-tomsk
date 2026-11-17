@@ -61,3 +61,5 @@ docker run --rm -e DEBUG=0 -e SECRET_KEY=test-only-not-a-production-key -e SQLIT
 Лицензии локальных шрифтов Onest и Montserrat находятся в `site/fonts/`.
 
 Инструкция для организатора: [добавление организаций и логотипов, PDF](output/pdf/organization-logos-guide.pdf). [Проверка выпуска от 16 ноября](docs/release-audit-2026-11-16.md).
+
+Вход по QR, проверка оплаты экскурсий и посещаемость: [инструкция](docs/entry-payments-2026-11-17.md).

@@ -101,10 +101,10 @@ class RegistrationItemLotInline(admin.TabularInline):
 
 @admin.register(RegistrationItem)
 class RegistrationItemAdmin(admin.ModelAdmin):
-    list_display = ('participant_name', 'event', 'status', 'decided_at', 'decided_by')
-    list_filter = ('status', 'event__day__forum', 'event__kind')
+    list_display = ('participant_name', 'event', 'status', 'payment_status', 'decided_at', 'decided_by')
+    list_filter = ('status', 'payment_status', 'event__day__forum', 'event__kind')
     search_fields = ('registration__participant__last_name', 'registration__participant__email', 'event__title')
-    readonly_fields = ('registration', 'event', 'status', 'decided_at', 'decided_by', 'created_at', 'updated_at')
+    readonly_fields = ('registration', 'event', 'status', 'payment_status', 'payment_amount', 'payment_instruction', 'decided_at', 'decided_by', 'created_at', 'updated_at')
     inlines = (RegistrationItemLotInline,)
     actions = ('approve_selected', 'reject_selected', 'cancel_selected', 'move_selected')
 
@@ -113,7 +113,7 @@ class RegistrationItemAdmin(admin.ModelAdmin):
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         action = request.POST.get('_moderation_action') if request.method == 'POST' else None
-        if action in ('approve', 'reject', 'cancel'):
+        if action in ('approve', 'reject', 'cancel', 'confirm_payment', 'send_payment_request'):
             item = self.get_object(request, object_id)
             if not item or not self.has_change_permission(request, item):
                 raise PermissionDenied
@@ -125,6 +125,9 @@ class RegistrationItemAdmin(admin.ModelAdmin):
                 self.log_change(request, item, 'Решение по заявке принято через карточку.')
                 self.message_user(request, 'Решение сохранено. Уведомление участнику поставлено в очередь.')
             return redirect(request.path)
+        item = self.get_object(request, object_id)
+        requested = bool(item and item.payment_request_id and NotificationOutbox.objects.filter(dedup_key=f'payment-request:{item.payment_request_id}').exists())
+        extra_context = {**(extra_context or {}), 'can_confirm_payment': request.user.has_perm('registrations.confirm_payment'), 'payment_request_exists': requested}
         return super().change_view(request, object_id, form_url, extra_context)
 
     @admin.display(ordering='registration__participant__last_name', description='Участник')

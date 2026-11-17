@@ -5,8 +5,8 @@ from django.contrib.auth.models import Permission
 from django.test import TestCase, override_settings
 from django.utils import timezone
 
-from forums.models import Forum
-from .models import Participant, Registration, Ticket, CheckIn
+from forums.models import Forum, EventDay, Event
+from .models import Participant, Registration, RegistrationItem, Ticket, CheckIn
 
 
 @override_settings(SECURE_SSL_REDIRECT=False, ADMIN_TOTP_REQUIRED=False,
@@ -19,6 +19,9 @@ class CheckinDeskTests(TestCase):
         person = Participant.objects.create(forum=forum, first_name='Иван', last_name='Иванов', middle_name='Иванович',
             email='test@example.org', phone='79991234567', organization='Предприятие', position='Директор', category='business')
         cls.registration = Registration.objects.create(participant=person)
+        day = EventDay.objects.create(forum=forum, date=now.date())
+        event = Event.objects.create(day=day, title='Вход', start_time='09:00', end_time='12:00')
+        RegistrationItem.objects.create(registration=cls.registration, event=event, status='confirmed')
         cls.ticket = Ticket.objects.create(registration=cls.registration)
         cls.user = get_user_model().objects.create_user('desk', is_staff=True)
         cls.user.user_permissions.add(Permission.objects.get(codename='add_checkin'))

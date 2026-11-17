@@ -80,6 +80,14 @@ class ForumAdminSite(AdminSite):
             ]),
         ]
         navigation = []
+        if request.user.has_perm('registrations.add_checkin'):
+            navigation.append({'title': 'Встреча участников', 'links': [
+                {'label': 'Сканировать QR', 'url': reverse('check-in-scanner'), 'description': 'Проверить билет и вручную пропустить участника', 'active': request.path.startswith('/admin/check-in/')},
+            ]})
+        if request.user.has_perm('registrations.export_checkin'):
+            navigation.append({'title': 'Посещения', 'links': [
+                {'label': 'Посещаемость и Excel', 'url': reverse('check-in-attendance'), 'description': 'Только подтверждённые отметки прибытия', 'active': request.path.startswith('/admin/attendance/')},
+            ]})
         for title, entries in sections:
             links = []
             for label, app, model, description in entries:
@@ -130,6 +138,9 @@ class ForumAdminSite(AdminSite):
         return context
 
     def index(self, request, extra_context=None):
+        if request.user.has_perm('registrations.add_checkin') and not request.user.has_perm('registrations.view_registration'):
+            from django.shortcuts import redirect
+            return redirect('check-in-scanner')
         from registrations.models import Registration, RegistrationItem, NotificationOutbox
         from forums.models import Event, Speaker
         from voting.models import Contest

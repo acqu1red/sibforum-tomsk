@@ -1,0 +1,13 @@
+{% extends 'admin/base_site.html' %}
+{% block content %}
+<h1>Посещаемость</h1>
+<p>Только фактические подтверждения кнопкой «Пропустить участника». Общий вход на форум не означает посещение всех мероприятий.</p>
+<p><a class="button" href="/admin/check-in/?{{ scope_query }}">Сканировать QR</a></p>
+<form method="get"><input type="hidden" name="forum" value="{{ forum.slug }}"><label for="attendance-event">Мероприятие</label><select id="attendance-event" name="event"><option value="">Все отметки форума</option>{% for e in events %}<option value="{{ e.id }}" {% if selected_event.id == e.id %}selected{% endif %}>{{ e.day.date|date:'d.m' }} {{ e.start_time|time:'H:i' }} — {{ e.title }}</option>{% endfor %}</select><button class="button">Показать</button></form>
+<p><a class="button" href="?{{ scope_query }}&amp;format=xlsx">Скачать Excel</a> <a class="button" href="?{{ scope_query }}&amp;format=csv">Скачать CSV</a></p>
+<p id="attendance-summary">Людей с отметкой: {{ summary.people }}. Всего отметок: {{ summary.marks }}.</p><p id="attendance-updated">Обновлено: {{ generated }} (Томск). На экране последние 100 отметок, в Excel все.</p>
+<div style="overflow-x:auto"><table><thead><tr><th>Участник</th><th>Организация</th><th>Допуск</th><th>Пришёл</th><th>Пропустил</th></tr></thead><tbody id="attendance-rows">{% for row in rows %}<tr><td>{{ row.1 }}</td><td>{{ row.2 }}</td><td>{{ row.3 }}</td><td>{{ row.4 }}</td><td>{{ row.5 }}</td></tr>{% endfor %}</tbody></table></div>
+<script>
+(function(){let busy=false;async function update(){if(busy||document.hidden)return;busy=true;try{const u=new URL(location.href);u.searchParams.set('format','json');const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw Error();const d=await r.json();document.getElementById('attendance-summary').textContent='Людей с отметкой: '+d.summary.people+'. Всего отметок: '+d.summary.marks+'.';document.getElementById('attendance-updated').textContent='Обновлено: '+d.generated+' (Томск). На экране последние 100 отметок, в Excel все.';const body=document.getElementById('attendance-rows');body.replaceChildren(...d.rows.map(row=>{const tr=document.createElement('tr');for(const i of [1,2,3,4,5]){const td=document.createElement('td');td.textContent=row[i];tr.append(td);}return tr;}));}catch{document.getElementById('attendance-updated').textContent='Нет обновления: проверьте связь и вход. Показан прежний снимок.';}finally{busy=false;}}setInterval(update,15000);document.addEventListener('visibilitychange',update);})();
+</script>
+{% endblock %}

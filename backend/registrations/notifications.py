@@ -10,6 +10,7 @@ from django.utils import timezone
 
 from .models import NotificationOutbox, RegistrationItem
 from .tickets import ticket_email_attachments
+from .payments import payment_attachments
 
 STATUS_LABELS = {
     'confirmed': 'подтверждено',
@@ -77,6 +78,20 @@ def message_content(notification):
                 lines.append('Лоты: ' + ', '.join(str(link.lot.number) for link in lots))
         lines.append(f"ID элемента заявки: {payload.get('item_id', '')}")
         body = '\n'.join(lines)
+    elif kind == 'payment_request':
+        subject = 'Заявка одобрена — оплатите участие в экскурсии'
+        lines = ['Здравствуйте!', '', 'Ваша заявка подтверждена модератором. Просим оплатить участие в экскурсии.',
+                 '', 'Экскурсия: ' + payload.get('event', ''), 'Стоимость: ' + str(payload.get('payment_amount', '')) + ' ₽.',
+                 'QR-код для оплаты прилагается во вложении (PDF и PNG).',
+                 '', 'После оплаты вышлите квитанцию на e-mail: ndv@tomsktpp.ru',
+                 'Входной билет с QR-кодом будет отправлен после проверки оплаты модератором.',
+                 '', 'Ваша заявка: ' + payload.get('personal_url', '')]
+        body = '\n'.join(lines)
+    elif kind == 'payment_confirmed':
+        subject = 'Оплата подтверждена — ваш входной билет'
+        body = ('Здравствуйте!\n\nМодератор подтвердил оплату участия в экскурсии: ' + payload.get('event', '')
+                + '.\nВходной билет с QR-кодом прилагается. Покажите его администратору на мероприятии.'
+                + '\n\nВаша заявка: ' + payload.get('personal_url', ''))
     elif kind == 'moderation_decision':
         status = payload.get('status')
         accepted = status in ('approved', 'confirmed')
@@ -144,6 +159,24 @@ def process_one(now=None):
     notification = claim_notification(now)
     if not notification:
         return None
+    if notification.kind in ('payment_request', 'payment_confirmed'):
+        with transaction.atomic():
+            item = RegistrationItem.objects.select_for_update().filter(id=notification.payload.get('item_id')).first()
+            expected = 'awaiting' if notification.kind == 'payment_request' else 'confirmed'
+            if (not item or item.status != 'approved' or not item.event.is_paid
+                    or item.payment_status != expected
+                    or str(item.payment_request_id) != notification.payload.get('payment_request_id')):
+                notification.status = NotificationOutbox.Status.CANCELLED
+                notification.locked_at = None
+                notification.lock_token = None
+                notification.last_error = 'Решение или оплата изменились; устаревшее письмо не отправлено.'
+                notification.save()
+                return 'cancelled'
+            return deliver_notification(notification)
+    return deliver_notification(notification)
+
+
+def deliver_notification(notification):
     message_id = f'<{notification.id}@siberianforum.local>'
     try:
         subject, body = message_content(notification)
@@ -154,7 +187,9 @@ def process_one(now=None):
             to=[notification.recipient],
             headers={'Message-ID': message_id},
         )
-        if notification.registration and notification.kind in ('registration_summary', 'moderation_decision'):
+        for filename, content, mimetype in payment_attachments(notification):
+            message.attach(filename, content, mimetype)
+        if notification.registration and notification.kind in ('registration_summary', 'moderation_decision', 'payment_confirmed'):
             for filename, content, mimetype in ticket_email_attachments(notification.registration):
                 message.attach(filename, content, mimetype)
             if message.attachments:
@@ -185,7 +220,7 @@ def process_one(now=None):
 
 
 def process_batch(limit=20):
-    counts = {'sent': 0, 'pending': 0, 'failed': 0, 'empty': 0}
+    counts = {'sent': 0, 'pending': 0, 'failed': 0, 'cancelled': 0, 'empty': 0}
     for _ in range(limit):
         result = process_one()
         if result is None:

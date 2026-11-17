@@ -1,10 +1,11 @@
 {% extends "admin/change_form.html" %}
 {% block after_field_sets %}
 {{ block.super }}
-{% if change and has_change_permission %}<p class="help">Решение относится к выбранному мероприятию. Кнопки одобрения, отклонения и отмены находятся внизу. После решения участник получит письмо со ссылкой на свою заявку.</p>{% endif %}
+{% if change and has_change_permission %}<p class="help">Решение относится к выбранному мероприятию. Кнопки одобрения, отклонения и отмены находятся внизу. Для платной экскурсии одобрение отправит просьбу оплатить с платёжным QR. Входной билет — после отдельной проверки оплаты.</p>{% endif %}
 {% endblock %}
 {% block submit_buttons_bottom %}
 {% if change and has_change_permission %}<div id="moderation-decision" class="submit-row workspace-decisions" aria-label="Решение по заявке">
+{% if original.status == 'approved' and original.event.is_paid and original.payment_status == 'awaiting' and can_confirm_payment %}<p>Проверьте квитанцию, присланную на ndv@tomsktpp.ru. Только эта кнопка выдаст входной билет. Получение квитанции само по себе оплату не подтверждает.</p><button type="submit" name="_moderation_action" value="confirm_payment">Квитанция проверена — подтвердить оплату</button>{% if not payment_request_exists %}<button type="submit" class="secondary" name="_moderation_action" value="send_payment_request">Отправить письмо с QR для оплаты</button>{% else %}<p class="help">Письмо с QR для этой заявки уже отправлено или находится в очереди.</p>{% endif %}{% endif %}
 {% if original.status == 'pending_review' %}<button type="submit" name="_moderation_action" value="approve">Одобрить заявку</button><button type="submit" class="secondary" name="_moderation_action" value="reject">Отклонить заявку</button>{% endif %}
 {% if original.status == 'confirmed' or original.status == 'pending_review' or original.status == 'approved' %}<button type="submit" class="secondary" name="_moderation_action" value="cancel">Отменить запись</button>{% endif %}
 </div>{% endif %}

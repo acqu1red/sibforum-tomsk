@@ -4,7 +4,7 @@
   var stream=null,timer=null,busy=false,starting=false,generation=0,readerPromise;
   var canvas=document.createElement('canvas'),context=canvas.getContext('2d',{willReadFrequently:true});
   function reader(){if(window.jsQR)return Promise.resolve(window.jsQR);if(!readerPromise)readerPromise=new Promise(function(resolve,reject){var s=document.createElement('script');s.src='/static/workspace/vendor/jsQR-1.4.0.js';s.onload=function(){resolve(window.jsQR);};s.onerror=function(){readerPromise=null;reject(Error('Не удалось загрузить распознавание. Проверьте подключение.'));};document.head.append(s);});return readerPromise;}
-  function stop(){generation++;starting=false;clearTimeout(timer);if(stream)stream.getTracks().forEach(function(t){t.stop();});stream=null;video.srcObject=null;video.classList.remove('active');button.textContent='Включить камеру';button.disabled=false;busy=false;}
+  function stop(){generation++;starting=false;clearTimeout(timer);if(stream)stream.getTracks().forEach(function(t){t.stop();});stream=null;video.srcObject=null;video.classList.remove('active');button.textContent='Отсканировать QR-код';button.disabled=false;busy=false;}
   function found(value){var input=document.getElementById('ticket-code');input.value=value;stop();status.textContent='Код распознан. Открываем билет…';input.form.requestSubmit();}
   function pixels(source,width,height,max){var scale=Math.min(1,max/Math.max(width,height));canvas.width=Math.max(1,Math.round(width*scale));canvas.height=Math.max(1,Math.round(height*scale));context.drawImage(source,0,0,canvas.width,canvas.height);return context.getImageData(0,0,canvas.width,canvas.height);}
   async function start(){

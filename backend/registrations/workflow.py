@@ -123,6 +123,9 @@ def registration_payload(registration):
             'id': str(item.id),
             'status': item.status,
             'decision_note': item.decision_note,
+            'payment_status': item.payment_status,
+            'payment_status_label': ('Оплата — после одобрения' if item.payment_status == 'not_required' else item.get_payment_status_display()) if item.event.is_paid else '',
+            'payment_amount': str(item.payment_amount) if item.payment_amount is not None else None,
             'event': {
                 'id': str(item.event.id),
                 'title': item.event.title,
@@ -244,15 +247,24 @@ def registration_by_token(token):
 
 @transaction.atomic
 def decide_item(item_id, action, admin_user, note='', target_event_id=None, lot_ids=None):
-    item = RegistrationItem.objects.select_for_update().filter(id=item_id).first()
-    if not item:
+    registration_id = RegistrationItem.objects.filter(id=item_id).values_list('registration_id', flat=True).first()
+    if not registration_id:
         raise RegistrationError('item_not_found', 'Элемент заявки не найден.', status=404)
+    Registration.objects.select_for_update().get(id=registration_id)
+    item = RegistrationItem.objects.select_for_update().get(id=item_id)
+    from .payments import request_payment, confirm_payment
     previous_status = item.status
     previous_event = item.event
     now = timezone.now()
     target_event = None
 
-    if action in ('approve', 'reject'):
+    if action == 'send_payment_request':
+        from .payments import send_payment_request
+        send_payment_request(item, admin_user)
+        return item
+    if action == 'confirm_payment':
+        confirm_payment(item, admin_user, str(note or '').strip()[:2000])
+    elif action in ('approve', 'reject'):
         if previous_event.registration_policy != Event.RegistrationPolicy.MODERATED or previous_status != RegistrationItem.Status.PENDING_REVIEW:
             raise RegistrationError('invalid_transition', 'Решение доступно только для заявки на модерации.', status=409)
         item.status = RegistrationItem.Status.APPROVED if action == 'approve' else RegistrationItem.Status.REJECTED
@@ -261,6 +273,8 @@ def decide_item(item_id, action, admin_user, note='', target_event_id=None, lot_
             raise RegistrationError('invalid_transition', 'Заявка уже неактивна.', status=409)
         item.status = RegistrationItem.Status.CANCELLED_BY_ADMIN
     elif action == 'move':
+        if item.payment_status == RegistrationItem.PaymentStatus.CONFIRMED:
+            raise RegistrationError('paid_transfer', 'Оплата уже подтверждена. Перевод оплаченной экскурсии требует отдельного согласования; повторный запрос оплаты не создан.', status=409)
         if previous_status not in (RegistrationItem.Status.PENDING_REVIEW, RegistrationItem.Status.APPROVED):
             raise RegistrationError('invalid_transition', 'Перевести можно только активную модерируемую заявку.', status=409)
         target_event = Event.objects.filter(
@@ -291,6 +305,14 @@ def decide_item(item_id, action, admin_user, note='', target_event_id=None, lot_
     else:
         raise RegistrationError('unknown_action', 'Неизвестное действие.')
 
+    if action in ('approve', 'move'):
+        if item.event.is_paid:
+            request_payment(item)
+        else:
+            item.payment_status = RegistrationItem.PaymentStatus.NOT_REQUIRED
+            item.payment_request_id = None
+            item.payment_amount = None
+            item.payment_instruction = None
     item.decision_note = str(note or '').strip()[:2000]
     item.decided_at = now
     item.decided_by = admin_user
@@ -314,9 +336,13 @@ def decide_item(item_id, action, admin_user, note='', target_event_id=None, lot_
     history = item.history.latest('created_at')
     queue_notification(
         registration,
-        'moderation_decision',
+        'payment_request' if action in ('approve', 'move') and item.event.is_paid else 'payment_confirmed' if action == 'confirm_payment' else 'moderation_decision',
         registration.participant.email,
         {
+            'item_id': str(item.id),
+            'payment_instruction': str(item.payment_instruction_id) if item.payment_instruction_id else None,
+            'payment_amount': str(item.payment_amount) if item.payment_amount is not None else None,
+            'payment_request_id': str(item.payment_request_id) if item.payment_request_id else None,
             'action': action_name,
             'previous_event': previous_event.title,
             'event': item.event.title,
@@ -328,6 +354,6 @@ def decide_item(item_id, action, admin_user, note='', target_event_id=None, lot_
             'venue': item.event.venue.name if item.event.venue else '',
             'personal_url': decision_personal_url(registration),
         },
-        f'moderation-decision:{history.id}',
+        f'payment-request:{item.payment_request_id}' if action in ('approve', 'move') and item.event.is_paid else f'moderation-decision:{history.id}',
     )
     return item

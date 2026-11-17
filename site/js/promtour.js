@@ -536,7 +536,7 @@
         (ticket.checked_in_at ? '<p class="promtour-status promtour-status-confirmed">Прибытие отмечено: ' + esc(new Date(ticket.checked_in_at).toLocaleString('ru-RU')) + '</p>' : '') + '</div>' +
         '<img src="' + esc(ticket.qr_path + '?t=' + encodeURIComponent(state.token)) + '" alt="QR-код для стойки регистрации" width="220" height="220"></section>';
     } else {
-      ticketHtml = '<section class="promtour-ticket-note"><p>Электронный билет с QR появится здесь после подтверждения хотя бы одного события.</p></section>';
+      ticketHtml = '<section class="promtour-ticket-note"><p>Электронный билет с QR появится после подтверждения участия. Для платной экскурсии требуется проверка оплаты модератором.</p></section>';
     }
     var html = '<div class="promtour-result-head"><div><p class="eyebrow">Заявка ' + esc(registration.id) + '</p><h3>Вы зарегистрированы</h3></div><p><b>' + esc(registration.participant.full_name) + '</b><br>' + esc(registration.participant.organization) + '</p></div>' +
       (state.submissionsEnabled ? '<div class="promtour-result-actions"><button type="button" class="btn btn-secondary" data-edit-registration>Изменить мероприятия</button><p>Можно добавить маршрут или изменить выбор. Сохранение — после подтверждения почты; маршруты проходят модерацию.</p></div>' : '') +
@@ -546,7 +546,7 @@
         var lots = item.lots.length ? '<p><b>Лоты:</b> ' + item.lots.map(function (lot) { return esc(lot.number + ' — ' + lot.title); }).join(', ') + '</p>' : '';
         var price = view.paid ? '<p class="promtour-result-price"><b>Стоимость: ' + esc(formatPrice(view.price)) + '.</b> ' + esc(view.payment_note) + '</p>' : '';
         return '<article class="promtour-result-item"><div><h4>' + esc(view.title) + '</h4><p>' + esc(view.day) + ' · ' + esc(view.time) + '</p></div>' +
-          '<span class="promtour-status promtour-status-' + esc(item.status) + '">' + esc(STATUS[item.status] || item.status) + '</span>' + price + lots +
+          '<span class="promtour-status promtour-status-' + esc(item.status) + '">' + esc(STATUS[item.status] || item.status) + '</span>' + (view.paid && item.payment_status_label ? '<p><b>' + esc(item.payment_status_label) + '</b>' + (item.payment_status === 'awaiting' ? '. После оплаты отправьте квитанцию на ndv@tomsktpp.ru. Входной билет появится после проверки.' : '') + '</p>' : '') + price + lots +
           (item.decision_note ? '<p>' + esc(item.decision_note) + '</p>' : '') + '</article>';
       }).join('') + '</div>';
     $('[data-result]').innerHTML = html;

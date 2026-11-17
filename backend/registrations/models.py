@@ -90,6 +90,10 @@ class EmailChallenge(TimeStampedModel):
 
 
 class RegistrationItem(TimeStampedModel):
+    class PaymentStatus(models.TextChoices):
+        NOT_REQUIRED = 'not_required', 'Оплата не требуется'
+        AWAITING = 'awaiting', 'Оплата не проверена'
+        CONFIRMED = 'confirmed', 'Оплата подтверждена'
     class Status(models.TextChoices):
         CONFIRMED = 'confirmed', 'Подтверждено'
         PENDING_REVIEW = 'pending_review', 'На рассмотрении'
@@ -107,14 +111,24 @@ class RegistrationItem(TimeStampedModel):
     decision_note = models.TextField(blank=True, verbose_name='Комментарий к решению')
     decided_at = models.DateTimeField(null=True, blank=True, verbose_name='Дата решения')
     decided_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True, verbose_name='Решение принял')
+    payment_status = models.CharField(max_length=20, choices=PaymentStatus.choices, default=PaymentStatus.NOT_REQUIRED, verbose_name='Оплата')
+    payment_request_id = models.UUIDField(null=True, blank=True, editable=False)
+    payment_amount = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, verbose_name='Сумма к оплате, ₽')
+    payment_instruction = models.ForeignKey('PaymentInstruction', on_delete=models.PROTECT, null=True, blank=True, verbose_name='Реквизиты оплаты')
 
     class Meta:
         verbose_name = 'запись на мероприятие'
+        permissions = [('confirm_payment', 'Подтверждать оплату по квитанции')]
         verbose_name_plural = 'Записи на мероприятия'
         ordering = ('event__day__position', 'event__start_time', 'event__position')
         constraints = [
             models.UniqueConstraint(fields=('registration', 'event'), name='unique_registration_event'),
         ]
+
+    def get_payment_status_display(self):
+        if self.event.is_paid and self.payment_status == self.PaymentStatus.NOT_REQUIRED:
+            return 'Оплата — после одобрения'
+        return dict(self.PaymentStatus.choices).get(self.payment_status, self.payment_status)
 
     def __str__(self):
         return f'{self.registration} — {self.event}'
@@ -229,7 +243,7 @@ class NotificationOutbox(TimeStampedModel):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name='Идентификатор')
     registration = models.ForeignKey(Registration, on_delete=models.CASCADE, related_name='notifications', null=True, blank=True, verbose_name='Заявка')
-    kind = models.CharField(max_length=50, choices=[('email_verification', 'Подтверждение почты'), ('registration_summary', 'Подтверждение регистрации'), ('moderation_request', 'Заявка куратору'), ('moderation_decision', 'Решение по заявке'), ('voting_verification', 'Код для голосования'), ('voting_confirmation', 'Подтверждение голосования')], verbose_name='Тип')
+    kind = models.CharField(max_length=50, choices=[('email_verification', 'Подтверждение почты'), ('registration_summary', 'Подтверждение регистрации'), ('moderation_request', 'Заявка куратору'), ('moderation_decision', 'Решение по заявке'), ('payment_request', 'Запрос оплаты'), ('payment_confirmed', 'Оплата подтверждена'), ('voting_verification', 'Код для голосования'), ('voting_confirmation', 'Подтверждение голосования')], verbose_name='Тип')
     recipient = models.EmailField(verbose_name='Получатель')
     template_version = models.CharField(max_length=60, verbose_name='Версия письма')
     payload = models.JSONField(default=dict, verbose_name='Содержимое письма')
@@ -278,18 +292,49 @@ class CheckIn(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name='Идентификатор')
     ticket = models.ForeignKey(Ticket, on_delete=models.PROTECT, related_name='checkins', verbose_name='Билет')
     admin_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, verbose_name='Сотрудник регистрации')
+    event = models.ForeignKey(Event, on_delete=models.PROTECT, null=True, blank=True, verbose_name='Мероприятие', help_text='Пусто — общий вход на форум, не посещение всех мероприятий.')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 
     class Meta:
         verbose_name = 'отметка прибытия'
+        permissions = [('export_checkin', 'Выгружать статистику посещений')]
         verbose_name_plural = 'Отметки прибытия'
         ordering = ('-created_at',)
         constraints = [
-            models.UniqueConstraint(fields=('ticket',), name='unique_general_checkin_per_ticket'),
+            models.UniqueConstraint(fields=('ticket',), condition=models.Q(event__isnull=True), name='unique_general_checkin_per_ticket'),
+            models.UniqueConstraint(fields=('ticket', 'event'), condition=models.Q(event__isnull=False), name='unique_event_checkin_per_ticket'),
         ]
 
     def __str__(self):
-        return f'{self.ticket.public_id} — {self.created_at:%d.%m.%Y %H:%M}'
+        return f'{self.ticket.public_id} — {timezone.localtime(self.created_at):%d.%m.%Y %H:%M}'
+
+
+class PaymentInstruction(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    forum = models.ForeignKey(Forum, on_delete=models.PROTECT)
+    source_filename = models.CharField(max_length=180)
+    pdf_bytes = models.BinaryField()
+    qr_png = models.BinaryField()
+    pdf_sha256 = models.CharField(max_length=64)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Платёжный QR — {timezone.localtime(self.created_at):%d.%m.%Y %H:%M}'
+
+    class Meta:
+        ordering = ('-created_at', '-id')
+
+
+class PaymentConfirmation(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    item = models.ForeignKey(RegistrationItem, on_delete=models.PROTECT, related_name='payment_confirmations')
+    request_id = models.UUIDField(unique=True)
+    event = models.ForeignKey(Event, on_delete=models.PROTECT)
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    instruction = models.ForeignKey(PaymentInstruction, on_delete=models.PROTECT)
+    actor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    note = models.CharField(max_length=2000)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class ExportLog(models.Model):
@@ -308,7 +353,7 @@ class ExportLog(models.Model):
         ordering = ('-created_at',)
 
     def __str__(self):
-        return f'{self.kind} — {self.actor_user.get_username()} — {self.created_at:%d.%m.%Y %H:%M}'
+        return f'{self.kind} — {self.actor_user.get_username()} — {timezone.localtime(self.created_at):%d.%m.%Y %H:%M}'
 
 
 class RegistrationAttemptLog(models.Model):

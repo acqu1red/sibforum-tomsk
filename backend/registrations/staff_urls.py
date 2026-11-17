@@ -1,9 +1,10 @@
 from django.urls import path
 
-from . import assistance, checkin, exports
+from . import assistance, checkin, exports, attendance
 from voting.exports import voting_export
 
 urlpatterns = [
+    path('attendance/', attendance.attendance, name='check-in-attendance'),
     path('registration-help/<uuid:registration_id>/', assistance.participant_help, name='registration-assistance'),
     path('registration-help/<uuid:registration_id>/resend/', assistance.resend, name='registration-resend'),
     path('registration-help/<uuid:registration_id>/ticket/qr.png', assistance.download_qr, name='registration-staff-qr'),

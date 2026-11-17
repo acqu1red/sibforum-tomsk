@@ -16,6 +16,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Image, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 from .models import RegistrationItem, Ticket
+from .admission import eligible_items
 
 STATUS_LABELS = {
     'confirmed': 'Подтверждено',
@@ -30,9 +31,7 @@ _font_registered = False
 
 @transaction.atomic
 def ensure_ticket(registration):
-    eligible = registration.items.filter(
-        status__in=(RegistrationItem.Status.CONFIRMED, RegistrationItem.Status.APPROVED),
-    ).exists()
+    eligible = eligible_items(registration.items).exists()
     ticket = Ticket.objects.select_for_update().filter(registration=registration).first()
     if not eligible:
         if ticket and ticket.status == Ticket.Status.ACTIVE:
@@ -113,7 +112,7 @@ def build_ticket_pdf(registration):
         ('BOTTOMPADDING', (0, 0), (-1, -1), 6 * mm),
     ])))
     story.append(Paragraph('Ваши события', heading))
-    for item in registration.items.select_related('event__day').prefetch_related('lot_links__lot'):
+    for item in eligible_items(registration.items).select_related('event__day').prefetch_related('lot_links__lot'):
         event = item.event
         text = (
             f"<b>{escape(event.title)}</b><br/>"
@@ -121,7 +120,7 @@ def build_ticket_pdf(registration):
             f"Статус: {STATUS_LABELS.get(item.status, item.status)}"
         )
         if event.is_paid:
-            text += f"<br/>Стоимость: {event.price} ₽. {escape(event.payment_note)}"
+            text += f"<br/>Оплата подтверждена: {item.payment_amount} ₽."
         lots = list(item.lot_links.all())
         if lots:
             text += '<br/>Лоты: ' + escape(', '.join(str(link.lot.number) for link in lots))
@@ -136,7 +135,7 @@ def build_ticket_pdf(registration):
 def ticket_payload(ticket):
     if not ticket or ticket.status != Ticket.Status.ACTIVE:
         return None
-    checkin = ticket.checkins.first()
+    checkin = ticket.checkins.filter(event__isnull=True).first()
     return {
         'id': str(ticket.public_id),
         'code': str(ticket.public_id).split('-')[0].upper(),

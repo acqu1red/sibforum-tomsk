@@ -29,8 +29,10 @@
 </head>
 <body>
 <main>
-  <nav class="desk-nav"><b>Сибирский форум</b><a href="/admin/">Панель организатора</a></nav>
+  <nav class="desk-nav"><b>Сибирский форум</b><a href="/admin/">Мой кабинет</a><form method="post" action="/admin/logout/">{% csrf_token %}<button type="submit" class="secondary" style="margin:0;padding:8px 14px">Выйти</button></form></nav>
   <h1>{{ title }}</h1>
+  {% if perms.registrations.export_checkin %}<p><a class="button secondary" href="/admin/attendance/?{{ scope_query }}">Посещаемость и Excel</a></p>{% endif %}
+  {% if forum %}<section><form method="get"><input type="hidden" name="forum" value="{{ forum.slug }}"><label for="gate-event">Что подтверждаем</label><select id="gate-event" name="event" style="width:100%;min-height:48px;font:inherit"><option value="">Общий вход на форум</option>{% for e in events %}<option value="{{ e.id }}" {% if selected_event.id == e.id %}selected{% endif %}>{{ e.day.date|date:'d.m' }} {{ e.start_time|time:'H:i' }} — {{ e.title }}</option>{% endfor %}</select><button class="secondary">Выбрать мероприятие</button></form><p class="muted">Сканирование только открывает билет. Приход записывается после кнопки «Пропустить участника».</p></section>{% endif %}
   {% if messages %}
     {% for message in messages %}<p class="{{ message.tags }}">{{ message }}</p>{% endfor %}
   {% endif %}
@@ -38,18 +40,18 @@
     <section>
       <h2>Сканировать QR</h2>
       <p class="muted">Наведите камеру на билет с телефона или бумаги. Доступ к камере включается только по кнопке.</p>
-      <div class="camera-actions"><button type="button" id="camera-start">Включить камеру</button><label class="file-button">Распознать с фотографии<input type="file" id="qr-file" accept="image/*"></label></div>
+      <div class="camera-actions"><button type="button" id="camera-start">Отсканировать QR-код</button><label class="file-button">Распознать с фотографии<input type="file" id="qr-file" accept="image/*"></label></div>
       <p id="camera-status" class="muted" role="status" aria-live="polite"></p>
       <video id="camera" playsinline muted></video>
       <p class="camera-note">Фотография распознаётся на устройстве и не загружается на сервер. После чтения кода откроется карточка участника.</p>
     </section>
     <section>
       <h2>Найти по имени или номеру билета</h2>
-      <form method="post">{% csrf_token %}<label for="participant-search">Имя, телефон, e-mail или первые 8 символов номера</label><input id="participant-search" name="search" value="{{ query }}" minlength="3" maxlength="120" autocomplete="off" required><button type="submit">Найти билет</button></form>
-      {% for match in matches %}<a class="desk-result" href="{% url 'check-in-ticket' match.public_id %}"><b>{{ match.registration.participant.full_name }}</b><span>{{ match.registration.participant.organization }}</span><small>{% if match.checkins.all %}Прибытие уже отмечено{% else %}Ожидаем участника{% endif %} · {{ match.public_id|stringformat:'s'|slice:':8'|upper }}</small></a>{% endfor %}
+      <form method="post"><input type="hidden" name="forum" value="{{ forum.slug }}"><input type="hidden" name="event" value="{{ selected_event.id|default:'' }}">{% csrf_token %}<label for="participant-search">Имя, телефон, e-mail или первые 8 символов номера</label><input id="participant-search" name="search" value="{{ query }}" minlength="3" maxlength="120" autocomplete="off" required><button type="submit">Найти билет</button></form>
+      {% for match in matches %}<a class="desk-result" href="{% url 'check-in-ticket' match.public_id %}?{{ scope_query }}"><b>{{ match.registration.participant.full_name }}</b><span>{{ match.registration.participant.organization }}</span><small>{% if match.scope_checked_in %}Прибытие уже отмечено{% else %}Ожидаем участника{% endif %} · {{ match.public_id|stringformat:'s'|slice:':8'|upper }}</small></a>{% endfor %}
     </section>
     <details class="desk-preview"><summary>Вставить ссылку из QR или полный номер</summary>
-      <form method="post">
+      <form method="post"><input type="hidden" name="forum" value="{{ forum.slug }}"><input type="hidden" name="event" value="{{ selected_event.id|default:'' }}">
         {% csrf_token %}
         <label for="ticket-code">Ссылка из QR или полный номер билета</label>
         <input id="ticket-code" name="code" required autocomplete="off">
@@ -57,23 +59,24 @@
       </form>
     </details>
   {% elif invalid_ticket %}
-    <section class="desk-invalid"><h2>{{ title }}</h2><p>{{ invalid_message }}</p><a class="button" href="/admin/check-in/">Вернуться к сканеру</a></section>
+    <section class="desk-invalid"><h2>{{ title }}</h2><p>{{ invalid_message }}</p><a class="button" href="/admin/check-in/?{{ scope_query }}">Вернуться к сканеру</a></section>
   {% else %}
     <section>
       <h2 class="desk-person-name">{{ participant.full_name }}</h2>
       <p>{{ participant.organization }} · {{ participant.position }}</p>
       <p class="desk-number">Билет {{ ticket.public_id|stringformat:'s'|slice:':8'|upper }}</p>
-      <div class="desk-preview"><a href="/api/v1/tickets/{{ ticket.public_id }}/ticket.pdf">Скачать PDF-билет</a><a href="/api/v1/tickets/{{ ticket.public_id }}/qr.png" target="_blank" rel="noopener">Открыть QR</a></div>
+      {% if can_download_ticket %}<div class="desk-preview"><a href="/api/v1/tickets/{{ ticket.public_id }}/ticket.pdf">Скачать PDF-билет</a><a href="/api/v1/tickets/{{ ticket.public_id }}/qr.png" target="_blank" rel="noopener">Открыть QR</a></div>{% endif %}
       {% if checkin %}
         <p class="success"><b>Прибытие отмечено:</b> {{ checkin.created_at|date:'d.m.Y H:i' }} · {{ checkin.admin_user.get_username }}</p>
-      {% else %}
-        <form method="post">
+      {% elif can_admit %}
+        <form method="post"><input type="hidden" name="forum" value="{{ forum.slug }}"><input type="hidden" name="event" value="{{ selected_event.id|default:'' }}">
           {% csrf_token %}
           <input type="hidden" name="action" value="confirm">
-          <button type="submit" class="desk-confirm">Подтвердить прибытие</button>
+          <button type="submit" class="desk-confirm">Пропустить участника</button>
         </form>
+      {% else %}<p class="error">Для выбранного входа допуск не подтверждён. Проверьте решение модератора и оплату.</p>
       {% endif %}
-      <a class="button secondary" href="/admin/check-in/">Сканировать следующий</a>
+      <a class="button secondary" href="/admin/check-in/?{{ scope_query }}">Сканировать следующий</a>
     </section>
     <section>
       <h2>События</h2>
@@ -81,7 +84,7 @@
         <div class="item">
           <b>{{ item.event.title }}</b>
           <p>{{ item.event.day.title }} · {{ item.event.start_time|time:'H:i' }}–{{ item.event.end_time|time:'H:i' }}</p>
-          <p>{{ item.get_status_display }}</p>
+          <p>{{ item.get_status_display }}{% if item.event.is_paid %} · {{ item.get_payment_status_display }}{% endif %}</p>
           {% if item.event.is_paid %}<p>{{ item.event.price }} ₽ · {{ item.event.payment_note }}</p>{% endif %}
           {% if item.lot_links.all %}<p>Лоты: {% for link in item.lot_links.all %}{{ link.lot.number }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}
         </div>
@@ -89,6 +92,6 @@
     </section>
   {% endif %}
 </main>
-{% if scanner %}<script src="{% static 'workspace/checkin.js' %}?v=2" defer></script>{% endif %}
+{% if scanner %}<script src="{% static 'workspace/checkin.js' %}?v=3" defer></script>{% endif %}
 </body>
 </html>
