@@ -1,14 +1,28 @@
 import csv
 import io
+from contextlib import contextmanager
 
+from django.db import connection, transaction
 from django.http import HttpResponse
 from django.utils import timezone
 from openpyxl import Workbook
-from openpyxl.styles import Font, PatternFill
+from openpyxl.styles import Alignment, Font, PatternFill
 
 from .models import ExportLog
 
 XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+
+
+@contextmanager
+def report_snapshot():
+    # Multiple sheets must describe one consistent snapshot, even while people
+    # register/vote. The audit log is written after this read-only transaction.
+    nested = connection.in_atomic_block
+    with transaction.atomic():
+        if connection.vendor == 'postgresql' and not nested:
+            with connection.cursor() as cursor:
+                cursor.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY')
+        yield
 
 
 def safe_value(value):
@@ -41,12 +55,16 @@ def xlsx_bytes(sheets):
             cell.fill = PatternFill('solid', fgColor='3F4FB5')
         for row in sheet['rows']:
             ws.append([safe_value(value) for value in row])
+        for row in ws:
+            for cell in row:
+                cell.alignment = Alignment(vertical='top', wrap_text=True)
+        ws.row_dimensions[1].height = 36
         ws.freeze_panes = 'A2'
         ws.auto_filter.ref = ws.dimensions
         for column in ws.columns:
             letter = column[0].column_letter
-            longest = max(len(str(cell.value or '')) for cell in column)
-            ws.column_dimensions[letter].width = min(max(longest + 2, 12), 60)
+            longest = max(max(map(len, str(cell.value or '').split('\n'))) for cell in column)
+            ws.column_dimensions[letter].width = min(max(longest + 2, 16), 60)
     output = io.BytesIO()
     workbook.save(output)
     return output.getvalue()

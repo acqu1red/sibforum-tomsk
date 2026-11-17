@@ -1,56 +1,59 @@
-<!doctype html>
-<html lang="ru">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ title }}</title>
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; background: #f5f6fb; color: #0e1330; font: 16px/1.5 system-ui, sans-serif; }
-    main { max-width: 860px; margin: 30px auto; padding: 20px; }
-    section { padding: 24px; border: 1px solid #d9dceb; border-radius: 16px; background: #fff; }
-    h1 { margin: 0 0 12px; font-size: 28px; }
-    p { color: #4a5070; }
-    form { display: grid; gap: 16px; margin-top: 24px; }
-    label { display: grid; gap: 6px; font-weight: 600; }
-    select { width: 100%; min-height: 46px; padding: 8px; border: 1px solid #9ba3bf; border-radius: 8px; background: #fff; font: inherit; }
-    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
-    button { min-height: 48px; padding: 12px 18px; border: 0; border-radius: 8px; background: #3f4fb5; color: #fff; font-weight: 700; cursor: pointer; }
-    button.secondary { background: #ecedf7; color: #33419e; }
-    .note { padding: 14px; border-radius: 10px; background: #ecedf7; }
-  </style>
-</head>
-<body>
-<main>
-  <section>
-    <h1>{{ title }}</h1>
-    <p>Форум: <b>{{ forum.title }}</b></p>
-    <p class="note">Выгрузки доступны только сотрудникам и записываются в журнал. «По событиям» — строка на событие участника, «Сводка по людям» — строка на человека со всеми его событиями.</p>
-    <form method="get">
-      <label>Событие
-        <select name="event">
-          <option value="">Все события</option>
-          {% for event in events %}<option value="{{ event.id }}" {% if filters.event == event.id|stringformat:'s' %}selected{% endif %}>{{ event.day.title }} · {{ event.start_time|time:'H:i' }} · {{ event.title }}</option>{% endfor %}
-        </select>
-      </label>
-      <label>Статус
-        <select name="status">
-          <option value="">Все статусы</option>
-          {% for value,label in statuses %}<option value="{{ value }}" {% if filters.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
-        </select>
-      </label>
-      <label>Представление
-        <select name="mode">
-          <option value="items" {% if filters.mode == 'items' %}selected{% endif %}>По событиям участников</option>
-          <option value="summary" {% if filters.mode == 'summary' %}selected{% endif %}>Сводка по людям</option>
-        </select>
-      </label>
-      <div class="actions">
-        <button type="submit" name="format" value="xlsx">Скачать XLSX</button>
-        <button type="submit" name="format" value="csv" class="secondary">Скачать CSV</button>
+{% extends "admin/base_site.html" %}{% load static %}
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="{% url 'admin:index' %}">Обзор</a> › Выгрузки Excel</div>{% endblock %}
+{% block content %}
+<div class="export-hub">
+  <p class="export-lead">Скачайте список для работы. Каждый файл содержит данные из базы на момент скачивания.</p>
+  <form method="get" class="export-forum">
+    <label for="export-forum">Форум</label>
+    <select id="export-forum" name="forum">{% for item in forums %}<option value="{{ item.slug }}"{% if item.pk == forum.pk %} selected{% endif %}>{{ item.title }}</option>{% endfor %}</select>
+    <button type="submit" class="button secondary">Показать</button>
+  </form>
+  <div class="export-jump" aria-label="Виды выгрузок">{% if can_register %}<a href="#registration-exports">Регистрации и маршруты ↓</a>{% endif %}{% if can_vote and contest %}<a href="#voting-exports">Онлайн-голосование ↓</a>{% endif %}<a href="{% static 'workspace/excel-exports-guide.pdf' %}" target="_blank" rel="noopener">Инструкция со скриншотами (PDF) ↗</a></div>
+  {% if can_register %}
+  <section class="export-section" id="registration-exports" aria-labelledby="registration-export-title">
+    <header><span class="export-step">01</span><div><h2 id="registration-export-title">Регистрации и маршруты</h2><p>Контакты участников, выбранные мероприятия и текущие статусы записей.</p></div></header>
+    <div class="export-presets">
+      <a class="export-preset" href="{% url 'staff-registration-export' format='xlsx' %}?forum={{ forum.slug|urlencode }}&amp;mode=full"><strong>Общая таблица</strong><span>Все участники, записи на мероприятия, маршруты и статистика на отдельных листах.</span><b>Скачать Excel ↓</b></a>
+      <a class="export-preset" href="{% url 'staff-registration-export' format='xlsx' %}?forum={{ forum.slug|urlencode }}&amp;mode=summary"><strong>Список людей</strong><span>Одна строка на человека: ФИО, контакты и все выбранные события со статусами.</span><b>Скачать Excel ↓</b></a>
+      <a class="export-preset" href="{% url 'staff-registration-export' format='xlsx' %}?forum={{ forum.slug|urlencode }}&amp;mode=routes"><strong>Маршруты и экскурсии</strong><span>Кто записался на каждый маршрут, включая заявки на рассмотрении.</span><b>Скачать Excel ↓</b></a>
+    </div>
+    <form method="get" action="{% url 'staff-registration-export' format='xlsx' %}" class="export-filter" id="registration-export-form">
+      <input type="hidden" name="forum" value="{{ forum.slug }}">
+      <h3>Список по конкретному мероприятию</h3>
+      <p>Оставьте «Все», чтобы выгрузить весь форум. Выбранные фильтры применяются вместе.</p>
+      <div class="export-fields">
+        <label for="export-event">Мероприятие или маршрут<select name="event" id="export-event"><option value="">Все мероприятия</option>{% for event in events %}<option value="{{ event.id }}">{{ event.day.date|date:'d.m.Y' }} · {{ event.start_time|time:'H:i' }} · {{ event.title }}</option>{% endfor %}</select></label>
+        <label for="export-kind">Тип мероприятия<select name="kind" id="export-kind"><option value="">Все типы</option>{% for value,label in kinds %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select></label>
+        <label for="export-status">Статус записи<select name="status" id="export-status"><option value="">Все статусы</option>{% for value,label in statuses %}<option value="{{ value }}">{{ label }}</option>{% endfor %}</select></label>
+        <label for="export-mode">Вид таблицы<select name="mode" id="export-mode"><option value="items">По мероприятиям: строка на запись</option><option value="summary">По людям: строка на человека</option><option value="full">Все листы в одном файле</option></select></label>
       </div>
+      <button class="button" type="submit">Скачать выбранный список в Excel</button>
     </form>
+    <p class="export-note">Без фильтра статуса видны и отменённые, и отклонённые записи. «Почта не подтверждена» - только предварительный выбор, место ещё не забронировано.</p>
   </section>
-</main>
-</body>
-</html>
+  {% endif %}
+  {% if can_vote %}
+  <section class="export-section" id="voting-exports" aria-labelledby="voting-export-title">
+    <header><span class="export-step">02</span><div><h2 id="voting-export-title">Онлайн-голосование конкурса</h2><p>{% if contest %}{{ contest.title }}{% else %}У этого форума пока нет конкурса.{% endif %}</p></div></header>
+    {% if contest %}
+    <div class="export-presets">
+      <a class="export-preset" href="{% url 'staff-voting-export' slug=forum.slug format='xlsx' %}?mode=full"><strong>Все принятые голоса</strong><span>Бюллетени, выбранные проекты и итоги по компаниям на трёх листах.</span><b>Скачать Excel ↓</b></a>
+      <a class="export-preset" href="{% url 'staff-voting-export' slug=forum.slug format='xlsx' %}?mode=choices"><strong>Кто за что проголосовал</strong><span>Одна строка на выбранный проект. Связь по ID бюллетеня, почта - если указана.</span><b>Скачать Excel ↓</b></a>
+      <a class="export-preset" href="{% url 'staff-voting-export' slug=forum.slug format='xlsx' %}?mode=results"><strong>Итоги по проектам</strong><span>Количество принятых голосов за каждую компанию в каждой номинации.</span><b>Скачать Excel ↓</b></a>
+    </div>
+    <form method="get" action="{% url 'staff-voting-export' slug=forum.slug format='xlsx' %}" class="export-filter" id="voting-export-form">
+      <h3>Настроить выгрузку голосования</h3>
+      <div class="export-fields">
+        <label for="vote-nomination">Номинация<select name="nomination" id="vote-nomination"><option value="">Все номинации</option>{% for nomination in contest.nominations.all %}<option value="{{ nomination.id }}">{{ nomination.title }}</option>{% endfor %}</select></label>
+        <label for="vote-status">Статус бюллетеня<select name="status" id="vote-status"><option value="submitted">Только принятые</option><option value="all">Все, включая ожидающие и отменённые</option><option value="pending_email">Ожидают подтверждения почты</option><option value="cancelled">Отменённые</option></select></label>
+        <label for="vote-mode">Вид таблицы<select name="mode" id="vote-mode"><option value="full">Все листы в одном файле</option><option value="ballots">Бюллетени: одна строка на голосование</option><option value="choices">Выбранные проекты: одна строка на выбор</option><option value="results">Итоги по проектам</option></select></label>
+      </div>
+      <button class="button" type="submit">Скачать голосование в Excel</button>
+    </form>
+    <p class="export-note">Голосование без почты анонимное: ФИО, телефонов и почты таких людей в базе нет. Бюллетени всех раундов сохранены; один человек мог проголосовать в нескольких раундах. Итоги считают только принятые голоса.</p>
+    {% endif %}
+  </section>
+  {% endif %}
+  <p class="export-footnote">Файлы не обновляются сами. Для актуального списка скачайте Excel ещё раз. Время в таблицах - томское. Выгрузки доступны по правам сотрудника и записываются в журнал.</p>
+</div>
+{% endblock %}

@@ -89,6 +89,12 @@ class ForumAdminSite(AdminSite):
                                   'active': request.path.startswith(url)})
             if links:
                 navigation.append({'title': title, 'links': links})
+        if request.user.is_authenticated and (request.user.has_perm('registrations.view_registration') or request.user.has_perm('voting.view_contest')):
+            navigation.insert(1, {'title': 'Отчёты', 'links': [{
+                'label': 'Выгрузки Excel', 'url': reverse('registration-export-page'),
+                'description': 'Списки регистраций, маршрутов и голосования из актуальной базы',
+                'active': request.path.startswith('/admin/exports/'),
+            }]})
         if owner:
             navigation.append({'title': 'Команда', 'links': [
                 {'label': 'Сотрудники', 'url': reverse('admin:auth_user_changelist'), 'description': 'Аккаунты, пароли и доступ к панели', 'active': '/auth/user/' in request.path},
@@ -143,5 +149,5 @@ class ForumAdminSite(AdminSite):
             from forums.models import Forum
             extra['workspace_forums'] = Forum.objects.all()[:5]
         extra['workspace_can_checkin'] = request.user.has_perm('registrations.add_checkin')
-        extra['workspace_can_export'] = request.user.has_perm('registrations.view_registration')
+        extra['workspace_can_export'] = request.user.has_perm('registrations.view_registration') or request.user.has_perm('voting.view_contest')
         return super().index(request, extra)
