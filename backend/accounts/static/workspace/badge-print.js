@@ -1,4 +1,4 @@
-const badge = document.querySelector('.badge');
+const badge = document.querySelector('.badge-sheet');
 const badgeName = badge.querySelector('span');
 
 function printBadge() {
@@ -11,5 +11,10 @@ function printBadge() {
   window.print();
 }
 
-document.getElementById('print-badge').addEventListener('click', printBadge);
-window.addEventListener('load', printBadge, { once: true });
+document.querySelectorAll('[data-print-badge]').forEach((control) => {
+  control.addEventListener('click', (event) => {
+    if (typeof window.print !== 'function') return;
+    event.preventDefault();
+    printBadge();
+  });
+});

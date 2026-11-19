@@ -1,0 +1,33 @@
+@page { size: 50mm 70mm; margin: 0; }
+
+.badge-sheet {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50mm;
+  height: 70mm;
+  padding: 0 4mm;
+  background: white;
+  color: black;
+}
+
+.badge-sheet span {
+  flex: none;
+  white-space: nowrap;
+  font-family: 'DejaVu Sans', Arial, sans-serif;
+}
+
+@media screen {
+  .badge-printable .badge-sheet {
+    position: fixed;
+    inset-inline-start: -10000px;
+    visibility: hidden;
+  }
+}
+
+@media print {
+  .badge-printable main, .badge-print-preview .controls { display: none; }
+  .badge-printable, .badge-print-preview { background: white; margin: 0; }
+  .badge-sheet { margin: 0; break-inside: avoid; }
+}

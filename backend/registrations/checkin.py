@@ -13,6 +13,7 @@ from django.views.decorators.http import require_http_methods
 from .models import CheckIn, Ticket
 from .attendance import scope
 from .admission import eligible_items
+from .badges import badge_font_size, badge_name
 
 
 def ticket_code(value):
@@ -97,6 +98,10 @@ def ticket_detail(request, public_id):
                 messages.warning(request, 'Прибытие уже отмечено другим сотрудником.')
         return redirect('/admin/check-in/' + str(public_id) + '/?' + context['scope_query'])
     registration = ticket.registration
+    checkin = None
+    if registration.participant.forum_id == context['forum'].id:
+        checkin = ticket.checkins.filter(event=event).select_related('admin_user').first()
+    name = badge_name(registration.participant) if checkin else ''
     return render(request, 'registrations/checkin.html', {
         **context,
         'can_admit': valid,
@@ -106,6 +111,8 @@ def ticket_detail(request, public_id):
         'registration': registration,
         'participant': registration.participant,
         'items': registration.items.select_related('event__day').prefetch_related('lot_links__lot'),
-        'checkin': ticket.checkins.filter(event=event).select_related('admin_user').first(),
+        'checkin': checkin,
+        'badge_name': name,
+        'badge_font_size': badge_font_size(name) if checkin else None,
         'title': 'Билет участника',
     })

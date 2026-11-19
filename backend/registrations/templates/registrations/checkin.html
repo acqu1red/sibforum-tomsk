@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ title }}</title>
+  {% if checkin %}<link rel="stylesheet" href="{% static 'workspace/badge-sheet.css' %}">{% endif %}
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; background: #f5f6fb; color: #0e1330; font: 16px/1.5 system-ui, sans-serif; }
@@ -26,15 +27,35 @@
     #camera-status { min-height: 24px; }
     .desk-nav {display:flex;justify-content:space-between;gap:16px;margin-bottom:24px;align-items:center}.desk-nav a{color:#3146ad;text-underline-offset:4px}.desk-nav b{color:#071466}.camera-actions{display:flex;gap:12px;flex-wrap:wrap}.file-button{display:inline-flex;align-items:center;min-height:48px;padding:12px 20px;margin-top:12px;border:1px solid #cad2e7;border-radius:8px;cursor:pointer;color:#3146ad;font-weight:650;background:#f5f7fc}.file-button input{position:absolute;width:1px;height:1px;opacity:0;min-height:0;padding:0}.file-button:focus-within{outline:3px solid #00aeea;outline-offset:3px}.desk-result{display:block;padding:14px 0;border-top:1px solid #d9dceb;color:#142b47;text-decoration:none}.desk-result b,.desk-result span{display:block}.desk-result small{color:#4a5070}.desk-back{color:#3146ad}.desk-person-name{font-size:clamp(24px,5vw,38px);line-height:1.25;overflow-wrap:anywhere}.desk-invalid{background:#fff0ee;border-color:#f0c6c0}.desk-confirm{width:100%;min-height:58px;font-size:18px}.desk-preview{border:1px dashed #cad2e7;border-radius:8px;background:#f8faff;padding:14px}.desk-preview a{color:#3146ad;margin-right:16px}#camera-upload-status{font-size:14px}.desk-number{font-weight:700;letter-spacing:1px;color:#3146ad}.camera-note{font-size:13px;color:#5f6f88}
   </style>
+  <style>
+    .desk-scope { margin-bottom: 16px; }
+    .desk-scope summary { color: #33419e; cursor: pointer; font-weight: 650; padding: 8px 0; }
+    .desk-scope form { margin-top: 8px; }
+    .desk-admitted { display: flex; gap: 10px; align-items: baseline; border-radius: 8px; }
+    .desk-admitted small { display: block; }
+    .badge-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .badge-actions .button { margin: 0; text-align: center; }
+    .desk-next { background: transparent; color: #33419e; padding-inline: 0; }
+    @media (max-width: 540px) {
+      main { margin: 0 auto; padding: 16px; }
+      section { padding: 16px; }
+      .desk-nav { gap: 8px; margin-bottom: 16px; flex-wrap: wrap; font-size: 14px; }
+      .badge-actions { display: grid; grid-template-columns: minmax(0, 1fr); }
+    }
+  </style>
 </head>
-<body>
+<body{% if checkin %} class="badge-printable"{% endif %}>
 <main>
   <nav class="desk-nav"><b>Сибирский форум</b><a href="/admin/">Мой кабинет</a><form method="post" action="/admin/logout/">{% csrf_token %}<button type="submit" class="secondary" style="margin:0;padding:8px 14px">Выйти</button></form></nav>
   <h1>{{ title }}</h1>
   {% if perms.registrations.export_checkin %}<p><a class="button secondary" href="/admin/attendance/?{{ scope_query }}">Посещаемость и Excel</a></p>{% endif %}
-  {% if forum %}<section><form method="get"><input type="hidden" name="forum" value="{{ forum.slug }}"><label for="gate-event">Что подтверждаем</label><select id="gate-event" name="event" style="width:100%;min-height:48px;font:inherit"><option value="">Общий вход на форум</option>{% for e in events %}<option value="{{ e.id }}" {% if selected_event.id == e.id %}selected{% endif %}>{{ e.day.date|date:'d.m' }} {{ e.start_time|time:'H:i' }} — {{ e.title }}</option>{% endfor %}</select><button class="secondary">Выбрать мероприятие</button></form><p class="muted">Сканирование только открывает билет. Приход записывается после кнопки «Пропустить участника».</p></section>{% endif %}
+  {% if forum %}
+    {% if scanner %}<section>{% else %}<details class="desk-scope"><summary>Вход: {{ selected_event.title|default:'Общий вход на форум' }}</summary>{% endif %}
+    <form method="get"><input type="hidden" name="forum" value="{{ forum.slug }}"><label for="gate-event">Что подтверждаем</label><select id="gate-event" name="event" style="width:100%;min-height:48px;font:inherit"><option value="">Общий вход на форум</option>{% for e in events %}<option value="{{ e.id }}" {% if selected_event.id == e.id %}selected{% endif %}>{{ e.day.date|date:'d.m' }} {{ e.start_time|time:'H:i' }} — {{ e.title }}</option>{% endfor %}</select><button class="secondary">Выбрать мероприятие</button></form>
+    {% if scanner %}<p class="muted">Сканирование только открывает билет. Приход записывается после кнопки «Пропустить участника».</p></section>{% else %}</details>{% endif %}
+  {% endif %}
   {% if messages %}
-    {% for message in messages %}<p class="{{ message.tags }}">{{ message }}</p>{% endfor %}
+    {% for message in messages %}{% if not checkin or message.tags != 'success' %}<p class="{{ message.tags }}">{{ message }}</p>{% endif %}{% endfor %}
   {% endif %}
   {% if scanner %}
     <section>
@@ -67,9 +88,9 @@
       <p class="desk-number">Билет {{ ticket.public_id|stringformat:'s'|slice:':8'|upper }}</p>
       {% if can_download_ticket %}<div class="desk-preview"><a href="/api/v1/tickets/{{ ticket.public_id }}/ticket.pdf">Скачать PDF-билет</a><a href="/api/v1/tickets/{{ ticket.public_id }}/qr.png" target="_blank" rel="noopener">Открыть QR</a></div>{% endif %}
       {% if checkin %}
-        <p class="success"><b>Прибытие отмечено:</b> {{ checkin.created_at|date:'d.m.Y H:i' }} · {{ checkin.admin_user.get_username }}</p>
-        <div class="camera-actions" aria-label="Бейдж 50 × 70 мм">
-          <a class="button" href="{% url 'check-in-badge' ticket.public_id %}?{{ scope_query }}&amp;print=1" target="_blank" rel="noopener">Напечатать бейдж</a>
+        <p class="success desk-admitted"><span aria-hidden="true">✓</span><span><strong>Участник пропущен</strong><small>{{ checkin.created_at|date:'d.m.Y H:i' }} · {{ checkin.admin_user.get_username }}</small></span></p>
+        <div class="badge-actions" aria-label="Бейдж 50 × 70 мм">
+          <a class="button" data-print-badge href="{% url 'check-in-badge' ticket.public_id %}?{{ scope_query }}&amp;print=1">Напечатать бейдж</a>
           <a class="button secondary" href="{% url 'check-in-badge' ticket.public_id %}?{{ scope_query }}">Скачать PDF 50 × 70 мм</a>
         </div>
       {% elif can_admit %}
@@ -80,7 +101,7 @@
         </form>
       {% else %}<p class="error">Для выбранного входа допуск не подтверждён. Проверьте решение модератора и оплату.</p>
       {% endif %}
-      <a class="button secondary" href="/admin/check-in/?{{ scope_query }}">Сканировать следующий</a>
+      <a class="button desk-next" href="/admin/check-in/?{{ scope_query }}">Сканировать следующий</a>
     </section>
     <section>
       <h2>События</h2>
@@ -97,5 +118,9 @@
   {% endif %}
 </main>
 {% if scanner %}<script src="{% static 'workspace/checkin.js' %}?v=3" defer></script>{% endif %}
+{% if checkin %}
+  {% include 'registrations/badge_sheet.html' with name=badge_name font_size=badge_font_size only %}
+  <script src="{% static 'workspace/badge-print.js' %}?v=2" defer></script>
+{% endif %}
 </body>
 </html>
