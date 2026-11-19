@@ -179,7 +179,7 @@
   function organizerHtml(organizer, roleLabel) {
     if (!organizer) return '';
     var image = window.forumContent.safeLink(organizer.image), url = window.forumContent.safeLink(organizer.website_url);
-    return '<aside class="promtour-event-organizer' + (organizer.background === 'dark' ? ' promtour-logo-dark' : '') + '" data-edit="logo:' + esc(organizer.id) + '"><span>' + esc(roleLabel || 'Организатор мероприятия') + '</span><div>' +
+    return '<aside class="promtour-event-organizer' + (organizer.background === 'dark' ? ' promtour-logo-dark' : '') + '" data-edit="logo:' + esc(organizer.id) + '"><span>' + esc(roleLabel || 'Организатор') + '</span><div>' +
       (image ? '<img src="' + esc(image) + '" alt="' + esc(organizer.name) + '" width="160" height="80" loading="lazy">' : '') +
       (organizer.show_name === false && image ? '' : '<b class="promtour-logo-caption">' + esc(organizer.name) + '</b>') +
       (url ? '<a href="' + esc(url) + '" target="_blank" rel="noopener">Сайт организации ↗</a>' : '') + '</div></aside>';

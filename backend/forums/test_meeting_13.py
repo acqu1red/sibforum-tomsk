@@ -39,11 +39,11 @@ class Meeting13Tests(TestCase):
         self.assertTrue(event['has_details'])
         self.assertEqual(event['organizer']['name'], 'Компания')
         self.assertFalse(event['organizer']['show_name'])
-        self.assertEqual(event['organizer_role_label'], 'Организатор мероприятия')
+        self.assertEqual(event['organizer_role_label'], 'Организатор')
         self.assertEqual(payload['speakers'], [])
         self.event.organizer_role = Event.OrganizerRole.CO_ORGANIZER
         self.event.save(update_fields=('organizer_role',))
-        self.assertEqual(self.program()['days'][0]['events'][0]['organizer_role_label'], 'Соорганизатор мероприятия')
+        self.assertEqual(self.program()['days'][0]['events'][0]['organizer_role_label'], 'Соорганизатор')
         self.company.is_published = False
         self.company.save()
         event = self.program()['days'][0]['events'][0]

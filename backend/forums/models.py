@@ -117,13 +117,13 @@ class Event(TimeStampedModel):
         DETAIL = 'detail', 'Подробное представление'
 
     class OrganizerRole(models.TextChoices):
-        ORGANIZER = 'organizer', 'Организатор мероприятия'
-        CO_ORGANIZER = 'co_organizer', 'Соорганизатор мероприятия'
+        ORGANIZER = 'organizer', 'Организатор'
+        CO_ORGANIZER = 'co_organizer', 'Соорганизатор'
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name='Идентификатор')
     day = models.ForeignKey(EventDay, on_delete=models.CASCADE, related_name='events', verbose_name='День программы')
     venue = models.ForeignKey(Venue, on_delete=models.PROTECT, related_name='events', null=True, blank=True, verbose_name='Площадка')
-    organizer = models.ForeignKey('OrganizationLogo', on_delete=models.SET_NULL, related_name='events', null=True, blank=True, verbose_name='Организатор мероприятия', help_text='Компания с логотипом внутри события. Она не добавляется в раздел «Люди форума».')
+    organizer = models.ForeignKey('OrganizationLogo', on_delete=models.SET_NULL, related_name='events', null=True, blank=True, verbose_name='Организатор', help_text='Компания с логотипом внутри события. Она не добавляется в раздел «Люди форума».')
     organizer_role = models.CharField(max_length=20, choices=OrganizerRole.choices, default=OrganizerRole.ORGANIZER, verbose_name='Роль организации')
     kind = models.CharField(max_length=20, choices=Kind.choices, default=Kind.OTHER, verbose_name='Тип')
     title = models.CharField(max_length=300, verbose_name='Название')
