@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import assistance, checkin, exports, attendance
+from . import assistance, badges, checkin, exports, attendance
 from voting.exports import voting_export
 
 urlpatterns = [
@@ -13,5 +13,6 @@ urlpatterns = [
     path('exports/registrations.<str:format>', exports.registration_export, name='staff-registration-export'),
     path('exports/voting/<slug:slug>.<str:format>', voting_export, name='staff-voting-export'),
     path('check-in/', checkin.scanner, name='check-in-scanner'),
+    path('check-in/<uuid:public_id>/badge.pdf', badges.attendee_badge, name='check-in-badge'),
     path('check-in/<uuid:public_id>/', checkin.ticket_detail, name='check-in-ticket'),
 ]

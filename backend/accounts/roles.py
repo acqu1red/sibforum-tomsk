@@ -13,7 +13,7 @@ ROLE_CHOICES = (
 
 LIMITED_PERMISSIONS = {
     'checkin': ('add_checkin', 'export_checkin'),
-    'moderator': ('view_participant', 'view_registration', 'view_registrationitem',
+    'moderator': ('add_checkin', 'view_participant', 'view_registration', 'view_registrationitem',
                   'change_registrationitem', 'view_registrationitemhistory', 'confirm_payment'),
 }
 

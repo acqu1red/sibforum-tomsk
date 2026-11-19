@@ -29,16 +29,6 @@ def confirm_payment(item, actor, note):
     item.payment_status = RegistrationItem.PaymentStatus.CONFIRMED
 
 
-def payment_attachments(notification):
-    if notification.kind != 'payment_request':
-        return []
-    instruction = PaymentInstruction.objects.filter(id=notification.payload.get('payment_instruction')).first()
-    if not instruction:
-        raise ValueError('Платёжный QR не найден: письмо не отправлено')
-    return [('payment-qr.pdf', bytes(instruction.pdf_bytes), 'application/pdf'),
-            ('payment-qr.png', bytes(instruction.qr_png), 'image/png')]
-
-
 def send_payment_request(item, actor):
     from .workflow import queue_notification, decision_personal_url
     from .selection import add_history

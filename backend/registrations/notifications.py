@@ -1,16 +1,18 @@
 import re
 import uuid
 from datetime import date
+from email.mime.image import MIMEImage
+from html import escape
 
 from django.conf import settings
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.core.mail.message import SafeMIMEMultipart
 from django.db import transaction
 from django.db.models import Q
 from django.utils import timezone
 
-from .models import NotificationOutbox, RegistrationItem
+from .models import NotificationOutbox, PaymentInstruction, RegistrationItem
 from .tickets import ticket_email_attachments
-from .payments import payment_attachments
 
 STATUS_LABELS = {
     'confirmed': 'подтверждено',
@@ -82,7 +84,7 @@ def message_content(notification):
         subject = 'Заявка одобрена — оплатите участие в экскурсии'
         lines = ['Здравствуйте!', '', 'Ваша заявка подтверждена модератором. Просим оплатить участие в экскурсии.',
                  '', 'Экскурсия: ' + payload.get('event', ''), 'Стоимость: ' + str(payload.get('payment_amount', '')) + ' ₽.',
-                 'QR-код для оплаты прилагается во вложении (PDF и PNG).',
+                 'QR-код для оплаты прикреплён к письму и показан ниже.',
                  '', 'После оплаты вышлите квитанцию на e-mail: ndv@tomsktpp.ru',
                  'Входной билет с QR-кодом будет отправлен после проверки оплаты модератором.',
                  '', 'Ваша заявка: ' + payload.get('personal_url', '')]
@@ -172,23 +174,56 @@ def process_one(now=None):
                 notification.last_error = 'Решение или оплата изменились; устаревшее письмо не отправлено.'
                 notification.save()
                 return 'cancelled'
-            return deliver_notification(notification)
+            return deliver_notification(notification, payment_item=item if expected == 'awaiting' else None)
     return deliver_notification(notification)
 
 
-def deliver_notification(notification):
+class PaymentRequestEmail(EmailMultiAlternatives):
+    def __init__(self, *, qr_png, **kwargs):
+        super().__init__(**kwargs)
+        self.qr_png = qr_png
+        self.qr_content_id = f'payment-qr-{uuid.uuid4()}@siberianforum.local'
+        body = '<br>'.join(escape(line) for line in self.body.split('\n'))
+        self.attach_alternative(
+            f'<html lang="ru"><body><p>{body}</p>'
+            f'<p><img src="cid:{self.qr_content_id}" width="200" height="200" '
+            'style="padding:12px;background-color:#ffffff;image-rendering:pixelated" '
+            'alt="QR-код для оплаты экскурсии"></p></body></html>',
+            'text/html',
+        )
+        self.attach('payment-qr.png', qr_png, 'image/png')
+
+    def _create_alternatives(self, msg):
+        # Keep the inline image related to the HTML body, separate from the file attachment.
+        related = SafeMIMEMultipart(_subtype='related', encoding=self.encoding or settings.DEFAULT_CHARSET)
+        related.attach(super()._create_alternatives(msg))
+        inline = MIMEImage(self.qr_png, _subtype='png')
+        inline.add_header('Content-ID', f'<{self.qr_content_id}>')
+        inline.add_header('Content-Disposition', 'inline')
+        related.attach(inline)
+        return related
+
+
+def deliver_notification(notification, payment_item=None):
     message_id = f'<{notification.id}@siberianforum.local>'
     try:
         subject, body = message_content(notification)
-        message = EmailMessage(
+        email_fields = dict(
             subject=subject,
             body=body,
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[notification.recipient],
             headers={'Message-ID': message_id},
         )
-        for filename, content, mimetype in payment_attachments(notification):
-            message.attach(filename, content, mimetype)
+        instruction = None
+        if payment_item is not None:
+            forum_id = payment_item.registration.participant.forum_id
+            instruction = PaymentInstruction.objects.filter(forum_id=forum_id).first()
+            if not instruction:
+                raise ValueError('Платёжный QR не найден: письмо не отправлено')
+            message = PaymentRequestEmail(qr_png=bytes(instruction.qr_png), **email_fields)
+        else:
+            message = EmailMessage(**email_fields)
         if notification.registration and notification.kind in ('registration_summary', 'moderation_decision', 'payment_confirmed'):
             for filename, content, mimetype in ticket_email_attachments(notification.registration):
                 message.attach(filename, content, mimetype)
@@ -206,6 +241,10 @@ def deliver_notification(notification):
         return notification.status
 
     payload = dict(notification.payload)
+    if instruction is not None:
+        payment_item.payment_instruction_id = instruction.pk
+        payment_item.save(update_fields=('payment_instruction',))
+        payload['payment_instruction'] = str(instruction.pk)
     payload.pop('code', None)
     payload.pop('personal_url', None)
     notification.payload = payload

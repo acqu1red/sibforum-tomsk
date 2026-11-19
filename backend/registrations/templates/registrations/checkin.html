@@ -68,6 +68,10 @@
       {% if can_download_ticket %}<div class="desk-preview"><a href="/api/v1/tickets/{{ ticket.public_id }}/ticket.pdf">Скачать PDF-билет</a><a href="/api/v1/tickets/{{ ticket.public_id }}/qr.png" target="_blank" rel="noopener">Открыть QR</a></div>{% endif %}
       {% if checkin %}
         <p class="success"><b>Прибытие отмечено:</b> {{ checkin.created_at|date:'d.m.Y H:i' }} · {{ checkin.admin_user.get_username }}</p>
+        <div class="camera-actions" aria-label="Бейдж 50 × 70 мм">
+          <a class="button" href="{% url 'check-in-badge' ticket.public_id %}?{{ scope_query }}&amp;print=1" target="_blank" rel="noopener">Напечатать бейдж</a>
+          <a class="button secondary" href="{% url 'check-in-badge' ticket.public_id %}?{{ scope_query }}">Скачать PDF 50 × 70 мм</a>
+        </div>
       {% elif can_admit %}
         <form method="post"><input type="hidden" name="forum" value="{{ forum.slug }}"><input type="hidden" name="event" value="{{ selected_event.id|default:'' }}">
           {% csrf_token %}

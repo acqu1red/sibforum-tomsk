@@ -1,0 +1,31 @@
+{% load static l10n %}<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Печать бейджа</title>
+  <style>
+    @page { size: 50mm 70mm; margin: 0; }
+    body { font: 16px system-ui, sans-serif; margin: 0; background: #f5f6fb; color: #0e1330; }
+    .controls { text-align: center; padding: 20px; }
+    .controls button, .controls a { font: inherit; padding: 10px 14px; }
+    .badge { box-sizing: border-box; display: flex; align-items: center; justify-content: center;
+      margin: 0 auto; width: 50mm; height: 70mm; padding: 0 4mm; background: #fff; color: #000; }
+    .badge span { flex: none; white-space: nowrap; font-family: 'DejaVu Sans', Arial, sans-serif; }
+    @media print {
+      body { background: #fff; }
+      .controls { display: none; }
+      .badge { margin: 0; }
+    }
+  </style>
+  <script src="{% static 'workspace/badge-print.js' %}" defer></script>
+</head>
+<body>
+  <div class="controls">
+    <button type="button" id="print-badge">Печать</button>
+    <a href="?{{ scope_query }}">Скачать PDF</a>
+    <p>Бумага 50 × 70 мм, масштаб 100%, без полей и колонтитулов.</p>
+  </div>
+  <div class="badge"><span style="font-size: {{ font_size|unlocalize }}pt">{{ name }}</span></div>
+</body>
+</html>

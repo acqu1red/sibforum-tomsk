@@ -4,7 +4,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.test import TestCase, override_settings
 from django.utils import timezone
+import fitz
 
+from accounts.roles import assign_role
 from forums.models import Forum, EventDay, Event
 from .models import Participant, Registration, RegistrationItem, Ticket, CheckIn
 
@@ -53,3 +55,38 @@ class CheckinDeskTests(TestCase):
         self.client.force_login(self.editor)
         self.assertEqual(self.client.get('/admin/check-in/', HTTP_HOST='admin.localhost').status_code, 403)
         self.assertEqual(self.client.get(f'/api/v1/tickets/{self.ticket.public_id}/qr.png', HTTP_HOST='admin.localhost').status_code, 404)
+
+    def test_badge_is_available_only_after_arrival_in_the_selected_scope(self):
+        self.client.force_login(self.user)
+        ticket = f'/admin/check-in/{self.ticket.public_id}/'
+        badge = ticket + 'badge.pdf'
+        event = self.registration.items.get().event_id
+        self.assertEqual(self.client.get(badge, HTTP_HOST='admin.localhost').status_code, 404)
+        self.client.post(ticket, {'action': 'confirm', 'event': event}, HTTP_HOST='admin.localhost')
+        self.assertEqual(self.client.get(badge, HTTP_HOST='admin.localhost').status_code, 404)
+
+        badge += f'?event={event}'
+        response = self.client.get(badge, HTTP_HOST='admin.localhost')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/pdf')
+        self.assertIn('attachment', response['Content-Disposition'])
+        self.assertIn('no-store', response['Cache-Control'])
+        with fitz.open(stream=response.content, filetype='pdf') as pdf:
+            self.assertEqual(len(pdf), 1)
+            page = pdf[0]
+            self.assertAlmostEqual(page.rect.width / 72 * 25.4, 50, places=3)
+            self.assertAlmostEqual(page.rect.height / 72 * 25.4, 70, places=3)
+            self.assertEqual(page.get_text().splitlines(), ['Иван Иванов'])
+
+        moderator = get_user_model().objects.create_user('badge-moderator', is_staff=True)
+        assign_role(moderator, 'moderator')
+        self.client.force_login(moderator)
+        self.assertContains(self.client.get(ticket + f'?event={event}', HTTP_HOST='admin.localhost'), 'Напечатать бейдж')
+        print_view = self.client.get(badge + '&print=1', HTTP_HOST='admin.localhost')
+        self.assertContains(print_view, 'size: 50mm 70mm')
+        self.assertContains(print_view, 'Иван Иванов')
+        self.assertNotContains(print_view, 'Иванович')
+        self.assertEqual(CheckIn.objects.count(), 1)
+
+        self.client.force_login(self.editor)
+        self.assertEqual(self.client.get(badge, HTTP_HOST='admin.localhost').status_code, 403)

@@ -1,4 +1,6 @@
 from datetime import time
+from email import policy
+from email.parser import BytesParser
 from hashlib import sha256
 from io import BytesIO
 from unittest.mock import patch
@@ -59,10 +61,30 @@ class PaymentsAttendanceTests(TestCase):
             self.assertEqual(process_one(), 'sent')
         self.assertEqual(len(mail.outbox), 1)
         self.assertIn('ndv@tomsktpp.ru', mail.outbox[0].body)
-        self.assertEqual([a.filename for a in mail.outbox[0].attachments], ['payment-qr.pdf', 'payment-qr.png'])
-        self.assertEqual(mail.outbox[0].attachments[0].content, bytes(self.asset.pdf_bytes))
+        message = BytesParser(policy=policy.default).parsebytes(mail.outbox[0].message().as_bytes())
+        attachment, = message.iter_attachments()
+        self.assertEqual(attachment.get_filename(), 'payment-qr.png')
+        inline, = [part for part in message.walk() if part.get_content_disposition() == 'inline']
+        self.assertEqual(attachment.get_payload(decode=True), bytes(self.asset.qr_png))
+        self.assertEqual(inline.get_payload(decode=True), bytes(self.asset.qr_png))
+        self.assertIn('cid:' + inline['Content-ID'].strip('<>'), message.get_body(('html',)).get_content())
+        self.assertIn('ndv@tomsktpp.ru', message.get_body(('plain',)).get_content())
         with self.assertRaises(RegistrationError): self.approve()
         self.assertEqual(NotificationOutbox.objects.count(), 1)
+
+    def test_queued_payment_uses_replacement_qr_and_records_the_sent_version(self):
+        item = self.approve()
+        image = BytesIO()
+        Image.new('RGB', (21, 21), 'black').save(image, format='PNG')
+        replacement = PaymentInstruction.objects.create(
+            forum=self.forum, source_filename='replacement.pdf', pdf_bytes=b'%PDF-replacement',
+            qr_png=image.getvalue(), pdf_sha256=sha256(b'%PDF-replacement').hexdigest(),
+        )
+        self.assertEqual(process_one(), 'sent')
+        self.assertEqual(mail.outbox[0].attachments[0].content, image.getvalue())
+        item.refresh_from_db()
+        self.assertEqual(item.payment_instruction_id, replacement.pk)
+        self.assertEqual(NotificationOutbox.objects.get().payload['payment_instruction'], str(replacement.pk))
 
     def test_receipt_confirmation_issues_ticket_and_is_single(self):
         item = self.approve(); process_one()
