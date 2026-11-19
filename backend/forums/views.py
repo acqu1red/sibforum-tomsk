@@ -80,6 +80,7 @@ def event_payload(event):
         'contact_name': event.contact_name,
         'contact_phone': event.contact_phone,
         'organizer': organization_payload(event.organizer) if event.organizer_id and event.organizer.is_published else None,
+        'organizer_role_label': event.get_organizer_role_display(),
         'venue': venue_payload(event.venue) if event.venue and event.venue.is_published else None,
         'speakers': [
             {

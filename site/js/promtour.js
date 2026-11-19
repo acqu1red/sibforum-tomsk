@@ -165,6 +165,7 @@
           annotation: annotation,
           description: event.has_details ? event.description : '',
           organizer: event.has_details ? event.organizer : null,
+          organizerRoleLabel: event.organizer_role_label,
           venue: event.venue ? event.venue.name + ' · ' + event.venue.address : '',
           speakers: event.speakers || (fallback ? fallback.speakerIds : []),
           extra: (anchor ? '<a class="link-arrow" href="#' + esc(anchor[0]) + '">' + esc(anchor[1]) + ' <span aria-hidden="true">→</span></a>' : '') + externalLink
@@ -175,10 +176,10 @@
     });
   }
 
-  function organizerHtml(organizer) {
+  function organizerHtml(organizer, roleLabel) {
     if (!organizer) return '';
     var image = window.forumContent.safeLink(organizer.image), url = window.forumContent.safeLink(organizer.website_url);
-    return '<aside class="promtour-event-organizer' + (organizer.background === 'dark' ? ' promtour-logo-dark' : '') + '" data-edit="logo:' + esc(organizer.id) + '"><span>Организатор мероприятия</span><div>' +
+    return '<aside class="promtour-event-organizer' + (organizer.background === 'dark' ? ' promtour-logo-dark' : '') + '" data-edit="logo:' + esc(organizer.id) + '"><span>' + esc(roleLabel || 'Организатор мероприятия') + '</span><div>' +
       (image ? '<img src="' + esc(image) + '" alt="' + esc(organizer.name) + '" width="160" height="80" loading="lazy">' : '') +
       (organizer.show_name === false && image ? '' : '<b class="promtour-logo-caption">' + esc(organizer.name) + '</b>') +
       (url ? '<a href="' + esc(url) + '" target="_blank" rel="noopener">Сайт организации ↗</a>' : '') + '</div></aside>';
@@ -189,7 +190,7 @@
       return '<section class="promtour-day"><div class="promtour-day-head"><div><h3>' + esc(day.title) + '</h3><p>' + esc(day.date) + '</p></div>' +
         (day.venue ? '<p class="promtour-day-venue">' + esc(day.venue) + '</p>' : '') + '</div>' +
         '<div class="promtour-timeline">' + day.events.map(function (event) {
-          var extra = speakerButtons(event.speakers || event.speakerIds) + (event.description ? '<p>' + esc(event.description) + '</p>' : '') + organizerHtml(event.organizer) + (event.extra || '');
+          var extra = speakerButtons(event.speakers || event.speakerIds) + (event.description ? '<p>' + esc(event.description) + '</p>' : '') + organizerHtml(event.organizer, event.organizerRoleLabel) + (event.extra || '');
           if (event.anchor && event.anchor !== 'speakers') extra += '<a class="link-arrow" href="#' + esc(event.anchor) + '">' + esc(event.anchorLabel) + ' <span aria-hidden="true">→</span></a>';
           if (event.externalUrl) extra += '<p class="promtour-event-meta">Ссылка на страницу внешней регистрации уточняется организатором.</p>';
           return '<article class="promtour-event" data-edit="event:' + esc(event.editorId || event.id) + '" id="event-' + esc(event.id) + '">' +

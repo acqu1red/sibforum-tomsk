@@ -33,7 +33,7 @@ SPECS = {
  'section': (PageSection, 'forum', 'Тексты разделов', ['heading', 'eyebrow', 'body', 'note', 'action_label', 'action_url', 'is_published']),
  'interface': (InterfaceText, 'forum', 'Подписи и пояснения', ['value']),
  'speaker': (Speaker, 'forum', 'Спикеры', ['full_name', 'short_name', 'short_position', 'credentials', 'topic', 'photo', 'position', 'is_published']),
- 'event': (Event, 'day__forum', 'Программа и маршруты', ['title', 'day', 'start_time', 'end_time', 'venue', 'annotation', 'description', 'contact_name', 'contact_phone', 'organizer', 'is_published', 'position', 'registration_policy', 'external_url', 'is_paid', 'price', 'payment_note', 'capacity_target', 'curator_email', 'min_lot_selections', 'max_lot_selections', 'detail_mode']),
+ 'event': (Event, 'day__forum', 'Программа и маршруты', ['title', 'day', 'start_time', 'end_time', 'venue', 'annotation', 'description', 'contact_name', 'contact_phone', 'organizer', 'organizer_role', 'is_published', 'position', 'registration_policy', 'external_url', 'is_paid', 'price', 'payment_note', 'capacity_target', 'curator_email', 'min_lot_selections', 'max_lot_selections', 'detail_mode']),
  'day': (EventDay, 'forum', 'Дни программы', ['title', 'date', 'position']),
  'venue': (Venue, 'forum', 'Площадки', ['name', 'address', 'map_url', 'position', 'is_published']),
  'contact': (ContactCard, 'forum', 'Контакты', ['placement', 'title', 'venue', 'subtitle', 'body', 'person_name', 'phone', 'email', 'link_label', 'link_url', 'position', 'is_published']),
@@ -248,7 +248,7 @@ def edit_object(request, kind, object_id):
                 message = 'Проверьте выделенные поля. Изменения пока не сохранены.'
         model = type(obj)
         basic = {
-            'event': {'title', 'day', 'start_time', 'end_time', 'venue', 'annotation', 'description', 'contact_name', 'contact_phone', 'organizer', 'is_published'},
+            'event': {'title', 'day', 'start_time', 'end_time', 'venue', 'annotation', 'description', 'contact_name', 'contact_phone', 'organizer', 'organizer_role', 'is_published'},
             'speaker': {'full_name', 'short_name', 'short_position', 'credentials', 'topic', 'photo', 'is_published'},
             'contest': {'title', 'description', 'rules_text', 'is_open'},
         }.get(kind)
