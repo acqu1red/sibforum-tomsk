@@ -50,7 +50,7 @@ def badge_lines(participant):
     if BADGE_ORGANIZATION_FONT not in pdfmetrics.getRegisteredFontNames():
         pdfmetrics.registerFont(TTFont(BADGE_ORGANIZATION_FONT, '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'))
 
-    surname = ' '.join(participant.last_name.split()).upper()
+    surname = ' '.join(participant.last_name.split()).title()
     first_name = ' '.join(participant.first_name.split()).title()
     lines = []
     organization = ' '.join(participant.organization.split())
@@ -66,11 +66,11 @@ def badge_lines(participant):
         lines.extend(BadgeLine(line, size, bold=False) for line in words)
 
     name_spacing = 4 * mm if lines else 0
-    names = [name for name in (surname, first_name) if name]
+    names = [name for name in (first_name, surname) if name]
     combined = fit_badge_line(' '.join(names), 36, name_spacing)
     if len(names) == 2 and combined.size < 26:
-        lines.append(fit_badge_line(surname, 37, name_spacing))
-        lines.append(fit_badge_line(first_name, 31, 1.5 * mm))
+        lines.append(fit_badge_line(first_name, 31, name_spacing))
+        lines.append(fit_badge_line(surname, 37, 1.5 * mm))
     elif names:
         lines.append(combined)
     return lines

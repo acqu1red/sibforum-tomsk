@@ -22,7 +22,7 @@ class CheckinDeskTests(TestCase):
     def setUpTestData(cls):
         now = timezone.now()
         forum = Forum.objects.create(slug='promtour', title='Форум', starts_at=now, ends_at=now+timezone.timedelta(days=1))
-        person = Participant.objects.create(forum=forum, first_name='Иван', last_name='Иванов', middle_name='Иванович',
+        person = Participant.objects.create(forum=forum, first_name='иВАН', last_name='ИВАНОВ', middle_name='Иванович',
             email='test@example.org', phone='79991234567', organization='Предприятие', position='Директор', category='business')
         cls.registration = Registration.objects.create(participant=person)
         day = EventDay.objects.create(forum=forum, date=now.date())
@@ -82,7 +82,7 @@ class CheckinDeskTests(TestCase):
             self.assertAlmostEqual(page.rect.height / 72 * 25.4, 50, places=3)
             rendered_lines = page.get_text().splitlines()
             self.assertEqual(rendered_lines[0], 'Предприятие')
-            self.assertEqual(' '.join(rendered_lines[1:]), 'ИВАНОВ Иван')
+            self.assertEqual(' '.join(rendered_lines[1:]), 'Иван Иванов')
             spans = [line['spans'][0] for block in page.get_text('dict')['blocks'] for line in block['lines']]
             self.assertNotIn('Bold', spans[0]['font'])
             for span in spans[1:]:
@@ -103,7 +103,9 @@ class CheckinDeskTests(TestCase):
         self.assertContains(card, 'Скачать Word')
         print_view = self.client.get(badge + '&print=1', HTTP_HOST='admin.localhost')
         self.assertContains(print_view, 'workspace/badge-sheet.css')
-        self.assertContains(print_view, 'ИВАНОВ')
+        self.assertContains(print_view, '>Иван</span>')
+        self.assertContains(print_view, '>Иванов</span>')
+        self.assertLess(print_view.content.index('>Иван</span>'.encode()), print_view.content.index('>Иванов</span>'.encode()))
         self.assertContains(print_view, 'Предприятие')
         self.assertNotContains(print_view, 'Иванович')
         word_url = ticket + f'badge.docx?event={event.id}'
@@ -120,7 +122,7 @@ class CheckinDeskTests(TestCase):
         self.assertEqual(page_size.get(f'{{{WORD_NAMESPACE}}}h'), '2835')
         runs = document.findall('.//w:r', ns)
         self.assertEqual(runs[0].find('w:t', ns).text, 'Предприятие')
-        self.assertEqual(' '.join(run.find('w:t', ns).text for run in runs[1:]), 'ИВАНОВ Иван')
+        self.assertEqual(' '.join(run.find('w:t', ns).text for run in runs[1:]), 'Иван Иванов')
         self.assertTrue(all(run.find('w:rPr/w:b', ns) is not None for run in runs[1:]))
         self.assertFalse(CheckIn.objects.exists())
         self.client.post(ticket, {'action': 'confirm', 'event': event.id}, HTTP_HOST='admin.localhost')
