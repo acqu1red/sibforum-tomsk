@@ -4,7 +4,6 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 2mm;
   align-items: center;
   justify-content: center;
   width: 70mm;
@@ -18,9 +17,10 @@
   flex: none;
   white-space: nowrap;
   font-family: 'DejaVu Sans', Arial, sans-serif;
-  font-weight: 700;
   line-height: 1.1;
 }
+
+.badge-sheet .badge-name { font-weight: 700; }
 
 @media screen {
   .badge-printable .badge-sheet {

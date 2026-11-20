@@ -38,7 +38,7 @@ def normalize_person(payload):
         'source': clean_text(payload.get('source'), 100),
         'comment': clean_text(payload.get('comment'), 1000),
     }
-    required = ('last_name', 'first_name', 'middle_name', 'email', 'phone', 'organization', 'position', 'category')
+    required = ('last_name', 'first_name', 'email', 'phone', 'organization', 'position', 'category')
     missing = [field for field in required if not person[field]]
     if missing:
         raise RegistrationError('required_fields', 'Заполните обязательные поля: ' + ', '.join(missing) + '.')

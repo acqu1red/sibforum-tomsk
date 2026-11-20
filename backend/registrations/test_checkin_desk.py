@@ -1,4 +1,7 @@
 import uuid
+from io import BytesIO
+from xml.etree import ElementTree
+from zipfile import ZipFile
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
@@ -8,6 +11,7 @@ import fitz
 
 from accounts.roles import assign_role
 from forums.models import Forum, EventDay, Event
+from .badge_docx import DOCX_CONTENT_TYPE, WORD_NAMESPACE
 from .models import Participant, Registration, RegistrationItem, Ticket, CheckIn
 
 
@@ -76,12 +80,15 @@ class CheckinDeskTests(TestCase):
             page = pdf[0]
             self.assertAlmostEqual(page.rect.width / 72 * 25.4, 70, places=3)
             self.assertAlmostEqual(page.rect.height / 72 * 25.4, 50, places=3)
-            self.assertEqual(page.get_text().splitlines(), ['ИВАНОВ', 'Иван Иванович'])
+            rendered_lines = page.get_text().splitlines()
+            self.assertEqual(rendered_lines[0], 'Предприятие')
+            self.assertEqual(' '.join(rendered_lines[1:]), 'ИВАНОВ Иван')
             spans = [line['spans'][0] for block in page.get_text('dict')['blocks'] for line in block['lines']]
-            for span in spans:
+            self.assertNotIn('Bold', spans[0]['font'])
+            for span in spans[1:]:
                 self.assertIn('Bold', span['font'])
                 self.assertAlmostEqual((span['bbox'][0] + span['bbox'][2]) / 2, page.rect.width / 2, places=1)
-            self.assertGreater(spans[0]['size'], spans[1]['size'])
+                self.assertGreater(span['size'], spans[0]['size'])
 
         moderator = get_user_model().objects.create_user('badge-moderator', is_staff=True)
         assign_role(moderator, 'moderator')
@@ -93,10 +100,28 @@ class CheckinDeskTests(TestCase):
         self.assertNotContains(card, 'Участник пропущен')
         self.assertContains(card, 'badge-sheet')
         self.assertContains(card, 'Скачать PDF 70 × 50 мм')
+        self.assertContains(card, 'Скачать Word')
         print_view = self.client.get(badge + '&print=1', HTTP_HOST='admin.localhost')
         self.assertContains(print_view, 'workspace/badge-sheet.css')
         self.assertContains(print_view, 'ИВАНОВ')
-        self.assertContains(print_view, 'Иван Иванович')
+        self.assertContains(print_view, 'Предприятие')
+        self.assertNotContains(print_view, 'Иванович')
+        word_url = ticket + f'badge.docx?event={event.id}'
+        word = self.client.get(word_url, HTTP_HOST='admin.localhost')
+        self.assertEqual(word.status_code, 200)
+        self.assertEqual(word['Content-Type'], DOCX_CONTENT_TYPE)
+        self.assertIn('.docx', word['Content-Disposition'])
+        self.assertIn('no-store', word['Cache-Control'])
+        with ZipFile(BytesIO(word.content)) as archive:
+            document = ElementTree.fromstring(archive.read('word/document.xml'))
+        ns = {'w': WORD_NAMESPACE}
+        page_size = document.find('.//w:pgSz', ns)
+        self.assertEqual(page_size.get(f'{{{WORD_NAMESPACE}}}w'), '3969')
+        self.assertEqual(page_size.get(f'{{{WORD_NAMESPACE}}}h'), '2835')
+        runs = document.findall('.//w:r', ns)
+        self.assertEqual(runs[0].find('w:t', ns).text, 'Предприятие')
+        self.assertEqual(' '.join(run.find('w:t', ns).text for run in runs[1:]), 'ИВАНОВ Иван')
+        self.assertTrue(all(run.find('w:rPr/w:b', ns) is not None for run in runs[1:]))
         self.assertFalse(CheckIn.objects.exists())
         self.client.post(ticket, {'action': 'confirm', 'event': event.id}, HTTP_HOST='admin.localhost')
         card = self.client.get(card_url, HTTP_HOST='admin.localhost')
@@ -106,3 +131,4 @@ class CheckinDeskTests(TestCase):
 
         self.client.force_login(self.editor)
         self.assertEqual(self.client.get(badge, HTTP_HOST='admin.localhost').status_code, 403)
+        self.assertEqual(self.client.get(word_url, HTTP_HOST='admin.localhost').status_code, 403)

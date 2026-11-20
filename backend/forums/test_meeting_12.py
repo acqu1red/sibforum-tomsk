@@ -86,11 +86,13 @@ class Meeting12Tests(TestCase):
         from registrations.workflow import submit_registration, verify_email
         day = EventDay.objects.create(forum=self.forum, date=self.day.date+timezone.timedelta(days=1), position=1)
         plenary = Event.objects.create(day=day, kind='plenary', title='Открытие', start_time=time(10), end_time=time(11), registration_policy='auto', is_published=True)
-        person = dict(last_name='Иванов', first_name='Иван', middle_name='Иванович', email='test@example.org', phone='+79991234567', organization='Компания', position='Директор', category='business')
+        person = dict(last_name='Иванов', first_name='Иван', email='test@example.org', phone='+79991234567', organization='Компания', position='Директор', category='business')
         consents = {'pd':True,'policy':True}
         result = submit_registration(self.forum, person, [{'event_id':str(plenary.pk)}], consents)
         registration, old_token = verify_email(self.forum, person['email'], result['debug_code'])
         self.assertEqual(registration.items.get().status, 'confirmed')
+        self.assertEqual(registration.participant.middle_name, '')
+        self.assertEqual(registration.participant.full_name, 'Иванов Иван')
         result = submit_registration(self.forum, person, [{'event_id':str(plenary.pk)}, {'event_id':str(self.route.pk)}], consents)
         self.assertEqual(registration.items.count(), 1)
         updated, new_token = verify_email(self.forum, person['email'], result['debug_code'])

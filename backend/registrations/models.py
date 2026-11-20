@@ -15,7 +15,7 @@ class Participant(TimeStampedModel):
     forum = models.ForeignKey(Forum, on_delete=models.PROTECT, related_name='participants', verbose_name='Форум')
     last_name = models.CharField(max_length=100, verbose_name='Фамилия')
     first_name = models.CharField(max_length=100, verbose_name='Имя')
-    middle_name = models.CharField(max_length=100, verbose_name='Отчество')
+    middle_name = models.CharField(max_length=100, blank=True, verbose_name='Отчество')
     email = models.EmailField(verbose_name='Электронная почта')
     phone = models.CharField(max_length=11, verbose_name='Телефон')
     organization = models.CharField(max_length=200, verbose_name='Организация')
