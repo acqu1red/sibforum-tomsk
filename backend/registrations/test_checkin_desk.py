@@ -56,16 +56,16 @@ class CheckinDeskTests(TestCase):
         self.assertEqual(self.client.get('/admin/check-in/', HTTP_HOST='admin.localhost').status_code, 403)
         self.assertEqual(self.client.get(f'/api/v1/tickets/{self.ticket.public_id}/qr.png', HTTP_HOST='admin.localhost').status_code, 404)
 
-    def test_badge_is_available_only_after_arrival_in_the_selected_scope(self):
+    def test_badge_is_available_before_arrival_without_marking_checkin(self):
         self.client.force_login(self.user)
         ticket = f'/admin/check-in/{self.ticket.public_id}/'
         badge = ticket + 'badge.pdf'
-        event = self.registration.items.get().event_id
-        self.assertEqual(self.client.get(badge, HTTP_HOST='admin.localhost').status_code, 404)
-        self.client.post(ticket, {'action': 'confirm', 'event': event}, HTTP_HOST='admin.localhost')
-        self.assertEqual(self.client.get(badge, HTTP_HOST='admin.localhost').status_code, 404)
+        event = self.registration.items.get().event
+        unrelated_event = Event.objects.create(day=event.day, title='Другой вход', start_time='13:00', end_time='14:00')
+        self.assertEqual(self.client.get(badge + f'?event={unrelated_event.id}', HTTP_HOST='admin.localhost').status_code, 404)
+        self.assertEqual(self.client.get(badge, HTTP_HOST='admin.localhost').status_code, 200)
 
-        badge += f'?event={event}'
+        badge += f'?event={event.id}'
         response = self.client.get(badge, HTTP_HOST='admin.localhost')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
@@ -81,15 +81,22 @@ class CheckinDeskTests(TestCase):
         moderator = get_user_model().objects.create_user('badge-moderator', is_staff=True)
         assign_role(moderator, 'moderator')
         self.client.force_login(moderator)
-        card = self.client.get(ticket + f'?event={event}', HTTP_HOST='admin.localhost')
+        card_url = ticket + f'?event={event.id}'
+        card = self.client.get(card_url, HTTP_HOST='admin.localhost')
         self.assertContains(card, 'data-print-badge')
-        self.assertContains(card, 'Участник пропущен')
+        self.assertContains(card, 'Пропустить участника')
+        self.assertNotContains(card, 'Участник пропущен')
         self.assertContains(card, 'badge-sheet')
         self.assertContains(card, 'Скачать PDF 50 × 70 мм')
         print_view = self.client.get(badge + '&print=1', HTTP_HOST='admin.localhost')
         self.assertContains(print_view, 'workspace/badge-sheet.css')
         self.assertContains(print_view, 'Иван Иванов')
         self.assertNotContains(print_view, 'Иванович')
+        self.assertFalse(CheckIn.objects.exists())
+        self.client.post(ticket, {'action': 'confirm', 'event': event.id}, HTTP_HOST='admin.localhost')
+        card = self.client.get(card_url, HTTP_HOST='admin.localhost')
+        self.assertContains(card, 'Участник пропущен')
+        self.assertContains(card, 'data-print-badge')
         self.assertEqual(CheckIn.objects.count(), 1)
 
         self.client.force_login(self.editor)

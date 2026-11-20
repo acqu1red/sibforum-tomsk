@@ -12,7 +12,7 @@ from django.views.decorators.http import require_http_methods
 
 from .models import CheckIn, Ticket
 from .attendance import scope
-from .admission import eligible_items
+from .admission import ticket_has_admission
 from .badges import badge_font_size, badge_name
 
 
@@ -81,8 +81,8 @@ def ticket_detail(request, public_id):
             'invalid_ticket': True, 'title': 'Билет отменён' if ticket else 'Билет не найден',
             'invalid_message': 'Этот билет больше не действует. Попросите участника открыть актуальный билет по личной ссылке.' if ticket else 'Проверьте QR-код или найдите участника по имени в сканере.'}, status=410 if ticket else 404)
     event = context['selected_event']
-    eligible = eligible_items(ticket.registration.items)
-    valid = ticket.registration.participant.forum_id == context['forum'].id and (eligible.filter(event=event).exists() if event else eligible.exists())
+    same_forum = ticket.registration.participant.forum_id == context['forum'].id
+    valid = same_forum and ticket_has_admission(ticket, event)
     if request.method == 'POST' and request.POST.get('action') == 'confirm' and not valid:
         messages.error(request, 'Допуск не подтверждён: проверьте мероприятие, решение модератора и оплату.')
         return redirect('/admin/check-in/' + str(public_id) + '/?' + context['scope_query'])
@@ -99,9 +99,10 @@ def ticket_detail(request, public_id):
         return redirect('/admin/check-in/' + str(public_id) + '/?' + context['scope_query'])
     registration = ticket.registration
     checkin = None
-    if registration.participant.forum_id == context['forum'].id:
+    if same_forum:
         checkin = ticket.checkins.filter(event=event).select_related('admin_user').first()
-    name = badge_name(registration.participant) if checkin else ''
+    can_print_badge = valid or checkin is not None
+    name = badge_name(registration.participant) if can_print_badge else ''
     return render(request, 'registrations/checkin.html', {
         **context,
         'can_admit': valid,
@@ -112,7 +113,8 @@ def ticket_detail(request, public_id):
         'participant': registration.participant,
         'items': registration.items.select_related('event__day').prefetch_related('lot_links__lot'),
         'checkin': checkin,
+        'can_print_badge': can_print_badge,
         'badge_name': name,
-        'badge_font_size': badge_font_size(name) if checkin else None,
+        'badge_font_size': badge_font_size(name) if can_print_badge else None,
         'title': 'Билет участника',
     })

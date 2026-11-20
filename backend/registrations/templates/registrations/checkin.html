@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ title }}</title>
-  {% if checkin %}<link rel="stylesheet" href="{% static 'workspace/badge-sheet.css' %}">{% endif %}
+  {% if can_print_badge %}<link rel="stylesheet" href="{% static 'workspace/badge-sheet.css' %}">{% endif %}
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; background: #f5f6fb; color: #0e1330; font: 16px/1.5 system-ui, sans-serif; }
@@ -34,7 +34,7 @@
     .desk-admitted { display: flex; gap: 10px; align-items: baseline; border-radius: 8px; }
     .desk-admitted small { display: block; }
     .badge-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
-    .badge-actions .button { margin: 0; text-align: center; }
+    .badge-actions button, .badge-actions .button { margin: 0; min-height: 48px; text-align: center; }
     .desk-next { background: transparent; color: #33419e; padding-inline: 0; }
     @media (max-width: 540px) {
       main { margin: 0 auto; padding: 16px; }
@@ -44,7 +44,7 @@
     }
   </style>
 </head>
-<body{% if checkin %} class="badge-printable"{% endif %}>
+<body{% if can_print_badge %} class="badge-printable"{% endif %}>
 <main>
   <nav class="desk-nav"><b>Сибирский форум</b><a href="/admin/">Мой кабинет</a><form method="post" action="/admin/logout/">{% csrf_token %}<button type="submit" class="secondary" style="margin:0;padding:8px 14px">Выйти</button></form></nav>
   <h1>{{ title }}</h1>
@@ -89,18 +89,22 @@
       {% if can_download_ticket %}<div class="desk-preview"><a href="/api/v1/tickets/{{ ticket.public_id }}/ticket.pdf">Скачать PDF-билет</a><a href="/api/v1/tickets/{{ ticket.public_id }}/qr.png" target="_blank" rel="noopener">Открыть QR</a></div>{% endif %}
       {% if checkin %}
         <p class="success desk-admitted"><span aria-hidden="true">✓</span><span><strong>Участник пропущен</strong><small>{{ checkin.created_at|date:'d.m.Y H:i' }} · {{ checkin.admin_user.get_username }}</small></span></p>
-        <div class="badge-actions" aria-label="Бейдж 50 × 70 мм">
-          <a class="button" data-print-badge href="{% url 'check-in-badge' ticket.public_id %}?{{ scope_query }}&amp;print=1">Напечатать бейдж</a>
+      {% endif %}
+      {% if can_print_badge %}
+        <div class="badge-actions" role="group" aria-label="Действия с билетом">
+          {% if can_admit and not checkin %}
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="forum" value="{{ forum.slug }}">
+              <input type="hidden" name="event" value="{{ selected_event.id|default:'' }}">
+              <input type="hidden" name="action" value="confirm">
+              <button type="submit" class="desk-confirm">Пропустить участника</button>
+            </form>
+          {% endif %}
+          <a class="button{% if not checkin %} secondary{% endif %}" data-print-badge href="{% url 'check-in-badge' ticket.public_id %}?{{ scope_query }}&amp;print=1">Напечатать бейдж</a>
           <a class="button secondary" href="{% url 'check-in-badge' ticket.public_id %}?{{ scope_query }}">Скачать PDF 50 × 70 мм</a>
         </div>
-      {% elif can_admit %}
-        <form method="post"><input type="hidden" name="forum" value="{{ forum.slug }}"><input type="hidden" name="event" value="{{ selected_event.id|default:'' }}">
-          {% csrf_token %}
-          <input type="hidden" name="action" value="confirm">
-          <button type="submit" class="desk-confirm">Пропустить участника</button>
-        </form>
-      {% else %}<p class="error">Для выбранного входа допуск не подтверждён. Проверьте решение модератора и оплату.</p>
-      {% endif %}
+      {% else %}<p class="error">Для выбранного входа допуск не подтверждён. Проверьте решение модератора и оплату.</p>{% endif %}
       <a class="button desk-next" href="/admin/check-in/?{{ scope_query }}">Сканировать следующий</a>
     </section>
     <section>
@@ -118,7 +122,7 @@
   {% endif %}
 </main>
 {% if scanner %}<script src="{% static 'workspace/checkin.js' %}?v=3" defer></script>{% endif %}
-{% if checkin %}
+{% if can_print_badge %}
   {% include 'registrations/badge_sheet.html' with name=badge_name font_size=badge_font_size only %}
   <script src="{% static 'workspace/badge-print.js' %}?v=2" defer></script>
 {% endif %}

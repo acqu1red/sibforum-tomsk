@@ -2,7 +2,7 @@ from io import BytesIO
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import permission_required
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET
@@ -10,8 +10,9 @@ from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfgen.canvas import Canvas
 
+from .admission import ticket_has_admission
 from .attendance import scope
-from .models import CheckIn, Ticket
+from .models import Ticket
 from .tickets import register_pdf_font
 
 
@@ -53,14 +54,16 @@ def build_badge_pdf(name):
 @require_GET
 def attendee_badge(request, public_id):
     context = scope(request)
-    arrival = get_object_or_404(
-        CheckIn.objects.select_related('ticket__registration__participant'),
-        ticket__public_id=public_id,
-        ticket__status=Ticket.Status.ACTIVE,
-        ticket__registration__participant__forum=context['forum'],
-        event=context['selected_event'],
+    ticket = get_object_or_404(
+        Ticket.objects.select_related('registration__participant'),
+        public_id=public_id,
+        status=Ticket.Status.ACTIVE,
+        registration__participant__forum=context['forum'],
     )
-    name = badge_name(arrival.ticket.registration.participant)
+    event = context['selected_event']
+    if not ticket_has_admission(ticket, event) and not ticket.checkins.filter(event=event).exists():
+        raise Http404('Для выбранного входа нет допуска')
+    name = badge_name(ticket.registration.participant)
     if request.GET.get('print') == '1':
         return render(request, 'registrations/badge_print.html', {
             'name': name,
