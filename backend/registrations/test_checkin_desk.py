@@ -2,6 +2,7 @@ import uuid
 from io import BytesIO
 from xml.etree import ElementTree
 from zipfile import ZipFile
+from PIL import Image
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
@@ -84,9 +85,13 @@ class CheckinDeskTests(TestCase):
             self.assertEqual(rendered_lines[0], 'Предприятие')
             self.assertEqual(' '.join(rendered_lines[1:]), 'Иван Иванов')
             spans = [line['spans'][0] for block in page.get_text('dict')['blocks'] for line in block['lines']]
+            self.assertIn('TimesNewRoman', spans[0]['font'])
             self.assertNotIn('Bold', spans[0]['font'])
+            self.assertAlmostEqual(spans[0]['size'], 14, places=1)
             for span in spans[1:]:
+                self.assertIn('TimesNewRoman', span['font'])
                 self.assertIn('Bold', span['font'])
+                self.assertAlmostEqual(span['size'], 24, places=1)
                 self.assertAlmostEqual((span['bbox'][0] + span['bbox'][2]) / 2, page.rect.width / 2, places=1)
                 self.assertGreater(span['size'], spans[0]['size'])
 
@@ -103,11 +108,13 @@ class CheckinDeskTests(TestCase):
         self.assertContains(card, 'Скачать Word')
         print_view = self.client.get(badge + '&print=1', HTTP_HOST='admin.localhost')
         self.assertContains(print_view, 'workspace/badge-sheet.css')
-        self.assertContains(print_view, '>Иван</span>')
-        self.assertContains(print_view, '>Иванов</span>')
-        self.assertLess(print_view.content.index('>Иван</span>'.encode()), print_view.content.index('>Иванов</span>'.encode()))
-        self.assertContains(print_view, 'Предприятие')
-        self.assertNotContains(print_view, 'Иванович')
+        image_url = ticket + f'badge.png?event={event.id}'
+        self.assertContains(print_view, 'badge.png?')
+        image = self.client.get(image_url, HTTP_HOST='admin.localhost')
+        self.assertEqual(image['Content-Type'], 'image/png')
+        with Image.open(BytesIO(image.content)) as png:
+            self.assertEqual(png.size, (1654, 1181))
+            self.assertEqual(png.getextrema(), (0, 255))
         word_url = ticket + f'badge.docx?event={event.id}'
         word = self.client.get(word_url, HTTP_HOST='admin.localhost')
         self.assertEqual(word.status_code, 200)
@@ -124,6 +131,9 @@ class CheckinDeskTests(TestCase):
         self.assertEqual(runs[0].find('w:t', ns).text, 'Предприятие')
         self.assertEqual(' '.join(run.find('w:t', ns).text for run in runs[1:]), 'Иван Иванов')
         self.assertTrue(all(run.find('w:rPr/w:b', ns) is not None for run in runs[1:]))
+        self.assertEqual([run.find('w:rPr/w:sz', ns).get(f'{{{WORD_NAMESPACE}}}val') for run in runs],
+                         ['28'] + ['48'] * (len(runs) - 1))
+        self.assertTrue(all(set(run.find('w:rPr/w:rFonts', ns).attrib.values()) == {'Times New Roman'} for run in runs))
         self.assertFalse(CheckIn.objects.exists())
         self.client.post(ticket, {'action': 'confirm', 'event': event.id}, HTTP_HOST='admin.localhost')
         card = self.client.get(card_url, HTTP_HOST='admin.localhost')
@@ -134,3 +144,4 @@ class CheckinDeskTests(TestCase):
         self.client.force_login(self.editor)
         self.assertEqual(self.client.get(badge, HTTP_HOST='admin.localhost').status_code, 403)
         self.assertEqual(self.client.get(word_url, HTTP_HOST='admin.localhost').status_code, 403)
+        self.assertEqual(self.client.get(image_url, HTTP_HOST='admin.localhost').status_code, 403)

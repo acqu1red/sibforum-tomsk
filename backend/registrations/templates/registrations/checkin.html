@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ title }}</title>
-  {% if can_print_badge %}<link rel="stylesheet" href="{% static 'workspace/badge-sheet.css' %}?v=3">{% endif %}
+  {% if can_print_badge %}<link rel="stylesheet" href="{% static 'workspace/badge-sheet.css' %}?v=4">{% endif %}
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; background: #f5f6fb; color: #0e1330; font: 16px/1.5 system-ui, sans-serif; }
@@ -124,8 +124,8 @@
 </main>
 {% if scanner %}<script src="{% static 'workspace/checkin.js' %}?v=3" defer></script>{% endif %}
 {% if can_print_badge %}
-  {% include 'registrations/badge_sheet.html' with badge_lines=badge_lines only %}
-  <script src="{% static 'workspace/badge-print.js' %}?v=3" defer></script>
+  {% include 'registrations/badge_sheet.html' with ticket_id=ticket.public_id scope_query=scope_query only %}
+  <script src="{% static 'workspace/badge-print.js' %}?v=4" defer></script>
 {% endif %}
 </body>
 </html>

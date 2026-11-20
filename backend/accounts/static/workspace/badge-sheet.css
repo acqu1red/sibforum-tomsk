@@ -1,26 +1,11 @@
 @page { size: 70mm 50mm; margin: 0; }
 
 .badge-sheet {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: block;
   width: 70mm;
   height: 50mm;
-  padding: 0 3mm;
   background: white;
-  color: black;
 }
-
-.badge-sheet span {
-  flex: none;
-  white-space: nowrap;
-  font-family: 'DejaVu Sans', Arial, sans-serif;
-  line-height: 1.1;
-}
-
-.badge-sheet .badge-name { font-weight: 700; }
 
 @media screen {
   .badge-printable .badge-sheet {

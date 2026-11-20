@@ -1,3 +1,1 @@
-{% load l10n %}<div class="badge-sheet">
-  {% for line in badge_lines %}<span{% if line.bold %} class="badge-name"{% endif %} style="font-size: {{ line.size|unlocalize }}pt; margin-top: {{ line.space_before|unlocalize }}pt">{{ line.text }}</span>{% endfor %}
-</div>
+<img class="badge-sheet" src="{% url 'check-in-badge-image' ticket_id %}?{{ scope_query }}" alt="Бейдж участника" fetchpriority="high">

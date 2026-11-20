@@ -13,7 +13,6 @@ from django.views.decorators.http import require_http_methods
 from .models import CheckIn, Ticket
 from .attendance import scope
 from .admission import ticket_has_admission
-from .badges import badge_lines
 
 
 def ticket_code(value):
@@ -113,6 +112,5 @@ def ticket_detail(request, public_id):
         'items': registration.items.select_related('event__day').prefetch_related('lot_links__lot'),
         'checkin': checkin,
         'can_print_badge': can_print_badge,
-        'badge_lines': badge_lines(registration.participant) if can_print_badge else [],
         'title': 'Билет участника',
     })
