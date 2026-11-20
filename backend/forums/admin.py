@@ -89,7 +89,7 @@ class EventAdmin(admin.ModelAdmin):
         ('Событие', {'fields': ('day', 'venue', 'kind', 'title', 'slug', 'annotation', 'description', 'start_time', 'end_time', 'position', 'is_published')}),
         ('Регистрация', {'fields': ('registration_policy', 'external_url', 'curator_email')}),
         ('Контакт для посетителей', {'fields': ('contact_name', 'contact_phone'), 'description': 'Показывается в карточке маршрута и при выборе мероприятия. Пустые поля не выводятся.'}),
-        ('Организатор и подробности', {'fields': ('organizer', 'organizer_role', 'detail_mode'), 'description': 'Подробный текст вводится в поле «Описание». Компания с логотипом показывается внутри события отдельно от спикеров.'}),
+        ('Организатор и подробности', {'fields': ('organizer', 'organizer_role', 'organizer_logo_only', 'detail_mode'), 'description': 'Подробный текст вводится в поле «Описание». Компания с логотипом показывается внутри события отдельно от спикеров.'}),
         ('Стоимость и вместимость', {'fields': ('is_paid', 'price', 'payment_note', 'capacity_target')}),
         ('Биржа субконтрактов', {'fields': ('min_lot_selections', 'max_lot_selections')}),
     )

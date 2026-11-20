@@ -125,6 +125,10 @@ class Event(TimeStampedModel):
     venue = models.ForeignKey(Venue, on_delete=models.PROTECT, related_name='events', null=True, blank=True, verbose_name='Площадка')
     organizer = models.ForeignKey('OrganizationLogo', on_delete=models.SET_NULL, related_name='events', null=True, blank=True, verbose_name='Организатор', help_text='Компания с логотипом внутри события. Она не добавляется в раздел «Люди форума».')
     organizer_role = models.CharField(max_length=20, choices=OrganizerRole.choices, default=OrganizerRole.ORGANIZER, verbose_name='Роль организации')
+    organizer_logo_only = models.BooleanField(
+        'Показывать только логотип', default=False,
+        help_text='В карточке события скрывает подпись и ссылку организации. Подпись остаётся, если логотип не загружен.',
+    )
     kind = models.CharField(max_length=20, choices=Kind.choices, default=Kind.OTHER, verbose_name='Тип')
     title = models.CharField(max_length=300, verbose_name='Название')
     slug = models.SlugField(max_length=80, blank=True, verbose_name='Адрес страницы')

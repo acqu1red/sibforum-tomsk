@@ -62,6 +62,9 @@ def speaker_payload(speaker):
 
 
 def event_payload(event):
+    organizer = organization_payload(event.organizer) if event.organizer_id and event.organizer.is_published else None
+    if organizer and event.organizer_logo_only:
+        organizer.update(show_name=False, website_url='')
     payload = {
         'id': str(event.id),
         'kind': event.kind,
@@ -79,7 +82,7 @@ def event_payload(event):
         'is_paid': event.is_paid,
         'contact_name': event.contact_name,
         'contact_phone': event.contact_phone,
-        'organizer': organization_payload(event.organizer) if event.organizer_id and event.organizer.is_published else None,
+        'organizer': organizer,
         'organizer_role_label': event.get_organizer_role_display(),
         'venue': venue_payload(event.venue) if event.venue and event.venue.is_published else None,
         'speakers': [

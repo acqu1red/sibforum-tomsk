@@ -58,6 +58,31 @@ class Meeting13Tests(TestCase):
         with self.assertRaises(ValidationError):
             self.event.full_clean()
 
+    def test_logo_only_hides_name_and_link_for_one_event(self):
+        self.company.show_name = True
+        self.company.website_url = 'https://example.org/'
+        self.company.group = 'partners'
+        self.company.save()
+        self.event.organizer = self.company
+        self.event.organizer_role = Event.OrganizerRole.CO_ORGANIZER
+        self.event.organizer_logo_only = True
+        self.event.save()
+        other = Event.objects.create(
+            day=self.day, title='Другое событие', organizer=self.company,
+            start_time=time(12), end_time=time(13), is_published=True,
+        )
+
+        program = self.program()
+        events = {event['id']: event for event in program['days'][0]['events']}
+        logo_only = events[str(self.event.pk)]
+        self.assertEqual(logo_only['organizer_role_label'], 'Соорганизатор')
+        self.assertFalse(logo_only['organizer']['show_name'])
+        self.assertEqual(logo_only['organizer']['website_url'], '')
+        self.assertEqual(logo_only['organizer']['image'], '/img/company.png')
+        for organizer in (events[str(other.pk)]['organizer'], program['page']['logos'][0]):
+            self.assertTrue(organizer['show_name'])
+            self.assertEqual(organizer['website_url'], 'https://example.org/')
+
     def test_contact_person_phone_and_email_are_separate_public_fields(self):
         ContactCard.objects.create(forum=self.forum, title='Связь', person_name='Иван Петров', phone='+7 (999) 123-45-67', email='public@example.org')
         contact = self.program()['page']['contacts'][0]
