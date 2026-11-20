@@ -4,21 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Печать бейджа</title>
-  <link rel="stylesheet" href="{% static 'workspace/badge-sheet.css' %}">
+  <link rel="stylesheet" href="{% static 'workspace/badge-sheet.css' %}?v=2">
   <style>
-    @page { size: 50mm 70mm; margin: 0; }
     body { font: 16px system-ui, sans-serif; margin: 0; background: #f5f6fb; color: #0e1330; }
     .controls { text-align: center; padding: 20px; }
     .controls button, .controls a { font: inherit; padding: 10px 14px; }
     @media screen { .badge-sheet { margin: 0 auto; } }
   </style>
-  <script src="{% static 'workspace/badge-print.js' %}?v=2" defer></script>
+  <script src="{% static 'workspace/badge-print.js' %}?v=3" defer></script>
 </head>
 <body class="badge-print-preview">
   <div class="controls">
     <button type="button" data-print-badge>Печать</button>
     <a href="?{{ scope_query }}">Скачать PDF</a>
-    <p>Бумага 50 × 70 мм, масштаб 100%, без полей и колонтитулов.</p>
+    <p>Ширина 70 мм, высота 50 мм, масштаб 100%, без полей и колонтитулов.</p>
   </div>
   {% include 'registrations/badge_sheet.html' %}
 </body>

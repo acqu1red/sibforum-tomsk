@@ -1,1 +1,3 @@
-{% load l10n %}<div class="badge-sheet"><span style="font-size: {{ font_size|unlocalize }}pt">{{ name }}</span></div>
+{% load l10n %}<div class="badge-sheet">
+  {% for line in badge_lines %}<span style="font-size: {{ line.size|unlocalize }}pt">{{ line.text }}</span>{% endfor %}
+</div>

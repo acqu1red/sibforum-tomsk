@@ -1,13 +1,15 @@
-@page { size: 50mm 70mm; margin: 0; }
+@page { size: 70mm 50mm; margin: 0; }
 
 .badge-sheet {
   box-sizing: border-box;
   display: flex;
+  flex-direction: column;
+  gap: 2mm;
   align-items: center;
   justify-content: center;
-  width: 50mm;
-  height: 70mm;
-  padding: 0 4mm;
+  width: 70mm;
+  height: 50mm;
+  padding: 0 3mm;
   background: white;
   color: black;
 }
@@ -16,6 +18,8 @@
   flex: none;
   white-space: nowrap;
   font-family: 'DejaVu Sans', Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.1;
 }
 
 @media screen {

@@ -74,9 +74,14 @@ class CheckinDeskTests(TestCase):
         with fitz.open(stream=response.content, filetype='pdf') as pdf:
             self.assertEqual(len(pdf), 1)
             page = pdf[0]
-            self.assertAlmostEqual(page.rect.width / 72 * 25.4, 50, places=3)
-            self.assertAlmostEqual(page.rect.height / 72 * 25.4, 70, places=3)
-            self.assertEqual(page.get_text().splitlines(), ['Иван Иванов'])
+            self.assertAlmostEqual(page.rect.width / 72 * 25.4, 70, places=3)
+            self.assertAlmostEqual(page.rect.height / 72 * 25.4, 50, places=3)
+            self.assertEqual(page.get_text().splitlines(), ['ИВАНОВ', 'Иван Иванович'])
+            spans = [line['spans'][0] for block in page.get_text('dict')['blocks'] for line in block['lines']]
+            for span in spans:
+                self.assertIn('Bold', span['font'])
+                self.assertAlmostEqual((span['bbox'][0] + span['bbox'][2]) / 2, page.rect.width / 2, places=1)
+            self.assertGreater(spans[0]['size'], spans[1]['size'])
 
         moderator = get_user_model().objects.create_user('badge-moderator', is_staff=True)
         assign_role(moderator, 'moderator')
@@ -87,11 +92,11 @@ class CheckinDeskTests(TestCase):
         self.assertContains(card, 'Пропустить участника')
         self.assertNotContains(card, 'Участник пропущен')
         self.assertContains(card, 'badge-sheet')
-        self.assertContains(card, 'Скачать PDF 50 × 70 мм')
+        self.assertContains(card, 'Скачать PDF 70 × 50 мм')
         print_view = self.client.get(badge + '&print=1', HTTP_HOST='admin.localhost')
         self.assertContains(print_view, 'workspace/badge-sheet.css')
-        self.assertContains(print_view, 'Иван Иванов')
-        self.assertNotContains(print_view, 'Иванович')
+        self.assertContains(print_view, 'ИВАНОВ')
+        self.assertContains(print_view, 'Иван Иванович')
         self.assertFalse(CheckIn.objects.exists())
         self.client.post(ticket, {'action': 'confirm', 'event': event.id}, HTTP_HOST='admin.localhost')
         card = self.client.get(card_url, HTTP_HOST='admin.localhost')

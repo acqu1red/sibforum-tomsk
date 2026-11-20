@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ title }}</title>
-  {% if can_print_badge %}<link rel="stylesheet" href="{% static 'workspace/badge-sheet.css' %}">{% endif %}
+  {% if can_print_badge %}<link rel="stylesheet" href="{% static 'workspace/badge-sheet.css' %}?v=2">{% endif %}
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; background: #f5f6fb; color: #0e1330; font: 16px/1.5 system-ui, sans-serif; }
@@ -102,7 +102,7 @@
             </form>
           {% endif %}
           <a class="button{% if not checkin %} secondary{% endif %}" data-print-badge href="{% url 'check-in-badge' ticket.public_id %}?{{ scope_query }}&amp;print=1">Напечатать бейдж</a>
-          <a class="button secondary" href="{% url 'check-in-badge' ticket.public_id %}?{{ scope_query }}">Скачать PDF 50 × 70 мм</a>
+          <a class="button secondary" href="{% url 'check-in-badge' ticket.public_id %}?{{ scope_query }}">Скачать PDF 70 × 50 мм</a>
         </div>
       {% else %}<p class="error">Для выбранного входа допуск не подтверждён. Проверьте решение модератора и оплату.</p>{% endif %}
       <a class="button desk-next" href="/admin/check-in/?{{ scope_query }}">Сканировать следующий</a>
@@ -123,8 +123,8 @@
 </main>
 {% if scanner %}<script src="{% static 'workspace/checkin.js' %}?v=3" defer></script>{% endif %}
 {% if can_print_badge %}
-  {% include 'registrations/badge_sheet.html' with name=badge_name font_size=badge_font_size only %}
-  <script src="{% static 'workspace/badge-print.js' %}?v=2" defer></script>
+  {% include 'registrations/badge_sheet.html' with badge_lines=badge_lines only %}
+  <script src="{% static 'workspace/badge-print.js' %}?v=3" defer></script>
 {% endif %}
 </body>
 </html>
