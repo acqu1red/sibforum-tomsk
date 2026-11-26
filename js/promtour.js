@@ -234,7 +234,7 @@
     var hasTopics = events.some(function (event) { return typeof event === 'object' && event.topic; });
     $('[data-speaker-dialog-content]').innerHTML = '<div class="promtour-dialog-person">' + speakerPhoto(speaker, 'promtour-dialog-photo') +
       '<div><h2 id="speaker-dialog-title">' + esc(speaker.name) + '</h2></div></div>' +
-      '<h3>' + copy('speaker_credentials', 'Должность, звание') + '</h3><p>' + esc(speaker.position) + '</p>' +
+      (speaker.position ? '<h3>' + copy('speaker_credentials', 'Должность, звание') + '</h3><p>' + esc(speaker.position) + '</p>' : '') +
       (!hasTopics && speaker.topic ? '<h3>Тема</h3><p>' + esc(speaker.topic) + '</p>' : '') +
       (events.length ? '<h3>' + copy('speaker_participation', 'Выступления и участие') + '</h3><ul class="promtour-person-talks">' + events.map(function (event) {
         return '<li><strong>' + esc(speakerEventName(event)) + '</strong>' + (typeof event === 'object' && event.topic ? '<p>' + esc(event.topic) + '</p>' : '') + '</li>';

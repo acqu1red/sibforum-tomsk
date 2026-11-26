@@ -9,8 +9,8 @@
   <script>
     window.forumInitialData = {
       '/deployment-config.json': Promise.resolve({submissions_enabled: 0, voting_enabled: 0}),
-      '/api/v1/forums/promtour/program/': fetch('/data/program.json').then(r => r.json()),
-      '/api/v1/contests/promtour/': fetch('/data/contest.json').then(r => r.json()),
+      '/api/v1/forums/promtour/program/': fetch('/data/program.json?v=b2d8357b8ee0').then(r => r.json()),
+      '/api/v1/contests/promtour/': fetch('/data/contest.json?v=bfc1bbe5ced5').then(r => r.json()),
       '/api/v1/contests/promtour/voter-session/': Promise.resolve({already_voted: false})
     };
   </script>
@@ -257,10 +257,10 @@
   <script src="/js/icons.js?v=2c4c0eb595b1"></script>
   <script src="/js/common.js?v=1d7a2511978a"></script>
   <script src="/promtour/content.js?v=b438f9b130bb"></script>
-  <script src="/promtour/nominations.js?v=2b1d710d0386"></script>
+  <script src="/promtour/nominations.js?v=f429095cb41e"></script>
   <script src="/js/captcha.js?v=4a8ba0c35d8b"></script>
   <script src="/js/select.js?v=973ca541eade" defer></script>
   <script src="/js/forum-content.js?v=30516c1b74ca"></script>
-  <script src="/js/promtour.js?v=174026f25ead"></script>
+  <script src="/js/promtour.js?v=85586a0c1293"></script>
 </body>
 </html>
