@@ -362,7 +362,7 @@
       api('/'),
       api('/voter-session/'),
       window.publicVotingReady,
-      (window.consumeInitialData('/api/v1/forums/promtour/program/') || fetch('/data/program.json?v=b2d8357b8ee0', { cache: 'no-store' })).then(function (r) {
+      (window.consumeInitialData('/api/v1/forums/promtour/program/') || fetch('/data/program.json?v=fb2e29e85d0d', { cache: 'no-store' })).then(function (r) {
         if (r && typeof r.json !== 'function') return r;
         if (!r || !r.ok) throw Error('Не удалось загрузить страницу форума.');
         return r.json();

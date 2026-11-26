@@ -9,7 +9,7 @@
   <script>
     window.forumInitialData = {
       '/deployment-config.json': Promise.resolve({submissions_enabled: 0, voting_enabled: 0}),
-      '/api/v1/forums/promtour/program/': fetch('/data/program.json?v=b2d8357b8ee0').then(r => r.json()),
+      '/api/v1/forums/promtour/program/': fetch('/data/program.json?v=fb2e29e85d0d').then(r => r.json()),
       '/api/v1/contests/promtour/': fetch('/data/contest.json?v=bfc1bbe5ced5').then(r => r.json()),
       '/api/v1/contests/promtour/voter-session/': Promise.resolve({already_voted: false})
     };
